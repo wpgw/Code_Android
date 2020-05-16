@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:screenOrientation="portrait"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context=".ActivitydoTask">
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="76dp">
+
+        <RadioButton
+            android:id="@+id/rd_onhold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="24dp"
+            android:text="待处理" />
+
+        <RadioButton
+            android:id="@+id/rd_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="24dp"
+            android:text="放行 " />
+
+        <RadioButton
+            android:id="@+id/rd_scrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="24dp"
+            android:text="报废" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/et_barcode"
+        android:layout_width="172dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="60dp"
+        android:ems="10"
+        android:hint="请扫码..."
+        android:inputType="textPersonName"
+        android:text=""
+        android:nextFocusUp="@+id/btn_confirm"
+        android:nextFocusLeft="@+id/btn_confirm"
+        android:nextFocusRight="@+id/btn_confirm"
+        android:nextFocusDown="@+id/btn_confirm"
+        app:layout_constraintStart_toStartOf="@+id/radioGroup"
+        app:layout_constraintTop_toTopOf="@+id/radioGroup" />
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:text="确认"
+        app:layout_constraintStart_toEndOf="@+id/et_barcode"
+        app:layout_constraintTop_toTopOf="@+id/et_barcode" />
+
+    <ImageButton
+        android:id="@+id/btn_scan"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/scan"
+        app:layout_constraintStart_toEndOf="@+id/btn_confirm"
+        app:layout_constraintTop_toTopOf="@+id/btn_confirm" />
+
+    <TextView
+        android:id="@+id/container_info"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="170dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@null"
+        android:gravity="top"
+        android:lines="12"
+        android:maxLines="12"
+        android:scrollbars="vertical"
+        android:text=""
+        android:textColor="#4c4d51"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_message"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.405"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <include
+        android:id="@+id/include_onhold"
+        layout="@layout/sub_onhold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="75dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+    <include
+        android:id="@+id/include_ok"
+        layout="@layout/sub_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="75dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+    <include
+        android:id="@+id/include_scrap"
+        layout="@layout/sub_scrap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="75dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:gravity="center"
+        android:scrollbars="vertical"
+        android:maxLines="100"
+        android:singleLine="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="8dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

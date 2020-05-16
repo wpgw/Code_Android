@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data id="0">
+ <record>
+  <field>
+   D01-冷模报废 Start-up scrap
+  </field>
+  <field>
+   21445
+  </field>
+ </record>
+ <record>
+  <field>
+   D02-充填不良 Incomplete Fill
+  </field>
+  <field>
+   34729
+  </field>
+ </record>
+ <record>
+  <field>
+   D03-顶杆印痕 Ejection Pin
+  </field>
+  <field>
+   34730
+  </field>
+ </record>
+ <record>
+  <field>
+   D04-裂缝 Crack
+  </field>
+  <field>
+   33978
+  </field>
+ </record>
+ <record>
+  <field>
+   D05-缩孔,探伤不合格 Shrinkage
+  </field>
+  <field>
+   33979
+  </field>
+ </record>
+ <record>
+  <field>
+   D06-切坏,缺肉 Trim damage
+  </field>
+  <field>
+   33980
+  </field>
+ </record>
+ <record>
+  <field>
+   D07-发黑 Die Lube
+  </field>
+  <field>
+   34731
+  </field>
+ </record>
+ <record>
+  <field>
+   D08-尺寸,壁厚超差 Oversize
+  </field>
+  <field>
+   33982
+  </field>
+ </record>
+ <record>
+  <field>
+   D09-欠铸 Missing Features
+  </field>
+  <field>
+   34732
+  </field>
+ </record>
+ <record>
+  <field>
+   D10-拉模/粘模 Soldering
+  </field>
+  <field>
+   33984
+  </field>
+ </record>
+ <record>
+  <field>
+   D11-孔位偏斜 Hole out of Position
+  </field>
+  <field>
+   34733
+  </field>
+ </record>
+ <record>
+  <field>
+   D12-热缩,变形 Warp
+  </field>
+  <field>
+   33986
+  </field>
+ </record>
+ <record>
+  <field>
+   D14- 其它压铸废品 Others
+  </field>
+  <field>
+   33988
+  </field>
+ </record>
+ <record>
+  <field>
+   D15 - 缩陷Sinks
+  </field>
+  <field>
+   34105
+  </field>
+ </record>
+ <record>
+  <field>
+   D16-料饼厚度超差 Biscuit Size
+  </field>
+  <field>
+   34734
+  </field>
+ </record>
+ <record>
+  <field>
+   D17-鼓泡 Blisters
+  </field>
+  <field>
+   34735
+  </field>
+ </record>
+ <record>
+  <field>
+   D18-崩肉 Breakout
+  </field>
+  <field>
+   34736
+  </field>
+ </record>
+ <record>
+  <field>
+   D19-断料饼 Broken Biscuit
+  </field>
+  <field>
+   34737
+  </field>
+ </record>
+ <record>
+  <field>
+   D20-断型芯 Broken Core
+  </field>
+  <field>
+   34738
+  </field>
+ </record>
+ <record>
+  <field>
+   D22-孔径超差 Hole Size
+  </field>
+  <field>
+   34740
+  </field>
+ </record>
+ <record>
+  <field>
+   D23-去毛刺过度 Grinding
+  </field>
+  <field>
+   34741
+  </field>
+ </record>
+ <record>
+  <field>
+   D24-分层/隔皮Lamination
+  </field>
+  <field>
+   34742
+  </field>
+ </record>
+ <record>
+  <field>
+   D25-泵漏不良 Leaker
+  </field>
+  <field>
+   34743
+  </field>
+ </record>
+ <record>
+  <field>
+   D26-未顶出 Stuck Casting
+  </field>
+  <field>
+   34744
+  </field>
+ </record>
+ <record>
+  <field>
+   D27-冷隔/水纹 Cold shut / Cold Flow
+  </field>
+  <field>
+   34745
+  </field>
+ </record>
+ <record>
+  <field>
+   D28-断冲头 Broken Punch
+  </field>
+  <field>
+   34746
+  </field>
+ </record>
+ <record>
+  <field>
+   D29-冲头弯 Bent Punch
+  </field>
+  <field>
+   34747
+  </field>
+ </record>
+ <record>
+  <field>
+   D30-多肉 Missing Component
+  </field>
+  <field>
+   34748
+  </field>
+ </record>
+ <record>
+  <field>
+   D31-龟裂 Hot Tear
+  </field>
+  <field>
+   34749
+  </field>
+ </record>
+ <record>
+  <field>
+   D32-取件手磕碰伤 Robot Mishandle
+  </field>
+  <field>
+   34750
+  </field>
+ </record>
+ <record>
+  <field>
+   D33-合金成分不符合要求 Alloy Out of Spec
+  </field>
+  <field>
+   34751
+  </field>
+ </record>
+ <record>
+  <field>
+   D34-气孔 Porosity
+  </field>
+  <field>
+   34752
+  </field>
+ </record>
+ <record>
+  <field>
+   D35-无标签/标签错误 Barcode Label
+  </field>
+  <field>
+   34753
+  </field>
+ </record>
+ <record>
+  <field>
+   D36-流水号不全 Engraved Number
+  </field>
+  <field>
+   34754
+  </field>
+ </record>
+ <record>
+  <field>
+   D37-压铸调试件Die Cast Sample
+  </field>
+  <field>
+   35064
+  </field>
+ </record>
+ <record>
+  <field>
+   D38-夹披风 Shot Over Flash
+  </field>
+  <field>
+   34756
+  </field>
+ </record>
+ <record>
+  <field>
+   M02-裂纹 Crack
+  </field>
+  <field>
+   33990
+  </field>
+ </record>
+ <record>
+  <field>
+   M03-磕碰伤 Handling damage
+  </field>
+  <field>
+   34758
+  </field>
+ </record>
+ <record>
+  <field>
+   M04-加工不出 Non-Clean up
+  </field>
+  <field>
+   34759
+  </field>
+ </record>
+ <record>
+  <field>
+   M05-过切 Overcut
+  </field>
+  <field>
+   33993
+  </field>
+ </record>
+ <record>
+  <field>
+   M07-螺纹烂牙 Thread Condition
+  </field>
+  <field>
+   34760
+  </field>
+ </record>
+ <record>
+  <field>
+   M08-尺寸超差 Out of print
+  </field>
+  <field>
+   33996
+  </field>
+ </record>
+ <record>
+  <field>
+   M12-机加调试件Machining Sample
+  </field>
+  <field>
+   35065
+  </field>
+ </record>
+ <record>
+  <field>
+   M13-装夹不当 Mis-Load
+  </field>
+  <field>
+   34762
+  </field>
+ </record>
+ <record>
+  <field>
+   M14-断刀 Broken Tool
+  </field>
+  <field>
+   34763
+  </field>
+ </record>
+ <record>
+  <field>
+   M16-夹渣 Slag inclusion
+  </field>
+  <field>
+   34004
+  </field>
+ </record>
+ <record>
+  <field>
+   M17-发黑 Black
+  </field>
+  <field>
+   34005
+  </field>
+ </record>
+ <record>
+  <field>
+   M18-孔径超差 Hole Size
+  </field>
+  <field>
+   34765
+  </field>
+ </record>
+ <record>
+  <field>
+   M21-少特征 Missing Features
+  </field>
+  <field>
+   34767
+  </field>
+ </record>
+ <record>
+  <field>
+   M23-孔位偏斜 Hole out of Position
+  </field>
+  <field>
+   34769
+  </field>
+ </record>
+ <record>
+  <field>
+   O07-组件变形 Components Bent
+  </field>
+  <field>
+   34772
+  </field>
+ </record>
+ <record>
+  <field>
+   O11-装配机报警 Assembly Machine Alarm
+  </field>
+  <field>
+   34781
+  </field>
+ </record>
+ <record>
+  <field>
+   O12-尺寸超差 Vision Scrap
+  </field>
+  <field>
+   34782
+  </field>
+ </record>
+ <record>
+  <field>
+   O13-表面油污 Contamination
+  </field>
+  <field>
+   34783
+  </field>
+ </record>
+ <record>
+  <field>
+   O14-漏工序 Incomplete Operation
+  </field>
+  <field>
+   34784
+  </field>
+ </record>
+ <record>
+  <field>
+   O15-部件缺失 Missing Components
+  </field>
+  <field>
+   34785
+  </field>
+ </record>
+ <record>
+  <field>
+   O16-涂装缺陷 Paint Defect
+  </field>
+  <field>
+   34786
+  </field>
+ </record>
+ <record>
+  <field>
+   O17-装配滑牙 Stripped Screw
+  </field>
+  <field>
+   34787
+  </field>
+ </record>
+ <record>
+  <field>
+   O18- 项目调试报废 Other Sample
+  </field>
+  <field>
+   34788
+  </field>
+ </record></data>

@@ -1,0 +1,2 @@
+include ':app',':base', ':wpcameral'
+rootProject.name='Plex_QA'

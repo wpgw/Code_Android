@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:id="@+id/tv_select"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="8dp"
+    android:paddingTop="8dp"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

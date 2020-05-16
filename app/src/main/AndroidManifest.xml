@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dist="http://schemas.android.com/apk/distribution"
+    package="com.philip.plex_qa">
+
+    <dist:module dist:instant="true" /> <!-- 王平加 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 手机存储 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/meridian"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/meridian"
+        android:screenOrientation="portrait"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".ActivityContainerHistory"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ActivityScan2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ActivitydoTask"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ActivityLogin">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
