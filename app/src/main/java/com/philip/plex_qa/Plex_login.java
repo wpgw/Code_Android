@@ -47,7 +47,7 @@ public class Plex_login {
         cookies.put("POLThemeKey","1");
     }
 
-    public void get_post(String url,Map<String,String> data,Connection.Method method) throws MyException{
+    public void get_post(String url,Map<String,String> data,Connection.Method method) throws Exception{
         try {
             Connection con=Jsoup.connect(url);
             if (method.equals(Method.POST)) {
@@ -80,16 +80,15 @@ public class Plex_login {
             //System.out.println("response url:" + res.url().toString());
             //System.out.println(doc.html());
             //System.out.println("");
-        }catch(MyException e){
-            throw e;
         }catch(SocketTimeoutException e){
             throw new MyException("Time Out!网络连接超时,请重试!");
         }catch(Exception e) {
             e.printStackTrace();
+            throw e;
         }
     }
 
-    public Map<String,String> login(String userID,String Password,String CompanyCode) throws MyException{
+    public Map<String,String> login(String userID,String Password,String CompanyCode) throws Exception{
 
         //String url= "https://mobile.plexus-online.com";
 //        if (Password.length()<19) {
@@ -117,7 +116,7 @@ public class Plex_login {
             if (response_url.toLowerCase().indexOf("+valid+")!=-1){   //注意字符串比较的大小写
                 System.out.println("  帐号或密码不正确！");
                 //vibrate()                             //需声音 报警
-                return null;
+                throw new MyException("帐号或密码不正确！");
             }
             //the 4 step: get the viewstate
             String url_login=url+"/Modules/SystemAdministration/Login/Login.aspx";
@@ -142,11 +141,9 @@ public class Plex_login {
             save_userInfo(userID,Password);
             return cookies;
 
-        }catch(MyException e){
-            throw e;
         }catch(Exception e) {
             e.printStackTrace();
-            return null;    //"return" will clear Exception
+            throw e;
         }
     }
 

@@ -100,7 +100,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                         message.obj = "用户名或密码错误!或未联网!";
                         mHandler.sendMessage(message);
                     }
-                } catch (MyException e) {
+                } catch (Exception e) {
                     //Toast.makeText(this,e.getMessage(), Toast.LENGTH_SHORT).show();
                     Message message = Message.obtain();
                     message.what = msgFAILLED;

@@ -63,14 +63,14 @@ public class Plex_qa{
     }
 
     //获得Cookies
-    public Map<String,String> get_cookies(String userID,String Password){
+    public Map<String,String> get_cookies(String userID,String Password) throws Exception{
         Plex_login login=new Plex_login(host);
         try {
             this.cookies=login.login(userID, Password,"smmp");   //此cookies为本类成员所共用
             return this.cookies;
-        } catch (MyException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw e;
         }
     }
 
@@ -121,20 +121,16 @@ public class Plex_qa{
             }
             return res;
 
-        }catch(MyException e){
-            System.out.println("Catch Myexception at request_get");
-            throw e;
         }catch(SocketTimeoutException e){
             throw new MyException("Time Out!网络连接超时,请重试!");
         }catch(Exception e) {
             System.out.println("Catch Exception at request_get");
-            e.printStackTrace();
-            //return null;
+            //e.printStackTrace();
             throw e;
         }
     }
 
-    public Connection.Response request_post(String url,Map<String,String> data) throws MyException{
+    public Connection.Response request_post(String url,Map<String,String> data) throws Exception{
         try {
             //trustEveryone();
             Connection con=Jsoup.connect(url);
@@ -156,17 +152,15 @@ public class Plex_qa{
             }
             return res;
 
-        }catch(MyException e){
-            throw e;
         }catch(SocketTimeoutException e){
             throw new MyException("Time Out!网络连接超时,请重试!");
         }catch(Exception e) {
             e.printStackTrace();
-            return null;
+            throw e;
         }
     }
 
-    public List<String> get_defect_list(String Session_Key) throws MyException{
+    public List<String> get_defect_list(String Session_Key) throws Exception{
         String path= Plex_qa.path +"/.defect_list.xml";
         File file=new File(path);
 
@@ -194,15 +188,13 @@ public class Plex_qa{
             }
             return list;
 
-        }catch(MyException e){
-            throw e;
         }catch(Exception e) {
             e.printStackTrace();
-            return null;
+            throw e;
         }
     }
 
-    public Map<String,String> get_scrap_reason_file(String Session_Key) throws MyException{
+    public Map<String,String> get_scrap_reason_file(String Session_Key) throws Exception{
         String path= Plex_qa.path +"/.plex_scrap_reason.xml";
         File file =new File(path);
         //file.delete();
@@ -241,15 +233,13 @@ public class Plex_qa{
             }
             return map;
 
-        }catch(MyException e){
-            throw e;
-        }catch(Exception e) {
+        }catch(Exception e){
             e.printStackTrace();
-            return null;
+            throw e;
         }
     }
 
-    public TreeMap<String,String> get_workcenter_list(String Session_Key) throws MyException{
+    public TreeMap<String,String> get_workcenter_list(String Session_Key) throws Exception{
         String path= Plex_qa.path +"/.workcenter_list.xml";  //path to save file
         File file=new File(path);
         try {
@@ -279,18 +269,15 @@ public class Plex_qa{
                     map.put(item.text(),item.attr("value") );  //map format { 机器名:机器id }
                 }
             }
-
             //System.out.println(map);
             return map;
-        }catch(MyException e){
-            throw e;
         }catch(Exception e) {
             e.printStackTrace();
-            return null;
+            throw e;
         }
     }
 
-    public Map<String,String> show_container_info(String Session_Key,String txtSerial_No) throws MyException{
+    public Map<String,String> show_container_info(String Session_Key,String txtSerial_No) throws Exception{
         //如果txtSerial_No不存在，会返回什么结果? 需处理
         String url= url_pre + Session_Key + "/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=" + txtSerial_No;
         try {
@@ -316,19 +303,14 @@ public class Plex_qa{
             //System.out.println(map);
             return map;
 
-        }catch(MyException e){
-            System.out.println("will throw MyException at show_container_info");
-            throw e;
-        }
-        catch(Exception e) {
+        }catch(Exception e) {
             System.out.println("catch Exception at show_container_info.");
             e.printStackTrace();
-            //如果条码不存在或出错等，将返回null
-            return null;
+            throw e;
         }
     }
 
-    public String get_container_workcenter(String Session_Key, String txtSerial_No) throws MyException{
+    public String get_container_workcenter(String Session_Key, String txtSerial_No) throws Exception{
         String url= url_pre + Session_Key + "/Ajax/AjaxPost.asp";  //采自 container scrap
 
         Map<String,String> data=new LinkedHashMap<>();   //这个保证顺序
@@ -344,51 +326,43 @@ public class Plex_qa{
 
         try {
             Connection.Response res=this.request_post(url, data);
+            Document doc=res.parse();
+            Element output=doc.select("field").first();
 
-            //其它函数也应有此项检查，Throw exception
-            if (res.url().toString().toLowerCase().endsWith("systemadministration/login/index.aspx")) { //如果帐号过期
-                print("  由于空闲时间过长，需重新登录了!");
-                return null;     //返回null, 代表应重新登录了
-            }else {
-                Document doc=res.parse();
-                Element output=doc.select("field").first();
+            return output.text();
 
-                return output.text();
-            }
-        }catch(MyException e){  //需学习，跟踪一下 throw e的作用
-            throw e;
-        }
-        catch(Exception e) {
+        }catch(Exception e) {
             e.printStackTrace();
-            return "";
+            throw e;
         }
     }
 
     //单线程 读取loaded containers
-    public String get_loaded_all(String Session_Key) throws MyException{
+    public String get_loaded_all(String Session_Key) throws Exception{
         String result="";
-        //遍历workcenter_list, 一个一个的查询其loaded containers
-        for(TreeMap.Entry<String, String> item:get_workcenter_list(Session_Key).entrySet()){
-            try{
+        String name="";
+        try{
+            //遍历workcenter_list, 一个一个的查询其loaded containers
+            for(TreeMap.Entry<String, String> item:get_workcenter_list(Session_Key).entrySet()){
                 Element table=get_loaded_container(Session_Key,item.getValue());
                 //add workcenter name at Table Head
-                table.getElementsByTag("th").first().prepend("<br><p align=\"left\"><u>"+item.getKey()+"</u></p>");
+                name=item.getKey();
+                table.getElementsByTag("th").first().prepend("<br><p align=\"left\"><u>"+name+"</u></p>");
                 System.out.println(table.outerHtml());
 
                 result+=table.outerHtml();
-            }catch(MyException e) {//处理下边传来的 MyException
-                //throw e;
-                result+="get_loaded_all运行不成功。";   //如果有错，记录下来，然后循环，算下一个
-            }catch(Exception e) {
-                e.printStackTrace();
-                result+="get_loaded_all运行不成功。";
             }
+        }catch(Exception e) {//处理下边传来的 Exception
+                result+=name+ " at get_loaded_all出错。";  //如果有错，清除exception. 记录下来，然后循环
+        }finally {
+            return result;
         }
-        return result;
+
     }
 
     //多线程 读取loaded containers
-    public String get_loaded_multiThread(String Session_key) throws MyException{
+    public String get_loaded_multiThread(String Session_key) throws Exception{
+        Plex_qa.result="";  //初始化
         Vector<Thread> threadVector=new Vector<Thread>();
         try {
             //遍历workcenter_list, 一个一个的查询其loaded containers
@@ -401,21 +375,20 @@ public class Plex_qa{
                 threadVector.add(thread);
                 Thread.sleep(100);
             }
-            for (Thread thread: threadVector){
+            for (Thread thread: threadVector){  //主线程在子线程之后停止
                 thread.join();
             }
-
             System.out.println("--------Main Thread End---------");
+
+            return Plex_qa.result;
         }catch (Exception e) {
             System.out.println("get_loaded_multiTread Exception");
-            e.printStackTrace();
-
+            //e.printStackTrace();
+            throw e;
         }
-        //System.out.println(res);
-        return Plex_qa.result;
     }
 
-    //用于多线程读取 loaded containers
+    //多线程 读取loaded containers的子线程定义
     public class cls_get_loaded implements Runnable{
         //public String result="";
         public String Session_Key;
@@ -461,31 +434,19 @@ public class Plex_qa{
         try {
             Connection.Response res=this.request_get(url);
 
-            //其它函数也应有此项检查，Throw exception
-            if (res.url().toString().toLowerCase().endsWith("systemadministration/login/index.aspx")) { //如果帐号过期
-                print("  由于空闲时间过长，需重新登录了!");
-                return null;     //返回null, 代表应重新登录了
-            }else {
                 Document doc=res.parse();
                 //其tbody含有有用的tr
                 Element table=doc.getElementsByTag("table").last();
                 return table;
-            }
-        }catch(MyException e){ //处理下边传来的 MyException
-            throw e;
-        }catch(SocketTimeoutException e){
-            System.out.println("get_loaded_container_Time Out!网络连接超时。");
-            throw new MyException("Time Out!网络连接超时,请重试!");
-        } catch(Exception e) {
+
+        }catch(Exception e) {
             e.printStackTrace();
             System.out.println("get_loaded_container运行不成功 Exception。");
-            //不成功返回null
-            //return null;
             throw e;
         }
     }
 
-    public String get_inventory_adjustment(String Session_Key) throws MyException{
+    public String get_inventory_adjustment(String Session_Key) throws Exception{
         String url= url_pre + Session_Key+"/Rendering_Engine/default.aspx?Request=Show&RequestData=SourceType(Screen)SourceKey(1732)";
 
         Map<String,String> data=new LinkedHashMap<>();
@@ -496,51 +457,42 @@ public class Plex_qa{
             //第一次get
             Connection.Response res=this.request_get(url);
 
-            //其它函数也应有此项检查，Throw exception
-            if (res.url().toString().toLowerCase().endsWith("systemadministration/login/index.aspx")) { //如果帐号过期
-                print("  由于空闲时间过长，需重新登录了!");
-                return null;     //返回null, 代表应重新登录了
-            }else {
-                Document doc=res.parse();
-                Elements output=doc.select("input");
-                for(Element e:output){
-                    //System.out.println(e.attr("name")+"  __  "+e.attr("value"));
-                    if(e.attr("value").length()>0){
-                        data.put(e.attr("name"),e.attr("value"));
-                    }
+            Document doc=res.parse();
+            Elements output=doc.select("input");
+            for(Element e:output){
+                //System.out.println(e.attr("name")+"  __  "+e.attr("value"));
+                if(e.attr("value").length()>0){
+                    data.put(e.attr("name"),e.attr("value"));
                 }
-                data.put("Layout1$el_23432",getFirstDayOfMonth());//"3/1/2020"
-                data.put("Layout1$el_23432_time","12:00 AM");
-                data.put("Layout1$el_23433",getLastDayOfMonth());
-                data.put("Layout1$el_23433_time","11:59 PM");
-                //第二次post
-                Connection.Response res2=this.request_post(url, data);
-                Document doc2=res2.parse();
-                //grid title
-                String grid_title="<head><meta charset=\"utf-8\"><title>Inventory Adjustment</title><style type=\"text/css\">.GridBody{background-color:#dddddd;} th{background-color:#ccccaa;}</style></head>";
-                grid_title+= "<h3>Inv Adj "+ getFirstDayOfMonth()+" to "+getLastDayOfMonth()+"</h3>";
-                //change the grid data
-                Element grid=doc2.getElementById("GRID_PANEL_3_28");
-                Elements grid_trs=grid.getElementsByTag("tr");  //表的行集合
-                for(Element tr:grid_trs){ //tr.child 指行中的列数据td
-                    tr.child(5).text(""); //tr.child(13).text("");//去掉 Unit Cost and  Part Group栏 column
-                    if(tr.child(2).text().length()==0){        //去掉没有修改数量的记录行 row
-                        tr.remove();
-                    }
-                }
-                return grid_title+grid.outerHtml();
             }
-        }catch(MyException e){
-            throw e;
-        }catch(SocketTimeoutException e){
-            throw new MyException("Time Out!网络连接超时,请重试!");
-        } catch(Exception e) {
+            data.put("Layout1$el_23432",getFirstDayOfMonth());//"3/1/2020"
+            data.put("Layout1$el_23432_time","12:00 AM");
+            data.put("Layout1$el_23433",getLastDayOfMonth());
+            data.put("Layout1$el_23433_time","11:59 PM");
+            //第二次post
+            Connection.Response res2=this.request_post(url, data);
+            Document doc2=res2.parse();
+            //grid title
+            String grid_title="<head><meta charset=\"utf-8\"><title>Inventory Adjustment</title><style type=\"text/css\">.GridBody{background-color:#dddddd;} th{background-color:#ccccaa;}</style></head>";
+            grid_title+= "<h3>Inv Adj "+ getFirstDayOfMonth()+" to "+getLastDayOfMonth()+"</h3>";
+            //change the grid data
+            Element grid=doc2.getElementById("GRID_PANEL_3_28");
+            Elements grid_trs=grid.getElementsByTag("tr");  //表的行集合
+            for(Element tr:grid_trs){ //tr.child 指行中的列数据td
+                tr.child(5).text(""); //tr.child(13).text("");//去掉 Unit Cost and  Part Group栏 column
+                if(tr.child(2).text().length()==0){        //去掉没有修改数量的记录行 row
+                    tr.remove();
+                }
+            }
+            return grid_title+grid.outerHtml();
+
+        }catch(Exception e) {
             e.printStackTrace();
-            return "<p>get_inventory_adjustment不成功</p>";
+            throw e;
         }
     }
 
-    public String get_container_history(String Session_Key,String txtSerial_No) throws MyException{
+    public String get_container_history(String Session_Key,String txtSerial_No) throws Exception{
         String path= Plex_qa.path +"/.history.html";
         File file=new File(path);
         try {
@@ -587,11 +539,9 @@ public class Plex_qa{
             html+=grid.outerHtml()+"</body>";  //.replace("Material","").replace("Heat","");
             return html;
 
-        }catch(MyException e){
-            throw e;
         }catch(Exception e) {
             e.printStackTrace();
-            return null;
+            throw e;
         }
     }
 
@@ -613,7 +563,7 @@ public class Plex_qa{
     }
 
     //Call之前，一定要先 show_info, 获得当时的status, active, Note等
-    public boolean change_status(String Session_Key,String Serial,String Status,String Reason,String Note) throws MyException{
+    public boolean change_status(String Session_Key,String Serial,String Status,String Reason,String Note){
         String url=url_pre + Session_Key + "/Rejection/Sort_Container_Modify.asp?Do=Update";
 
         Map<String,String> data=new LinkedHashMap<>();   //这个保证顺序
@@ -638,11 +588,7 @@ public class Plex_qa{
                 print("修改"+Serial+"的状态失败！");
                 return false;
             }
-
-        }catch(MyException e){
-            throw e;
-        }
-        catch(Exception e) {
+        }catch(Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -742,13 +688,14 @@ public class Plex_qa{
 
     public static void main(String[] args) {
         Plex_qa app=new Plex_qa("www.plexus-online.com");
-        Map<String,String> cookies= app.get_cookies("smmp.pwang", "99887766");
-
-        String Session_Key=cookies.get("Session_Key");
-        Session_Key=Session_Key.substring(1,Session_Key.length()-1);  //去掉头尾的字符{}
-
-        String label="smmp123456";
         try {
+            Map<String,String> cookies= app.get_cookies("smmp.pwang", "99887766");
+
+            String Session_Key=cookies.get("Session_Key");
+            Session_Key=Session_Key.substring(1,Session_Key.length()-1);  //去掉头尾的字符{}
+
+            String label="smmp123456";
+
             System.out.println("waiting...");
             //currentThread().sleep(120 * 60000);
 

@@ -302,7 +302,7 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
                         String scrap_key = scrap_map.get(sp_scrap.getSelectedItem().toString());
                         String workcenter_key = workcenter_name_map.get(sp_workcenter.getSelectedItem().toString());
 
-                        try {
+                        try { //报废
                             if (plex_qa.scrap_container(Session_Key, barcode, scrap_key, workcenter_key, this.containerQTY)) {
                                 tv_info_addText("报废 " + barcode + " 成功!");
                             } else {
@@ -312,7 +312,7 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
                         } catch (Exception e) {
                             tv_info_addText("Exception: 报废 " + barcode + " 不成功!");
                             et_barcode.setBackgroundColor(Color.YELLOW);
-                            //e.printStackTrace();
+                            Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -383,9 +383,16 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
                 //multi thread to get workcenter_key
                 workcenter_key=plex_qa.get_container_workcenter(Session_Key,barcode);  //get workcenter_key for scrap method
                 mHandler.sendEmptyMessage(2);
-            } catch (MyException e) {
-                tv_info_addText(e.getMessage()+ " at multi thread");
-                Toast.makeText(ActivitydoTask.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+            }catch (MyException e) {
+                Message message1 = Message.obtain();
+                message1.what = 3;
+                message1.obj = e.getMessage();   //发送exception信息给 主线程
+                mHandler.sendMessage(message1);
+            }catch (Exception e) {
+                Message message1 = Message.obtain();
+                message1.what = 3;
+                message1.obj = "条码可能不存在！Exception!";   //发送exception信息给 主线程
+                mHandler.sendMessage(message1);
             }
 
         }
@@ -429,7 +436,7 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
                     //btn_onhold.setVisibility(View.VISIBLE);
                     //btn_ok.setVisibility(view.VISIBLE);
                 }else{
-                    tv_info_addText("查询"+ Barcode+"不成功! 条码可能不存在\n");
+                    tv_info_addText("查询不成功! 条码可能不存在\n");
                     containerActive="否";   // 此时不能作任何操作 onhold/scrap
                     et_barcode.setBackgroundColor(Color.RED);
                     set_btn_color(Color.GRAY);
@@ -441,6 +448,12 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
                 workcenter_key_list.addAll(workcenter_name_map.values());  // this list only store data of workcenter key, which will provide the index for SP to show
                 Spinner sp = findViewById(R.id.sp_workcenter);
                 sp.setSelection(workcenter_key_list.indexOf(workcenter_key));
+            }
+            if(msg.what==3){    // 3 means exception at child thread
+                tv_info_addText(msg.obj+"\n");
+                containerActive="否";   // 此时不能作任何操作 onhold/scrap
+                et_barcode.setBackgroundColor(Color.RED);
+                set_btn_color(Color.GRAY);
             }
         }
     };
@@ -457,7 +470,7 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
         try {
             defect_list=plex_qa.get_defect_list(this.Session_Key);
             show_dropdown_list("On Hold Reason...",R.id.sp_onhold_reason,defect_list);
-        } catch (MyException e) {
+        } catch (Exception e) {
             Toast.makeText(ActivitydoTask.this,e.getMessage(),Toast.LENGTH_SHORT).show();
             //e.printStackTrace();
         }
@@ -472,7 +485,7 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
             workcenter_list.addAll(workcenter_name_map.keySet());
 
             show_dropdown_list("工作中心 Workcenter",R.id.sp_workcenter,workcenter_list);
-        } catch (MyException e) {
+        } catch (Exception e) {
             Toast.makeText(ActivitydoTask.this,e.getMessage(),Toast.LENGTH_SHORT).show();
             //e.printStackTrace();
         }
@@ -485,12 +498,12 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
             scrap_list.addAll(scrap_map.keySet());
 
             show_dropdown_list("报废原因 Scrap Reason",R.id.sp_scrap_reason,scrap_list);
-        } catch (MyException e) {
+        } catch (Exception e) {
                 Toast.makeText(ActivitydoTask.this,e.getMessage(),Toast.LENGTH_SHORT).show();
                 //e.printStackTrace();
             }
     }
-    void tv_info_addText(String str){
+    private void tv_info_addText(String str){
         if (!TextUtils.isEmpty(str)){
             String str_raw=tv_info.getText().toString();
             if (str_raw.length()>2600){
