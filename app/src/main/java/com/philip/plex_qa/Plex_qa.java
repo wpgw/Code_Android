@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.io.OutputStreamWriter;
 import java.io.BufferedReader;  // readline
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Map;
@@ -113,9 +114,13 @@ public class Plex_qa{
             //System.setProperty("javax.net.ssl.trustStore", "D:\\Code\\Java\\plex.jks");
 
             Connection.Response res=con.method(Method.GET).execute();
-            if (res.url().toString().toLowerCase().endsWith("systemadministration/login/index.asp")){
-                throw new MyException("由于空闲时间过长,你需重新登陆了!");
+
+            if (res.url().toString().toLowerCase().contains("systemadministration/login/index.asp"))
+            //if(res.parse().title().contains("Login"))
+            {
+                throw new MyException("你空闲时间过长,需重新登陆了!");
             }
+
             if (res.url().toString().toLowerCase().contains("change_password")){
                 throw new MyException("你的密码过期了,请在电脑上更新密码!");
             }
@@ -123,6 +128,8 @@ public class Plex_qa{
 
         }catch(SocketTimeoutException e){
             throw new MyException("Time Out!网络连接超时,请重试!");
+        }catch(UnknownHostException e){
+            throw new MyException("网络故障，找不到主机地址！");
         }catch(Exception e) {
             System.out.println("Catch Exception at request_get");
             //e.printStackTrace();
@@ -144,8 +151,8 @@ public class Plex_qa{
             //System.setProperty("javax.net.ssl.trustStore", "D:\\Code\\Java\\plex.jks");
 
             Connection.Response res=con.method(Method.POST).execute();
-            if (res.url().toString().toLowerCase().endsWith("systemadministration/login/index.asp")){
-                throw new MyException("由于空闲时间过长,你需重新登陆了!");
+            if (res.url().toString().toLowerCase().contains("systemadministration/login/index.asp")){
+                throw new MyException("你空闲时间过长,需重新登陆了!");
             }
             if (res.url().toString().toLowerCase().contains("change_password")){
                 throw new MyException("你的密码过期了,请在电脑上更新密码!");
@@ -154,6 +161,8 @@ public class Plex_qa{
 
         }catch(SocketTimeoutException e){
             throw new MyException("Time Out!网络连接超时,请重试!");
+        }catch(UnknownHostException e){
+            throw new MyException("网络故障，找不到主机地址！");
         }catch(Exception e) {
             e.printStackTrace();
             throw e;
@@ -284,6 +293,7 @@ public class Plex_qa{
             Connection.Response res=request_get(url);
 
             Document doc=res.parse();
+
             Elements el_input=doc.select("input");
 
             Map<String,String> map=new LinkedHashMap<>();
@@ -624,7 +634,6 @@ public class Plex_qa{
                 print("已报废条码 "+Serial+"，请检查是否成功！");
                 return true;
             }
-
         }catch(MyException e){
             throw e;
         }

@@ -389,12 +389,12 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
                 message1.obj = e.getMessage();   //发送exception信息给 主线程
                 mHandler.sendMessage(message1);
             }catch (Exception e) {
+                e.printStackTrace();
                 Message message1 = Message.obtain();
                 message1.what = 3;
-                message1.obj = "条码可能不存在！Exception!";   //发送exception信息给 主线程
+                message1.obj = e.getMessage()+"\n条码可能不存在！Exception!";   //发送exception信息给 主线程
                 mHandler.sendMessage(message1);
             }
-
         }
     }
 
@@ -429,8 +429,6 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
                     info += "激活: " + containerActive + "   状态: " + containerStatus + "\n";
                     info += "备注: " + containerNote+"\n";
                     tv_info_addText(info);
-
-
                     //button should be show here
                     //btn_scrap.setClickable(true);
                     //btn_onhold.setVisibility(View.VISIBLE);
