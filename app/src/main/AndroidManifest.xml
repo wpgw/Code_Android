@@ -20,7 +20,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ActivityContainerHistory"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="user"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity
             android:name=".ActivityScan2"
             android:screenOrientation="portrait" />

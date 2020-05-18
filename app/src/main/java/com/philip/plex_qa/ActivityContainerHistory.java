@@ -4,6 +4,7 @@ package com.philip.plex_qa;
 
 import androidx.appcompat.app.AppCompatActivity;
 //import android.support.v7.app.AppCompatActivity;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -33,6 +34,7 @@ public class ActivityContainerHistory extends AppCompatActivity{
     String Session_Key,host;  //host may be test DB or production DB
     String barcode,function;
     String html="";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,4 +164,6 @@ public class ActivityContainerHistory extends AppCompatActivity{
         }
         super.onDestroy();
     }
+
+
 }
