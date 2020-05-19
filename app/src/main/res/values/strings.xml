@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Plex_QA V1.0</string>
+    <string name="app_name">Plex_QA V1.1</string>
     <string name="title_activity_navi">NaviActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
