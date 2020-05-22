@@ -6,10 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 //import android.support.v7.app.AppCompatActivity;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -31,7 +34,7 @@ public class ActivityContainerHistory extends AppCompatActivity{
     //sessions data
     Map<String,String> cookies=new HashMap<>();  //should get cookies if it is null
     Plex_qa plex_qa;
-    String Session_Key,host;  //host may be test DB or production DB
+    String Session_Key,host,base_url;  //host may be test DB or production DB
     String barcode,function;
     String html="";
 
@@ -50,6 +53,8 @@ public class ActivityContainerHistory extends AppCompatActivity{
         this.cookies=(Map<String,String>)bundle.getSerializable("cookies");
         this.Session_Key=this.cookies.get("Session_Key");
         this.Session_Key=Session_Key.substring(1,Session_Key.length()-1);  //去掉头尾的字符{}
+        this.base_url="https://"+this.host+"/"+Session_Key;
+
         // init a plex_qa class instance
         plex_qa =new Plex_qa(this.host);
         plex_qa.cookies=this.cookies;   // transfer cookies to plex_qa instance
@@ -132,8 +137,11 @@ public class ActivityContainerHistory extends AppCompatActivity{
                     html=html.replace("No Source Inventory Loaded","<p align=\"left\">No Source Inventory Loaded</p>");
                     html=html.replace("Currently Loaded","");
                 }
+                html=html.replace("\"../","\"https://"+host+"/"+Session_Key+"/");  //换成绝对地址
+                //这个BaseURL要研究下
+                mWebview.loadDataWithBaseURL(this.base_url, html, "text/html", "utf-8", null);
                 //mWebview.loadData(history_html,"text/html", "utf-8");
-                mWebview.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
+                set_cookie();
             } catch (Exception e) {
                 Toast.makeText(ActivityContainerHistory.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
@@ -165,5 +173,36 @@ public class ActivityContainerHistory extends AppCompatActivity{
         super.onDestroy();
     }
 
+    public void set_cookie(){
+        //参考 https://blog.csdn.net/kelaker/article/details/82751287
+        //delete cookies
+//        CookieSyncManager.createInstance(this);
+//        CookieManager.getInstance().removeAllCookie();
+//        CookieManager.getInstance().removeSessionCookie();
+//        if (Build.VERSION.SDK_INT < 21) {
+//            CookieSyncManager.getInstance().sync();
+//        } else {
+//            CookieManager.getInstance().flush();
+//        }
 
+        //得到向URL中添加的Cookie的值
+        String cookieString="";
+
+        for(Map.Entry<String, String> item:this.cookies.entrySet()){
+            cookieString=item.getKey()+"="+item.getValue()+";path=/";
+
+            CookieManager cookieManager = CookieManager.getInstance();
+            //使用cookieManager..setCookie()向URL中添加Cookie
+            cookieManager.setCookie("https://"+host, cookieString);
+            System.out.println("https://"+host);
+
+            CookieSyncManager.createInstance(this);
+            if (Build.VERSION.SDK_INT < 21) {
+                CookieSyncManager.getInstance().sync();
+            } else {
+                CookieManager.getInstance().flush();
+            }
+        }
+        System.out.println( CookieManager.getInstance().getCookie("https://"+host));
+    }
 }

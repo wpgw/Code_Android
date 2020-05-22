@@ -363,7 +363,7 @@ public class Plex_qa{
                 result+=table.outerHtml();
             }
         }catch(Exception e) {//处理下边传来的 Exception
-                result+=name+ " at get_loaded_all出错。";  //如果有错，清除exception. 记录下来，然后循环
+                result+=name+ " at get_loaded_all出错。\n"+e.getMessage();  //如果有错，清除exception. 记录下来，然后循环
         }finally {
             return result;
         }
@@ -583,7 +583,6 @@ public class Plex_qa{
 
         try{
             Connection.Response res=this.request_post(url, data);
-
             Document doc=res.parse();
 
             //正则表达式
