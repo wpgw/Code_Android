@@ -20,11 +20,8 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.jsoup.nodes.Element;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class ActivityContainerHistory extends AppCompatActivity{
     WebView mWebview;
@@ -71,20 +68,17 @@ public class ActivityContainerHistory extends AppCompatActivity{
 
         mWebSettings = mWebview.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
-        //mWebSettings.setSaveFormData(true);
-        mWebSettings.setBuiltInZoomControls(true);  // 看看是否可缩放？
+        mWebSettings.setSaveFormData(true);  //看一看有无作用？
+        mWebSettings.setBuiltInZoomControls(true);  // 可缩放
 
-        //设置不用系统浏览器打开,直接显示在当前Webview
+        //设置WebViewClient类  作用：处理各种通知 & 请求事件
         mWebview.setWebViewClient(new WebViewClient() {
+            //设置不用系统浏览器打开,直接显示在当前Webview
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return true;
             }
-        });
-
-        //设置WebViewClient类  作用：处理各种通知 & 请求事件
-        mWebview.setWebViewClient(new WebViewClient() {
             //设置加载前的函数
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -141,7 +135,7 @@ public class ActivityContainerHistory extends AppCompatActivity{
                 //这个BaseURL要研究下
                 mWebview.loadDataWithBaseURL(this.base_url, html, "text/html", "utf-8", null);
                 //mWebview.loadData(history_html,"text/html", "utf-8");
-                set_cookie();
+                set_cookie();  // 保存Cookie
             } catch (Exception e) {
                 Toast.makeText(ActivityContainerHistory.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
@@ -176,32 +170,22 @@ public class ActivityContainerHistory extends AppCompatActivity{
     public void set_cookie(){
         //参考 https://blog.csdn.net/kelaker/article/details/82751287
         //delete cookies
-//        CookieSyncManager.createInstance(this);
 //        CookieManager.getInstance().removeAllCookie();
 //        CookieManager.getInstance().removeSessionCookie();
-//        if (Build.VERSION.SDK_INT < 21) {
-//            CookieSyncManager.getInstance().sync();
-//        } else {
-//            CookieManager.getInstance().flush();
-//        }
 
         //得到向URL中添加的Cookie的值
         String cookieString="";
-
         for(Map.Entry<String, String> item:this.cookies.entrySet()){
             cookieString=item.getKey()+"="+item.getValue()+";path=/";
-
-            CookieManager cookieManager = CookieManager.getInstance();
-            //使用cookieManager..setCookie()向URL中添加Cookie
-            cookieManager.setCookie("https://"+host, cookieString);
-            System.out.println("https://"+host);
-
-            CookieSyncManager.createInstance(this);
-            if (Build.VERSION.SDK_INT < 21) {
-                CookieSyncManager.getInstance().sync();
-            } else {
-                CookieManager.getInstance().flush();
-            }
+            //添加Cookie
+            CookieManager.getInstance().setCookie("https://"+host, cookieString);
+        }
+        //同步 cookie修改
+        CookieSyncManager.createInstance(this);
+        if (Build.VERSION.SDK_INT < 21) {
+            CookieSyncManager.getInstance().sync();
+        } else {
+            CookieManager.getInstance().flush();
         }
         System.out.println( CookieManager.getInstance().getCookie("https://"+host));
     }
