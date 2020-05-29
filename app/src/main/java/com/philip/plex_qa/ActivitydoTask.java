@@ -368,6 +368,7 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
 
     private class thread_check_container_info extends Thread {
         String barcode;
+        //构造函数
         public thread_check_container_info(String barcode){
             this.barcode=barcode;
         }
