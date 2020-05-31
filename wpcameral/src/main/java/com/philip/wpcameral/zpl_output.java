@@ -14,14 +14,14 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class wpCameraActivity extends AppCompatActivity {
+public class zpl_output extends AppCompatActivity {
     Button btnPrint;
     Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wp_camera);
+        setContentView(R.layout.activity_zpl_output);
         activity=this;
 
         final String item="P149WGG";

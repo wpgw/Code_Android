@@ -17,6 +17,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -354,6 +356,47 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
                 Toast.makeText(ActivitydoTask.this, "条码" + barcode + "不能操作!", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.bottom_nav_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id=item.getItemId();
+        //show container history
+        if(id==R.id.navigation_container_history && et_barcode.getText().length()>9){
+            //refine barcode
+            String barcode=et_barcode.getText().toString();
+            barcode=plex_qa.refine_label(barcode);
+
+            // Transfer to next page
+            Intent intent = new Intent(this, ActivityContainerHistory.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("host", host);
+            bundle.putString("barcode",barcode);
+            bundle.putString("function","Inventory_History");  //显示 箱号历史
+            bundle.putSerializable("cookies", (Serializable) cookies);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            return true;    //true if the callback consumed the long click, false otherwise, will run onClick
+        }
+        if(id==R.id.navigation_container_loaded ){  //长按最下边的文字
+            // Transfer to next page
+            Intent intent = new Intent(this, ActivityContainerHistory.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("host", host);
+            bundle.putString("barcode","");
+            bundle.putString("function","Inventory_Loaded");  //决定 下一个页面 到底干什么
+            bundle.putSerializable("cookies", (Serializable) cookies);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            return true;    //true if the callback consumed the long click, false otherwise, will run onClick
+        }
+        return false;
     }
 
     protected void onActivityResult(int requestCode,int resultCode,Intent data){

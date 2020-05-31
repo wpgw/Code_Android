@@ -20,36 +20,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final String item="P149WGG";
 
-        btnPrint=(Button)findViewById(R.id.btnPrint);
-        btnPrint.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try{
-                            Looper.prepare();
-                            final String ip="127.0.0.1";
-                            final Integer port=9100;
-                            Socket client=new Socket(ip,port);
-                            String sb="content";
-                            byte[] mybytearray=sb.getBytes();
-                            OutputStream outputStream=client.getOutputStream();
-                            outputStream.write(mybytearray,0,mybytearray.length);
-                            outputStream.flush();
-                            outputStream.close();
-                            client.close();
-                        } catch (UnknownHostException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-            }
-
-        });
     }
 }

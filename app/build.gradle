@@ -48,4 +48,8 @@ dependencies {
     //for easypermission
     implementation 'pub.devrel:easypermissions:1.0.1'
 
+    //add for giberish, but no usage
+    tasks.withType(JavaCompile){
+        options.encoding="UTF-8"
+    }
 }
