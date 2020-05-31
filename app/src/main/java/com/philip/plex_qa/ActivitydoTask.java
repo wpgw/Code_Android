@@ -43,7 +43,7 @@ import java.util.TreeMap;
 
 import android.util.Log;
 
-public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener,View.OnClickListener,View.OnLongClickListener {
+public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener,View.OnClickListener{
     //sessions data
     Map<String,String> cookies=new HashMap<>();  //should get cookies if it is null
     Plex_qa plex_qa;
@@ -109,10 +109,6 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
             radiogroup.setOnCheckedChangeListener(this);
             btn_scrap.setOnClickListener(this);btn_ok.setOnClickListener(this);btn_onhold.setOnClickListener(this);
             btn_confirm.setOnClickListener(this);btn_scan.setOnClickListener(this);
-            if(user.equals("smmp.pwang")){   //pwang 有特殊权限
-                tv_message.setOnLongClickListener(this);
-                tv_info.setOnLongClickListener(this);
-            }
             et_barcode.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -202,41 +198,6 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
             this.include_onhold.setVisibility(View.GONE);
             tv_info.setPadding(dip2px(5),dip2px(70),0,0);  //change place of tv_info
         }
-    }
-
-    @Override
-    public boolean onLongClick(View v){
-        System.out.println("LongClick已按下了！\n");
-        //show container history
-        if(v.getId()==R.id.container_info && et_barcode.getText().length()>9){
-            //refine barcode
-            String barcode=et_barcode.getText().toString();
-            barcode=plex_qa.refine_label(barcode);
-
-            // Transfer to next page
-            Intent intent = new Intent(this, ActivityContainerHistory.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("host", host);
-            bundle.putString("barcode",barcode);
-            bundle.putString("function","Inventory_History");  //显示 箱号历史
-            bundle.putSerializable("cookies", (Serializable) cookies);
-            intent.putExtras(bundle);
-            startActivity(intent);
-            return true;    //true if the callback consumed the long click, false otherwise, will run onClick
-        }
-        if(v.getId()==R.id.tv_message ){  //长按最下边的文字
-            // Transfer to next page
-            Intent intent = new Intent(this, ActivityContainerHistory.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("host", host);
-            bundle.putString("barcode","");
-            bundle.putString("function","Inventory_Loaded");  //决定 下一个页面 到底干什么
-            bundle.putSerializable("cookies", (Serializable) cookies);
-            intent.putExtras(bundle);
-            startActivity(intent);
-            return true;    //true if the callback consumed the long click, false otherwise, will run onClick
-        }
-        return false;
     }
 
     @Override
@@ -358,13 +319,16 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
         }
     }
 
-    @Override
+    @Override   //显示 选项菜单
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.bottom_nav_menu,menu);
-        return true;
+        if(user.equals("smmp.pwang")) {  //pwang有特殊功能
+            getMenuInflater().inflate(R.menu.bottom_nav_menu, menu);
+            return true;
+        }
+        return false;
     }
 
-    @Override
+    @Override    //执行 选项菜单
     public boolean onOptionsItemSelected(MenuItem item){
         int id=item.getItemId();
         //show container history
@@ -395,8 +359,10 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
             intent.putExtras(bundle);
             startActivity(intent);
             return true;    //true if the callback consumed the long click, false otherwise, will run onClick
+        }else if(id==R.id.navigation_finish){
+            finish();
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     protected void onActivityResult(int requestCode,int resultCode,Intent data){

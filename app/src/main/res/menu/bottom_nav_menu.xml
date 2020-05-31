@@ -10,4 +10,9 @@
         android:id="@+id/navigation_container_loaded"
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="Container Loaded" />
+
+    <item
+        android:id="@+id/navigation_finish"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="End" />
 </menu>
