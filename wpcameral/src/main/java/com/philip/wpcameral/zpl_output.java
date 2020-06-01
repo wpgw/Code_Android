@@ -46,7 +46,6 @@ public class zpl_output extends AppCompatActivity {
                             final String ip="10.70.30.162";
                             final Integer port=9100;
                             Socket client=new Socket(ip,port);
-                            //String sb="^XA^LH203,203^F0203,203^BY3,2.4,50^B3N,Y,,Y^FDABC123^FS^XZ";
                             String sb=etText.getText().toString();
                             byte[] mybytearray=sb.getBytes();
                             OutputStream outputStream=client.getOutputStream();
@@ -63,7 +62,5 @@ public class zpl_output extends AppCompatActivity {
                 }).start();
             }
         });
-
-
     }
 }

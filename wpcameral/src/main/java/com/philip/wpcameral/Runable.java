@@ -40,7 +40,7 @@ public class Runable extends AppCompatActivity implements View.OnClickListener {
     private Handler handler=new Handler();
     private Runnable on_count=new Runnable(){
         @Override
-        public void run(){
+        public void run(){  //这个没有任何出错处理
             count++;
             tv_result.setText("currunt count is "+count);
             System.out.println("currunt count is "+count);
