@@ -27,12 +27,12 @@ public class CameraView extends SurfaceView {
         super(context,attrs);
         mContext=context;
         SurfaceHolder holder=getHolder();
-        holder.addCallback(mSurfaceCallback);
+        holder.addCallback(mSurfaceCallback);  //mSurfaceCallback全在操作camera
         holder.setFormat(PixelFormat.TRANSPARENT);
     }
 
     public void doTakePicture(){
-        if(isPreviwing&&mCamera!=null){
+        if(isPreviwing&&mCamera!=null){ //mShutterCallback操作声音  mPictureCallback操作结果照片
             mCamera.takePicture(mShutterCallback,null,mPictureCallback);
         }
     }
@@ -40,13 +40,13 @@ public class CameraView extends SurfaceView {
     private Camera.ShutterCallback mShutterCallback=new Camera.ShutterCallback(){
         @Override
         public void onShutter() {
-            System.out.println("at ShutterCalback.");
+            System.out.println("At ShutterCalback.");  //咔嚓一声
         }
     };
 
     private Camera.PictureCallback mPictureCallback=new Camera.PictureCallback() {
         @Override
-        public void onPictureTaken(byte[] data, Camera camera) {
+        public void onPictureTaken(byte[] data, Camera camera) { //处理结果 data
             Bitmap raw=null;
             if(data!=null){
                 raw= BitmapFactory.decodeByteArray(data,0,data.length);
@@ -66,7 +66,7 @@ public class CameraView extends SurfaceView {
         }
     };
 
-    private SurfaceHolder.Callback mSurfaceCallback=new SurfaceHolder.Callback() {
+    private SurfaceHolder.Callback mSurfaceCallback=new SurfaceHolder.Callback() {//这个回调 操作Camera
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
             mCamera=Camera.open(0);  //0 refers to behind camera, 1 refers to front camera
