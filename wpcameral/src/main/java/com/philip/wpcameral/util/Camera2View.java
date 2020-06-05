@@ -1,3 +1,4 @@
+//可参看 https://www.jianshu.com/p/0ea5e201260f
 package com.philip.wpcameral.util;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import android.widget.Toast;
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class Camera2View extends TextureView {
     private static final String TAG = "Camera2View";
-    private Context mContext; // 声明一个上下文对象
+    private Context mContext;   // 声明一个上下文对象
     private Handler mHandler;
     private HandlerThread mThreadHandler;
     private CaptureRequest.Builder mPreviewBuilder; // 声明一个拍照请求构建器对象
@@ -53,7 +54,6 @@ public class Camera2View extends TextureView {
     public Camera2View(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-        mThreadHandler = new HandlerThread("camera2");
         mThreadHandler.start();
         mHandler = new Handler(mThreadHandler.getLooper());
     }
@@ -141,7 +141,7 @@ public class Camera2View extends TextureView {
         Toast.makeText(mContext, "已完成连拍，按返回键回到上页查看照片。", Toast.LENGTH_SHORT).show();
     }
 
-    // 定义一个拍摄停止任务
+    // 定义一个拍摄停止任务  王平：与连拍有关
     private Runnable mStop = new Runnable() {
         @Override
         public void run() {
@@ -163,14 +163,14 @@ public class Camera2View extends TextureView {
             // CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY表示遗留的
             int level = cc.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
             StreamConfigurationMap map = cc.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-            Size largest = Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)), new CompareSizeByArea());
+            Size largest = Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)), new CompareSizeByArea());//王平：按compare规则取最大值
             // 获取预览画面的尺寸
             mPreViewSize = map.getOutputSizes(SurfaceTexture.class)[0];
             // 创建一个JPEG格式的图像读取器
             mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(), ImageFormat.JPEG, 10);
             // 设置图像读取器的图像可用监听器，一旦捕捉到图像数据就会触发监听器的onImageAvailable方法
             mImageReader.setOnImageAvailableListener(onImageAvaiableListener, mHandler);
-            // 开启摄像头
+            // 开启摄像头   王平：这个有权限要求
             cm.openCamera(cameraid, mDeviceStateCallback, mHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();

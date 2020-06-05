@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
-
+// Take picture with camera
 public class TakePictureActivity extends AppCompatActivity implements OnClickListener {
     private CameraView camera_view;
     private int mTaketype=0; // 拍照类型。0为单拍，1为连拍
@@ -21,7 +21,6 @@ public class TakePictureActivity extends AppCompatActivity implements OnClickLis
 
         findViewById(R.id.btn_shutter).setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View v) {

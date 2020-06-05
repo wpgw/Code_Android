@@ -14,9 +14,7 @@ import android.widget.Toast;
 
 import com.philip.wpcameral.util.Camera2View;
 
-/**
- * Created by ouyangshen on 2017/11/4.
- */
+//Take picture with camera2
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class TakeShootingActivity extends AppCompatActivity implements OnClickListener {
     private static final String TAG = "TakeShootingActivity";
@@ -37,6 +35,7 @@ public class TakeShootingActivity extends AppCompatActivity implements OnClickLi
         findViewById(R.id.btn_shooting).setOnClickListener(this);
     }
 
+    //按返回键 去查已拍的照
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(); // 创建一个新意图
@@ -58,6 +57,7 @@ public class TakeShootingActivity extends AppCompatActivity implements OnClickLi
         finish(); // 关闭当前页面
     }
 
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_shutter) { // 点击了单拍按钮
@@ -74,7 +74,7 @@ public class TakeShootingActivity extends AppCompatActivity implements OnClickLi
         } else if (v.getId() == R.id.btn_shooting) { // 点击了连拍按钮
             mTakeType = 1;
             // 命令二代相机视图执行连拍操作
-            camera2_view.startShooting(7000);
+//            camera2_view.startShooting(7000);
         }
     }
 

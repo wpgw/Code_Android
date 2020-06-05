@@ -337,7 +337,7 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
             String barcode=et_barcode.getText().toString();
             barcode=plex_qa.refine_label(barcode);
 
-            // Transfer to next page
+            // Transfer to Inventory History
             Intent intent = new Intent(this, ActivityContainerHistory.class);
             Bundle bundle = new Bundle();
             bundle.putString("host", host);
