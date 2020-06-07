@@ -8,6 +8,11 @@ import java.util.Date;
 @SuppressLint("SimpleDateFormat")
 public class DateUtil {
 
+    public static String getNowDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        return sdf.format(new Date());
+    }
+
     public static String getNowDateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         return sdf.format(new Date());

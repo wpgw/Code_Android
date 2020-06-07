@@ -14,9 +14,6 @@ import android.widget.Toast;
 
 import com.philip.wpcameral.util.Camera2View;
 
-/**
- * Created by ouyangshen on 2017/11/4.
- */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class TakeShootingActivity extends AppCompatActivity implements OnClickListener {
     private static final String TAG = "TakeShootingActivity";

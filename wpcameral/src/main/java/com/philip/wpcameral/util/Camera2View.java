@@ -1,3 +1,4 @@
+//参考 https://www.jianshu.com/p/0ea5e201260f
 package com.philip.wpcameral.util;
 
 import java.util.ArrayList;
