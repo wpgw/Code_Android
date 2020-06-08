@@ -56,6 +56,7 @@ public class Camera2View extends TextureView {
     public Camera2View(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
+        mThreadHandler=new HandlerThread("camera2");
         mThreadHandler.start();
         mHandler = new Handler(mThreadHandler.getLooper());
     }
@@ -99,6 +100,7 @@ public class Camera2View extends TextureView {
         }
     }
 
+    // 连拍相关
     private ArrayList<String> mShootingArray; // 连拍的相片保存路径队列
     // 获取连拍的相片保存路径队列
     public ArrayList<String> getShootingList() {

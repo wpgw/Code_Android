@@ -28,13 +28,17 @@
         </provider>
 
         <activity android:name=".SystemCamera">
+
+
+
+        </activity>
+        <activity android:name=".TakeShootingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TakeShootingActivity" />
         <activity android:name=".TakePictureActivity"></activity>
         <activity android:name=".Runable" />
         <activity android:name=".zpl_output"></activity>
