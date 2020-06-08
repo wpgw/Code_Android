@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 手机存储 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
@@ -15,17 +16,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TakeShootingActivity">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.philip.wpcameral.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity android:name=".SystemCamera">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TakePictureActivity">
-        </activity>
+        <activity android:name=".TakeShootingActivity" />
+        <activity android:name=".TakePictureActivity"></activity>
         <activity android:name=".Runable" />
-        <activity android:name=".zpl_output" />
+        <activity android:name=".zpl_output"></activity>
     </application>
 
 </manifest>
