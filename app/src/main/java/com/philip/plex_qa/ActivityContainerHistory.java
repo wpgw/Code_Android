@@ -8,11 +8,13 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -71,6 +73,11 @@ public class ActivityContainerHistory extends AppCompatActivity{
         mWebSettings.setSaveFormData(true);  //看一看有无作用？
         mWebSettings.setBuiltInZoomControls(true);  // 可缩放
 
+        //用于 运行jascript, 获取 webview的当前html
+        mWebview.addJavascriptInterface(new InJavaScriptLocalObj(),"java_obj");
+        mWebview.setWebViewClient(new WebViewClient()); //此行代码可以保证JavaScript的Alert弹窗正常弹出
+
+
         //设置WebViewClient类  作用：处理各种通知 & 请求事件
         mWebview.setWebViewClient(new WebViewClient() {
             //设置不用系统浏览器打开,直接显示在当前Webview
@@ -89,14 +96,12 @@ public class ActivityContainerHistory extends AppCompatActivity{
             //设置结束加载函数
             @Override
             public void onPageFinished(WebView view, String url) {
-                //如：可以在这里获取cookie
-                //CookieManager cookieManager = CookieManager.getInstance();
-                //String CookieStr = cookieManager.getCookie(url);
+                //获取 webview 的html
+                view.loadUrl("javascript:window.java_obj.getSource('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
                 System.out.println("结束加载了");
                 endLoading.setText("结束加载了");
             }
         });
-
         //设置WebChromeClient类  作用：辅助 WebView 处理 Javascript 的对话框,网站图标,网站标题等等
         mWebview.setWebChromeClient(new WebChromeClient() {
             //获取网站标题
@@ -132,9 +137,10 @@ public class ActivityContainerHistory extends AppCompatActivity{
                     html=html.replace("Currently Loaded","");
                 }
                 html=html.replace("\"../","\"https://"+host+"/"+Session_Key+"/");  //换成绝对地址
-                //这个BaseURL要研究下
+                //这个BaseURL没作用，要研究下
                 mWebview.loadDataWithBaseURL(this.base_url, html, "text/html", "utf-8", null);
                 //mWebview.loadData(history_html,"text/html", "utf-8");
+                //mWebview.loadUrl(this.base_url+"/Interplant_Shipper/Interplant_Shipper.asp");
                 set_cookie();  // 保存Cookie
             } catch (Exception e) {
                 Toast.makeText(ActivityContainerHistory.this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -188,5 +194,12 @@ public class ActivityContainerHistory extends AppCompatActivity{
             CookieManager.getInstance().flush();
         }
         System.out.println( CookieManager.getInstance().getCookie("https://"+host));
+    }
+
+    final class InJavaScriptLocalObj{   //有关获取webview 的html, 在onPageFinished中引用
+        @JavascriptInterface
+        public void getSource(String html){
+            System.out.println("嘿嘿html=\n"+html);
+        }
     }
 }
