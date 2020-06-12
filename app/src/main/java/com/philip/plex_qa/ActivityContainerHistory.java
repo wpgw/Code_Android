@@ -102,6 +102,7 @@ public class ActivityContainerHistory extends AppCompatActivity{
                 endLoading.setText("结束加载了");
             }
         });
+
         //设置WebChromeClient类  作用：辅助 WebView 处理 Javascript 的对话框,网站图标,网站标题等等
         mWebview.setWebChromeClient(new WebChromeClient() {
             //获取网站标题
