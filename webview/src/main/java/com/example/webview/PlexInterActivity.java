@@ -1,11 +1,13 @@
 package com.example.webview;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
@@ -13,6 +15,8 @@ import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -23,12 +27,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 public class PlexInterActivity extends AppCompatActivity {
     WebView mWebview;
     TextView textview;
     WebSettings mWebSettings;
     String url_plex="https://www.plexus-online.com";
-    String url_mobile="https://mobile.plexus-online.com";
+    String url_mobile="https://mobile.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
     String session_ID="";
     boolean flag_changed=false;
 
@@ -48,54 +55,80 @@ public class PlexInterActivity extends AppCompatActivity {
         textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         textview.setHeight(100);
 
-        mWebSettings=mWebview.getSettings();
         mWebSettings = mWebview.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
-        mWebSettings.setSaveFormData(true);  //看一看有无作用？
+        mWebSettings.setSaveFormData(true);         //看一看有无作用？
         mWebSettings.setBuiltInZoomControls(true);  // 可缩放
+        mWebSettings.setBlockNetworkImage(true);  //  不加载图片，快些
 
         //用于 运行jascript, 获取 webview的当前html
         mWebview.addJavascriptInterface(new InJavaScriptLocalObj(),"java_obj");
-        mWebview.setWebViewClient(new WebViewClient()); //此行代码可以保证JavaScript的Alert弹窗正常弹出
+        //mWebview.setWebViewClient(new WebViewClient()); //此行代码可以保证JavaScript的Alert弹窗正常弹出
 
         //设置WebViewClient类  作用：处理各种通知 & 请求事件
         mWebview.setWebViewClient(new WebViewClient() {
             //设置不用系统浏览器打开,直接显示在当前Webview
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                System.out.println("拦截at 1: "+url);
+                if(url.contains("/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx")){   //如mobile界面登录成功
+                    Uri uri=Uri.parse(url);
+                    session_ID=uri.getPathSegments().get(0);
+                    String cookieString=CookieManager.getInstance().getCookie(url_mobile);
+                    //如果mobile界面登录成功
+                    if(session_ID.length()==36){
+                        set_cookie(url_plex,cookieString);    //把mobile 的cookie转给 www
+                        //go to inter-plant
+                        view.loadUrl(url_plex+"/"+session_ID+"/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=460129");  //513993
+                        return true;
+                    }
+                }
                 view.loadUrl(url);
                 return true;
             }
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request){
+                System.out.println("拦截at 2: "+request.getUrl().toString());
+                view.loadUrl(request.getUrl().toString());
+                return true;
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                System.out.println("拦截at 3: "+url);
+//                if(url.contains("www.plexus-online")) {  //一个拦截测试
+//                    return myInterruptResponse(url);
+//                }
+                return super.shouldInterceptRequest(view, url);
+            }
+//            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+//                System.out.println("拦截at 4: "+request.getUrl().toString());
+//                return super.shouldInterceptRequest(view, request);
+//            }
+
+            private WebResourceResponse myInterruptResponse(String url){  //拦截回调的具体处理子程序
+                String targetHtml="<p>have a test</p>";
+                InputStream targetContent=new ByteArrayInputStream(targetHtml.getBytes());
+                return new WebResourceResponse("text/html","utf-8",targetContent);
+            }
+
             //设置加载前的函数
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                System.out.println("开始加载了");
+                System.out.println("开始加载了"+url);
             }
 
             //设置结束加载函数
             @Override
             public void onPageFinished(WebView view, String url) {
-                System.out.println("结束加载了");
+                System.out.println("结束加载了"+url);
                 //获取 webview 的html
-                if(url.contains("Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")){     //在Inter-Plant扫描界面
-                        //执行javascript:
+                if(url.contains("Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")){  //如在Inter-Plant扫描加载界面
+                        //注入javascript，然后页面刷新
                         view.loadUrl("javascript:window.java_obj.getSource('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
-
-                }else if(url.contains("mobile.plexus-online.com")){                //登录中mobile中......
-                    Uri uri=Uri.parse(url);
-                    session_ID=uri.getPathSegments().get(0);
-                    String cookieString=CookieManager.getInstance().getCookie(url_mobile);
-                    //如果mobile界面登录成功
-                    if((session_ID.length()==36)&&uri.getPath().contains("Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx")){
-                        set_cookie(url_plex,cookieString);    //把mobile 的cookie转到 www
-                        //cookieString=CookieManager.getInstance().getCookie("https://www.plexus-online.com");
-                        //go to inter-plant
-                        view.loadUrl(url_plex+"/"+session_ID+"/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=460129");  //513993
-                    }
-                }else if(url.contains("https://www.plexus-online.com/modules/systemadministration/login/index.aspx")){  //帐号过期，会转到这里
+                }else if(url.contains("https://www.plexus-online.com/modules/systemadministration/login/index.aspx")){                //如果帐号过期，会转到这里
                     mWebview.loadUrl("https://mobile.plexus-online.com/modules/systemadministration/login/index.aspx");
                 }
-                System.out.println(url);
             }
         });
 
@@ -118,32 +151,40 @@ public class PlexInterActivity extends AppCompatActivity {
         });
     }
 
-    final class InJavaScriptLocalObj{   //有关获取webview 的html, 在onPageFinished中引用
+    final class InJavaScriptLocalObj{   //获取webview 的html并jsoup解读, 在onPageFinished中注入javascript
         @JavascriptInterface
         public void getSource(final String html){
-            System.out.println("嘿嘿 html=\n");
+            //System.out.println("内容:\n"+html);
             mWebview.post(new Runnable() {
                 @Override
                 public void run() {
                     Document document=Jsoup.parse(html);
                     Element element_table=document.getElementById("MainContainerLoadingGridTable");
+                    Boolean flag_error=false;
+                    //init info at textview
                     textview.setText("   信息栏： ");  //clear textview
                     textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                    if(element_table!=null){
+                    if(element_table!=null){          //如果有 加载表格，处理表格
                         Elements elements=element_table.getElementsByTag("tbody").first().getElementsByTag("tr");
-                        System.out.println("元素个数"+elements.size());
 
                         for(Element element:elements){
                             Elements eles=element.getElementsByTag("td");
-                            System.out.println(eles.get(3).text());
+                            //System.out.println(eles.get(3).text());
                             if(eles.get(3).text().contains("EPC")){
+                                //warning message at textview
                                 textview.setBackgroundColor(getResources().getColor(R.color.colorRed));
                                 textview.setHeight(textview.getHeight()+50);
+                                textview.setText("   信息栏： "+eles.get(1).text());
+                                vibrate(500);
+                                flag_error=true;
                             }
                         }
                         //mWebview.loadDataWithBaseURL(url_plex,document.outerHtml(), "text/html", "utf-8", null);
                         //mWebview.reload();
-                        textview.setText("   信息栏： "+(elements.size()-1));
+                        if(!flag_error){
+                            textview.setText("   信息栏： " + (elements.size() - 1));
+                        }
+
                     }
                 }
             });
@@ -191,5 +232,10 @@ public class PlexInterActivity extends AppCompatActivity {
             CookieManager.getInstance().flush();
         }
         //System.out.println( CookieManager.getInstance().getCookie("https://"+host));
+    }
+
+    public void vibrate(int time){
+        Vibrator vibrator=(Vibrator) this.getSystemService(this.VIBRATOR_SERVICE);
+        vibrator.vibrate(time);
     }
 }
