@@ -3,6 +3,7 @@ package com.example.webview;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -37,7 +38,6 @@ public class PlexInterActivity extends AppCompatActivity {
     String url_plex="https://www.plexus-online.com";
     String url_mobile="https://mobile.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
     String session_ID="";
-    boolean flag_changed=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,7 @@ public class PlexInterActivity extends AppCompatActivity {
         mWebview.loadUrl(url_mobile);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")         //不报错
     private void init_view(){
         textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         textview.setHeight(100);
@@ -59,7 +60,7 @@ public class PlexInterActivity extends AppCompatActivity {
         mWebSettings.setJavaScriptEnabled(true);
         mWebSettings.setSaveFormData(true);         //看一看有无作用？
         mWebSettings.setBuiltInZoomControls(true);  // 可缩放
-        mWebSettings.setBlockNetworkImage(true);  //  不加载图片，快些
+        //mWebSettings.setBlockNetworkImage(true);  //  不加载图片，快些
 
         //用于 运行jascript, 获取 webview的当前html
         mWebview.addJavascriptInterface(new InJavaScriptLocalObj(),"java_obj");
@@ -68,60 +69,63 @@ public class PlexInterActivity extends AppCompatActivity {
         //设置WebViewClient类  作用：处理各种通知 & 请求事件
         mWebview.setWebViewClient(new WebViewClient() {
             //设置不用系统浏览器打开,直接显示在当前Webview
-            @Override
+            @Override   //老机器用
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 System.out.println("拦截at 1: "+url);
+                runOverrideUrlLoading(view,url);
+                return true;
+            }
+            @Override    //新机器用
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request){
+                String url=request.getUrl().toString();
+                System.out.println("拦截at 2: "+url);
+                runOverrideUrlLoading(view,url);
+                return true;
+            }
+            private void runOverrideUrlLoading(WebView view,String url){
                 if(url.contains("/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx")){   //如mobile界面登录成功
+                    System.out.println("准备跳转：");
                     Uri uri=Uri.parse(url);
                     session_ID=uri.getPathSegments().get(0);
                     String cookieString=CookieManager.getInstance().getCookie(url_mobile);
-                    //如果mobile界面登录成功
-                    if(session_ID.length()==36){
-                        set_cookie(url_plex,cookieString);    //把mobile 的cookie转给 www
-                        //go to inter-plant
-                        view.loadUrl(url_plex+"/"+session_ID+"/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=460129");  //513993
-                        return true;
-                    }
+                    //登录成功后，把mobile 的cookie转给 www
+                    set_cookie(url_plex,cookieString);
+                    //go to inter-plant
+                    view.loadUrl(url_plex+"/"+session_ID+"/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=460129");  //513993
+                }else{
+                    view.loadUrl(url);
                 }
-                view.loadUrl(url);
-                return true;
-            }
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request){
-                System.out.println("拦截at 2: "+request.getUrl().toString());
-                view.loadUrl(request.getUrl().toString());
-                return true;
             }
 
-            @Override
-            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-                System.out.println("拦截at 3: "+url);
+//            @Override   //以下拦截代码：会拦截每一个请求 另：测试表明两个回调函数会重复运行，只需一个
+//            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+//                System.out.println("拦截at 3: "+url);
 //                if(url.contains("www.plexus-online")) {  //一个拦截测试
 //                    return myInterruptResponse(url);
 //                }
-                return super.shouldInterceptRequest(view, url);
-            }
+//                return super.shouldInterceptRequest(view, url);
+//            }
+//            @Override
 //            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
 //                System.out.println("拦截at 4: "+request.getUrl().toString());
 //                return super.shouldInterceptRequest(view, request);
 //            }
-
-            private WebResourceResponse myInterruptResponse(String url){  //拦截回调的具体处理子程序
-                String targetHtml="<p>have a test</p>";
-                InputStream targetContent=new ByteArrayInputStream(targetHtml.getBytes());
-                return new WebResourceResponse("text/html","utf-8",targetContent);
-            }
+//            private WebResourceResponse myInterruptResponse(String url){  //拦截回调后的一个具体处理子程序
+//                String targetHtml="<p>have a test</p>";
+//                InputStream targetContent=new ByteArrayInputStream(targetHtml.getBytes());
+//                return new WebResourceResponse("text/html","utf-8",targetContent);
+//            }
 
             //设置加载前的函数
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                System.out.println("开始加载了"+url);
+                System.out.println("开始加载:"+url);
             }
 
             //设置结束加载函数
             @Override
             public void onPageFinished(WebView view, String url) {
-                System.out.println("结束加载了"+url);
+                System.out.println("结束加载:"+url);
                 //获取 webview 的html
                 if(url.contains("Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")){  //如在Inter-Plant扫描加载界面
                         //注入javascript，然后页面刷新
@@ -225,8 +229,8 @@ public class PlexInterActivity extends AppCompatActivity {
             CookieManager.getInstance().setCookie(url, value);
         }
         //同步 cookie修改
-        CookieSyncManager.createInstance(this);
         if (Build.VERSION.SDK_INT < 21) {
+            CookieSyncManager.createInstance(this);
             CookieSyncManager.getInstance().sync();
         } else {
             CookieManager.getInstance().flush();
