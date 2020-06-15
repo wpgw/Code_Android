@@ -37,6 +37,7 @@ public class PlexInterActivity extends AppCompatActivity {
     WebSettings mWebSettings;
     String url_plex="https://www.plexus-online.com";
     String url_mobile="https://mobile.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
+    String firstPage="/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=513993";  //460129
     String session_ID="";
 
     @Override
@@ -61,6 +62,7 @@ public class PlexInterActivity extends AppCompatActivity {
         mWebSettings.setSaveFormData(true);         //看一看有无作用？
         mWebSettings.setBuiltInZoomControls(true);  // 可缩放
         //mWebSettings.setBlockNetworkImage(true);  //  不加载图片，快些
+        mWebSettings.setSavePassword(true);
 
         //用于 运行jascript, 获取 webview的当前html
         mWebview.addJavascriptInterface(new InJavaScriptLocalObj(),"java_obj");
@@ -91,7 +93,7 @@ public class PlexInterActivity extends AppCompatActivity {
                     //登录成功后，把mobile 的cookie转给 www
                     set_cookie(url_plex,cookieString);
                     //go to inter-plant
-                    view.loadUrl(url_plex+"/"+session_ID+"/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=460129");  //513993
+                    view.loadUrl(url_plex+"/"+session_ID+firstPage);
                 }else{
                     view.loadUrl(url);
                 }
@@ -177,7 +179,7 @@ public class PlexInterActivity extends AppCompatActivity {
                             if(eles.get(3).text().contains("EPC")){
                                 //warning message at textview
                                 textview.setBackgroundColor(getResources().getColor(R.color.colorRed));
-                                textview.setHeight(textview.getHeight()+50);
+                                textview.setHeight(textview.getHeight());
                                 textview.setText("   信息栏： "+eles.get(1).text());
                                 vibrate(500);
                                 flag_error=true;

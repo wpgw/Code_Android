@@ -10,7 +10,9 @@
         android:id="@+id/textView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:text="   信息栏： "
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

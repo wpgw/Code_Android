@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -38,11 +39,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class PlexInterActivity2 extends AppCompatActivity {
+    Context context=this;
     WebView mWebview;
     TextView textview;
     WebSettings mWebSettings;
     String url_plex = "https://www.plexus-online.com";
     String url_mobile = "https://mobile.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
+    String first_page="/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=513993"; //460129
     String session_ID = "";
     HashMap cookies;
 
@@ -60,7 +63,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
         init_view();
-        mWebview.loadUrl(url_mobile);
+        mWebview.loadUrl(url_mobile);  //开始登录
     }
 
     @SuppressLint("SetJavaScriptEnabled")         //不报错
@@ -75,7 +78,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
         //mWebSettings.setBlockNetworkImage(true);  //  不加载图片，快些
 
         //用于 运行jascript, 获取 webview的当前html
-        mWebview.addJavascriptInterface(new InJavaScriptLocalObj(), "java_obj");
+        //mWebview.addJavascriptInterface(new InJavaScriptLocalObj(), "java_obj");
         //mWebview.setWebViewClient(new WebViewClient()); //此行代码可以保证JavaScript的Alert弹窗正常弹出
 
         //设置WebViewClient类  作用：处理各种通知 & 请求事件
@@ -84,29 +87,28 @@ public class PlexInterActivity2 extends AppCompatActivity {
             @Override   //老机器用
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 System.out.println("拦截at 1: " + url);
-                try {
+                try { //登录成功后，保存cookie,跳转首页
                     runOverrideUrlLoading(view, url);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return true;
             }
-
             @Override    //新机器用
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
                 System.out.println("拦截at 2: " + url);
                 try {
-                    //可能会拦截
+                    //登录成功后，保存cookie,跳转首页
                     runOverrideUrlLoading(view, url);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return true;
             }
-
             private void runOverrideUrlLoading(WebView view, String url) throws Exception {
-                if (url.contains("/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx")) {   //如mobile界面登录成功
+                //如mobile界面登录成功,就跳转
+                if (url.contains("/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx")) {
                     System.out.println("准备跳转：");
                     Uri uri = Uri.parse(url);
                     session_ID = uri.getPathSegments().get(0);
@@ -115,7 +117,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
                     set_cookie(url_plex, cookieString);
                     cookies = stringTomap(cookieString);
                     //go to inter-plant
-                    view.loadUrl(url_plex + "/" + session_ID + "/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=513993");  //460129
+                    view.loadUrl(url_plex + "/" + session_ID + first_page);
                 }
              else {
                     view.loadUrl(url);
@@ -123,27 +125,33 @@ public class PlexInterActivity2 extends AppCompatActivity {
             }
 
             @Override   //以下拦截代码：会拦截每一个请求 另：测试表明两个回调函数会重复运行，只需一个
-            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-                System.out.println("拦截at 3: "+url);
-                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")) {  //一个拦截测试
-                    try {
-                        return myInterruptResponse(url);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                return super.shouldInterceptRequest(view, url);
-            }
-
-            //            @Override
-//            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-//                System.out.println("拦截at 4: "+request.getUrl().toString());
-//                return super.shouldInterceptRequest(view, request);
+//            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+//                System.out.println("拦截at 3: "+url);
+//                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")) {  //一个拦截测试
+//                        return myInterruptResponse(url);
+//                }
+//                return super.shouldInterceptRequest(view, url);
 //            }
-            private WebResourceResponse myInterruptResponse(String url) throws Exception {  //拦截回调后的一个具体处理子程序
-                String targetHtml=dealwith_interplant(getInterplantContainer(url,cookies));
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                String url=request.getUrl().toString();
+                System.out.println("拦截at 4: "+url);
+                //如果是 interplant加载界面，就拦截后，直接返回
+                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")) {  //一个拦截测试
+                    return myInterruptResponse(url);
+                }
+                return super.shouldInterceptRequest(view, request);
+            }
+            private WebResourceResponse myInterruptResponse(String url){
+                //访问页面，并修改后，返回一个WebResourceReponse给拦截器
+                String targetHtml="";
+                try{
+                    targetHtml=dealwith_interplant(getInterplantContainer(url,cookies));
+                }catch(Exception e){
+                    targetHtml=e.getMessage()+ "<br><a href=\"" +url+"\">"+url+"</a>";
+                }
                 InputStream targetContent=new ByteArrayInputStream(targetHtml.getBytes());
                 return new WebResourceResponse("text/html","utf-8",targetContent);
+
             }
 
             //设置加载前的函数
@@ -156,11 +164,8 @@ public class PlexInterActivity2 extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 System.out.println("结束加载:" + url);
-                //如在Inter-Plant扫描加载界面, 注入javascript，获取 webview 的html
-                if (url.contains("Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")) {
-                    //view.loadUrl("javascript:window.java_obj.getSource('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
-                    //如果帐号过期，会转到Test
-                } else if (url.contains("https://www.plexus-online.com/modules/systemadministration/login/index.aspx")) {
+                //如果帐号过期，会从www转到mobile的界面再次登录
+                if (url.contains("https://www.plexus-online.com/modules/systemadministration/login/index.aspx")) {
                     mWebview.loadUrl("https://mobile.plexus-online.com/modules/systemadministration/login/index.aspx");
                 }
             }
@@ -186,44 +191,96 @@ public class PlexInterActivity2 extends AppCompatActivity {
         });
     }
 
-    final class InJavaScriptLocalObj {   //获取webview 的html并jsoup解读, 在onPageFinished中注入javascript
-        @JavascriptInterface
-        public void getSource(final String html) {
-            //System.out.println("内容:\n"+html);
-            mWebview.post(new Runnable() {
-                @Override
-                public void run() {
-                    Document document = Jsoup.parse(html);
-                    Element element_table = document.getElementById("MainContainerLoadingGridTable");
-                    Boolean flag_error = false;
-                    //init info at textview
-                    textview.setText("   信息栏： ");  //clear textview
-                    textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                    if (element_table != null) {          //如果有 加载表格，处理表格
-                        Elements elements = element_table.getElementsByTag("tbody").first().getElementsByTag("tr");
+//    final class InJavaScriptLocalObj {   //获取webview 的html并jsoup解读, 在onPageFinished中注入javascript
+//        @JavascriptInterface
+//        public void getSource(final String html) {
+//            //System.out.println("内容:\n"+html);
+//            mWebview.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Document document = Jsoup.parse(html);
+//                    Element element_table = document.getElementById("MainContainerLoadingGridTable");
+//                    Boolean flag_error = false;
+//                    //init info at textview
+//                    textview.setText("   信息栏： ");  //clear textview
+//                    textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+//                    if (element_table != null) {          //如果有 加载表格，处理表格
+//                        Elements elements = element_table.getElementsByTag("tbody").first().getElementsByTag("tr");
+//
+//                        for (Element element : elements) {
+//                            Elements eles = element.getElementsByTag("td");
+//                            //System.out.println(eles.get(3).text());
+//                            if (eles.get(3).text().contains("EPC")) {
+//                                //warning message at textview
+//                                textview.setBackgroundColor(getResources().getColor(R.color.colorRed));
+//                                textview.setHeight(textview.getHeight() + 50);
+//                                textview.setText("   信息栏： " + eles.get(1).text());
+//                                vibrate(500);
+//                                flag_error = true;
+//                            }
+//                        }
+//                        //mWebview.loadDataWithBaseURL(url_plex,document.outerHtml(), "text/html", "utf-8", null);
+//                        //mWebview.reload();
+//                        if (!flag_error) {
+//                            textview.setText("   信息栏： " + (elements.size() - 1));
+//                        }
+//
+//                    }
+//                }
+//            });
+//        }
+//    }
 
-                        for (Element element : elements) {
-                            Elements eles = element.getElementsByTag("td");
-                            //System.out.println(eles.get(3).text());
-                            if (eles.get(3).text().contains("EPC")) {
-                                //warning message at textview
-                                textview.setBackgroundColor(getResources().getColor(R.color.colorRed));
-                                textview.setHeight(textview.getHeight() + 50);
-                                textview.setText("   信息栏： " + eles.get(1).text());
-                                vibrate(500);
-                                flag_error = true;
-                            }
-                        }
-                        //mWebview.loadDataWithBaseURL(url_plex,document.outerHtml(), "text/html", "utf-8", null);
-                        //mWebview.reload();
-                        if (!flag_error) {
-                            textview.setText("   信息栏： " + (elements.size() - 1));
-                        }
+    private String dealwith_interplant(Element element) {
 
-                    }
+        Element ele_containers=element.getElementById("hdnContainerView").parent();
+        Element input_table=element.getElementById("ContainerLoadingFilterTable").getElementsByTag("tbody").first();
+        Element element_table = element.getElementById("MainContainerLoadingGridTable");
+        Boolean flag_error = false;
+        //init info at textview  !!!!!!!!!!!此线程不能直接操作View
+//        textview.setText("   信息栏inter： ");  //clear textview
+//        textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+
+        if (element_table != null) {          //如果有 加载表格，处理表格
+            Elements header=element_table.getElementsByTag("thead").first().getElementsByTag("th");
+            header.last().previousElementSibling().remove();
+            header.last().remove();
+
+            //去掉 Print按钮
+            element.select("ul[title=Print]").remove();
+            element.select("ul[title=Wiki]").remove();
+            Elements table_rows = element_table.getElementsByTag("tbody").first().getElementsByTag("tr");
+            int count=(table_rows.size()-1);
+            //显示箱数
+            ele_containers.text(count+" Containers");
+            for (Element row : table_rows) {
+                Elements colums = row.getElementsByTag("td");
+                colums.last().previousElementSibling().remove();
+                colums.last().remove();
+
+                //System.out.println(eles.get(3).text());
+                if (colums.get(3).text().contains("EPC")) {
+                    //warning message at textview
+//                    textview.setBackgroundColor(getResources().getColor(R.color.colorRed));
+//                    textview.setHeight(textview.getHeight() + 50);
+//                    textview.setText("   信息栏error： " + colums.get(1).text());
+                    vibrate(500);
+                    flag_error = true;
+                    //问题行变红
+                    row.attr("style","background-color:red");
+                    input_table.removeAttr("style");
+                    input_table.attr("style","background-color:red");
+                    ele_containers.attr("style","background-color:red");
+
+                }else if(colums.get(1).text().contains("Totals")){  //在第二列加上总箱数
+                    colums.get(1).text("Totals: "+count);
                 }
-            });
+            }
+            if (!flag_error) {
+//                textview.setText("   信息栏： " + (table.size() - 1));
+            }
         }
+        return element.outerHtml();
     }
 
     //点击返回上一页面而不是退出浏览器
@@ -321,6 +378,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
         }
     }
 
+    //访问指定的网站
     public Element getInterplantContainer(String url, HashMap<String, String> cookies) throws Exception {
         try {
             Connection.Response res = this.request_get(url, cookies);
@@ -334,40 +392,5 @@ public class PlexInterActivity2 extends AppCompatActivity {
         }
     }
 
-    private String dealwith_interplant(Element element) {
-        Element element_table = element.getElementById("MainContainerLoadingGridTable");
-        Boolean flag_error = false;
-        //init info at textview  !!!!!!!!!!!此线程不能直接操作View
-//        textview.setText("   信息栏inter： ");  //clear textview
-//        textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        if (element_table != null) {          //如果有 加载表格，处理表格
-            Elements header=element_table.getElementsByTag("thead").first().getElementsByTag("th");
-            header.last().previousElementSibling().remove();
-            header.last().remove();
-
-            Elements table_rows = element_table.getElementsByTag("tbody").first().getElementsByTag("tr");
-            for (Element row : table_rows) {
-                Elements colums = row.getElementsByTag("td");
-                colums.last().previousElementSibling().remove();
-                colums.last().remove();
-
-                //System.out.println(eles.get(3).text());
-                if (colums.get(3).text().contains("EPC")) {
-                    //warning message at textview
-//                    textview.setBackgroundColor(getResources().getColor(R.color.colorRed));
-//                    textview.setHeight(textview.getHeight() + 50);
-//                    textview.setText("   信息栏error： " + colums.get(1).text());
-                    vibrate(500);
-                    flag_error = true;
-                }else if(colums.get(1).text().contains("Totals")){
-                    colums.get(1).text("Totals: "+(table_rows.size()-1));
-                }
-            }
-            if (!flag_error) {
-//                textview.setText("   信息栏： " + (table.size() - 1));
-            }
-        }
-        return element.outerHtml();
-    }
 
 }
