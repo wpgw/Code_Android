@@ -66,27 +66,27 @@ public class PlexInterActivity extends AppCompatActivity {
 
         //用于 运行jascript, 获取 webview的当前html
         mWebview.addJavascriptInterface(new InJavaScriptLocalObj(),"java_obj");
-        //mWebview.setWebViewClient(new WebViewClient()); //此行代码可以保证JavaScript的Alert弹窗正常弹出
+        mWebview.setWebViewClient(new WebViewClient()); //此行代码可以保证JavaScript的Alert弹窗正常弹出
 
         //设置WebViewClient类  作用：处理各种通知 & 请求事件
         mWebview.setWebViewClient(new WebViewClient() {
             //设置不用系统浏览器打开,直接显示在当前Webview
             @Override   //老机器用
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                System.out.println("拦截at 1: "+url);
+                System.out.println("拦截 旧: "+url);
                 runOverrideUrlLoading(view,url);
                 return true;
             }
             @Override    //新机器用
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request){
                 String url=request.getUrl().toString();
-                System.out.println("拦截at 2: "+url);
+                System.out.println("拦截 新: "+url);
                 runOverrideUrlLoading(view,url);
                 return true;
             }
             private void runOverrideUrlLoading(WebView view,String url){
                 if(url.contains("/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx")){   //如mobile界面登录成功
-                    System.out.println("准备跳转：");
+                    System.out.println("登录成功，存Cookie,跳转首页：");
                     Uri uri=Uri.parse(url);
                     session_ID=uri.getPathSegments().get(0);
                     String cookieString=CookieManager.getInstance().getCookie(url_mobile);
@@ -129,12 +129,16 @@ public class PlexInterActivity extends AppCompatActivity {
             public void onPageFinished(WebView view, String url) {
                 System.out.println("结束加载:"+url);
                 //获取 webview 的html
-                if(url.contains("Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")){  //如在Inter-Plant扫描加载界面
-                        //注入javascript，然后页面刷新
-                        view.loadUrl("javascript:window.java_obj.getSource('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
-                }else if(url.contains("https://www.plexus-online.com/modules/systemadministration/login/index.aspx")){                //如果帐号过期，会转到这里
-                    mWebview.loadUrl("https://mobile.plexus-online.com/modules/systemadministration/login/index.aspx");
+                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Modify.asp?Do=Load_Container&Interplant_Shipper_Key=513993&Serial_No=123456")){
+                    view.loadUrl("javascript:window.java_obj.getSource('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
                 }
+
+//                if(url.contains("Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")){  //如在Inter-Plant扫描加载界面
+//                        //注入javascript，然后页面刷新
+//                        view.loadUrl("javascript:window.java_obj.getSource('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+//                }else if(url.contains("https://www.plexus-online.com/modules/systemadministration/login/index.aspx")){                //如果帐号过期，会转到这里
+//                    mWebview.loadUrl("https://mobile.plexus-online.com/modules/systemadministration/login/index.aspx");
+//                }
             }
         });
 
@@ -164,6 +168,7 @@ public class PlexInterActivity extends AppCompatActivity {
             mWebview.post(new Runnable() {
                 @Override
                 public void run() {
+                    //mWebview.loadDataWithBaseURL(url_plex,html, "text/html", "utf-8", null);
                     Document document=Jsoup.parse(html);
                     Element element_table=document.getElementById("MainContainerLoadingGridTable");
                     Boolean flag_error=false;

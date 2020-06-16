@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.Vibrator;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -44,6 +45,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
     TextView textview;
     WebSettings mWebSettings;
     String url_plex = "https://www.plexus-online.com";
+    String url_plex2="https://www.plexonline.com";
     String url_mobile = "https://mobile.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
     String first_page="/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=513993"; //460129
     String session_ID = "";
@@ -52,7 +54,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_plex_inter);
+        setContentView(R.layout.activity_plex_inter2);
 
         mWebview = findViewById(R.id.webview);
         textview = findViewById(R.id.textView);
@@ -62,14 +64,15 @@ public class PlexInterActivity2 extends AppCompatActivity {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        init_view();
+        init_view();         //初始化 view
         mWebview.loadUrl(url_mobile);  //开始登录
     }
 
-    @SuppressLint("SetJavaScriptEnabled")         //不报错
+    @SuppressLint("SetJavaScriptEnabled")  //标记，让不报错
     private void init_view() {
         textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         textview.setHeight(100);
+        textview.setVisibility(View.GONE);
 
         mWebSettings = mWebview.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
@@ -79,42 +82,35 @@ public class PlexInterActivity2 extends AppCompatActivity {
 
         //用于 运行jascript, 获取 webview的当前html
         //mWebview.addJavascriptInterface(new InJavaScriptLocalObj(), "java_obj");
-        //mWebview.setWebViewClient(new WebViewClient()); //此行代码可以保证JavaScript的Alert弹窗正常弹出
 
         //设置WebViewClient类  作用：处理各种通知 & 请求事件
         mWebview.setWebViewClient(new WebViewClient() {
             //设置不用系统浏览器打开,直接显示在当前Webview
             @Override   //老机器用
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                System.out.println("拦截at 1: " + url);
-                try { //登录成功后，保存cookie,跳转首页
-                    runOverrideUrlLoading(view, url);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                System.out.println("转向旧: " + url);
+                //登录成功后，保存cookie,跳转首页
+                runOverrideUrlLoading(view, url);
                 return true;
             }
             @Override    //新机器用
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                System.out.println("拦截at 2: " + url);
-                try {
-                    //登录成功后，保存cookie,跳转首页
-                    runOverrideUrlLoading(view, url);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                System.out.println("转向新: " + url);
+                //登录成功后，保存cookie,跳转首页
+                runOverrideUrlLoading(view, url);
                 return true;
             }
-            private void runOverrideUrlLoading(WebView view, String url) throws Exception {
-                //如mobile界面登录成功,就跳转
+            private void runOverrideUrlLoading(WebView view, String url){
+                //如mobile界面登录成功,保存cookie,跳转首页
                 if (url.contains("/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx")) {
-                    System.out.println("准备跳转：");
+                    System.out.println("登录成功,准备跳转：\n");
                     Uri uri = Uri.parse(url);
                     session_ID = uri.getPathSegments().get(0);
                     String cookieString = CookieManager.getInstance().getCookie(url_mobile);
                     //登录成功后，把mobile 的cookie转给 www
                     set_cookie(url_plex, cookieString);
+                    set_cookie(url_plex2,cookieString);
                     cookies = stringTomap(cookieString);
                     //go to inter-plant
                     view.loadUrl(url_plex + "/" + session_ID + first_page);
@@ -126,17 +122,17 @@ public class PlexInterActivity2 extends AppCompatActivity {
 
             @Override   //以下拦截代码：会拦截每一个请求 另：测试表明两个回调函数会重复运行，只需一个
 //            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-//                System.out.println("拦截at 3: "+url);
-//                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")) {  //一个拦截测试
+//                System.out.println("拦截 旧: "+url);
+//                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")) {
 //                        return myInterruptResponse(url);
 //                }
 //                return super.shouldInterceptRequest(view, url);
 //            }
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String url=request.getUrl().toString();
-                System.out.println("拦截at 4: "+url);
+                System.out.println("拦截 新: "+url);
                 //如果是 interplant加载界面，就拦截后，直接返回
-                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")) {  //一个拦截测试
+                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")) {
                     return myInterruptResponse(url);
                 }
                 return super.shouldInterceptRequest(view, request);
@@ -145,13 +141,15 @@ public class PlexInterActivity2 extends AppCompatActivity {
                 //访问页面，并修改后，返回一个WebResourceReponse给拦截器
                 String targetHtml="";
                 try{
-                    targetHtml=dealwith_interplant(getInterplantContainer(url,cookies));
+                    Element doc=getInterplantContainer(url,cookies);  //这里有调用网络操作，可能网络出错
+                    targetHtml=dealwith_interPlant(doc);
                 }catch(Exception e){
+                    //如网络操作出错，显示出错原因，并返回一个url当前跳转
+                    System.out.println("网络操作出错，显示出错原因，并返回一个url当前跳转");
                     targetHtml=e.getMessage()+ "<br><a href=\"" +url+"\">"+url+"</a>";
                 }
                 InputStream targetContent=new ByteArrayInputStream(targetHtml.getBytes());
                 return new WebResourceResponse("text/html","utf-8",targetContent);
-
             }
 
             //设置加载前的函数
@@ -231,59 +229,50 @@ public class PlexInterActivity2 extends AppCompatActivity {
 //        }
 //    }
 
-    private String dealwith_interplant(Element element) {
-
-        Element ele_containers=element.getElementById("hdnContainerView").parent();
-        Element input_table=element.getElementById("ContainerLoadingFilterTable").getElementsByTag("tbody").first();
+    private String dealwith_interPlant(Element element) {
+        //主表格上的两个框框
+        Element ele_containers=element.getElementById("hdnContainerView").parent();  //用于改颜色，显箱数
+        Element input_table=element.getElementById("ContainerLoadingFilterTable").getElementsByTag("tbody").first(); //用于改颜色
+        //获得主表格
         Element element_table = element.getElementById("MainContainerLoadingGridTable");
-        Boolean flag_error = false;
-        //init info at textview  !!!!!!!!!!!此线程不能直接操作View
-//        textview.setText("   信息栏inter： ");  //clear textview
-//        textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-
         if (element_table != null) {          //如果有 加载表格，处理表格
+            //表头的 最后两列去掉
             Elements header=element_table.getElementsByTag("thead").first().getElementsByTag("th");
-            header.last().previousElementSibling().remove();
-            header.last().remove();
-
-            //去掉 Print按钮
+            header.last().previousElementSibling().remove();   header.last().remove();
+            //去掉左上角的 Print，Wiki按钮
             element.select("ul[title=Print]").remove();
             element.select("ul[title=Wiki]").remove();
+            //主表格的各数据行
             Elements table_rows = element_table.getElementsByTag("tbody").first().getElementsByTag("tr");
-            int count=(table_rows.size()-1);
             //显示箱数
+            int count=(table_rows.size()-1);
             ele_containers.text(count+" Containers");
             for (Element row : table_rows) {
-                Elements colums = row.getElementsByTag("td");
-                colums.last().previousElementSibling().remove();
-                colums.last().remove();
-
-                //System.out.println(eles.get(3).text());
-                if (colums.get(3).text().contains("EPC")) {
+                Elements columns = row.getElementsByTag("td");
+                //表格行的最后两列去掉
+                columns.last().previousElementSibling().remove();
+                columns.last().remove();
+                //如果发现在EPC的箱号，变红色
+                if (columns.get(3).text().contains("EPC")) {
                     //warning message at textview
 //                    textview.setBackgroundColor(getResources().getColor(R.color.colorRed));
 //                    textview.setHeight(textview.getHeight() + 50);
-//                    textview.setText("   信息栏error： " + colums.get(1).text());
-                    vibrate(500);
-                    flag_error = true;
+                    vibrate(1000);
                     //问题行变红
                     row.attr("style","background-color:red");
+                    //其它有关表头框框等变红
                     input_table.removeAttr("style");
                     input_table.attr("style","background-color:red");
                     ele_containers.attr("style","background-color:red");
-
-                }else if(colums.get(1).text().contains("Totals")){  //在第二列加上总箱数
-                    colums.get(1).text("Totals: "+count);
+                }else if(columns.get(1).text().contains("Totals")){  //在底行第二列加上总箱数
+                    columns.get(1).text("Totals: "+count);
                 }
-            }
-            if (!flag_error) {
-//                textview.setText("   信息栏： " + (table.size() - 1));
             }
         }
         return element.outerHtml();
     }
 
-    //点击返回上一页面而不是退出浏览器
+    //点击返回上一页面而不是退出Activity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && mWebview.canGoBack()) {
@@ -326,6 +315,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
         //System.out.println( "饼干："+CookieManager.getInstance().getCookie(url));
     }
 
+    //把Cookie String转成Map
     public HashMap<String, String> stringTomap(String cookieString) {
         HashMap<String, String> Cookies = new HashMap<String, String>();
         String[] values = cookieString.split(";");
@@ -333,7 +323,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
             int index = value.indexOf('=');
             Cookies.put(value.substring(0, index), value.substring(index + 1));
         }
-        System.out.println(Cookies);
+        System.out.println(this.toString()+ Cookies);
         return Cookies;
     }
 
