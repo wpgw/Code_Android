@@ -40,7 +40,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class PlexInterActivity2 extends AppCompatActivity {
-    Context context=this;
     WebView mWebview;
     TextView textview;
     WebSettings mWebSettings;

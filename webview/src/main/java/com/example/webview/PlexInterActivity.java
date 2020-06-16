@@ -30,6 +30,7 @@ import org.jsoup.select.Elements;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
 
 public class PlexInterActivity extends AppCompatActivity {
     WebView mWebview;
@@ -39,6 +40,7 @@ public class PlexInterActivity extends AppCompatActivity {
     String url_mobile="https://mobile.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
     String firstPage="/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=513993";  //460129
     String session_ID="";
+    HashMap<String,String> headers=new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,10 @@ public class PlexInterActivity extends AppCompatActivity {
 
     @SuppressLint("SetJavaScriptEnabled")         //不报错
     private void init_view(){
+        String headerkey="User-Agent";
+        String headervalue="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36";
+        headers.put(headerkey,headervalue);
+
         textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         textview.setHeight(100);
 
@@ -62,7 +68,7 @@ public class PlexInterActivity extends AppCompatActivity {
         mWebSettings.setSaveFormData(true);         //看一看有无作用？
         mWebSettings.setBuiltInZoomControls(true);  // 可缩放
         //mWebSettings.setBlockNetworkImage(true);  //  不加载图片，快些
-        mWebSettings.setSavePassword(true);
+        //mWebSettings.setSavePassword(true);
 
         //用于 运行jascript, 获取 webview的当前html
         mWebview.addJavascriptInterface(new InJavaScriptLocalObj(),"java_obj");
@@ -73,14 +79,15 @@ public class PlexInterActivity extends AppCompatActivity {
             //设置不用系统浏览器打开,直接显示在当前Webview
             @Override   //老机器用
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                System.out.println("拦截 旧: "+url);
+                System.out.println("跳转 旧: "+url);
                 runOverrideUrlLoading(view,url);
                 return true;
             }
             @Override    //新机器用
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request){
                 String url=request.getUrl().toString();
-                System.out.println("拦截 新: "+url);
+                System.out.println("跳转 新: "+url);
+                System.out.println(request.getRequestHeaders());
                 runOverrideUrlLoading(view,url);
                 return true;
             }
@@ -95,7 +102,7 @@ public class PlexInterActivity extends AppCompatActivity {
                     //go to inter-plant
                     view.loadUrl(url_plex+"/"+session_ID+firstPage);
                 }else{
-                    view.loadUrl(url);
+                    view.loadUrl(url,headers);
                 }
             }
 
