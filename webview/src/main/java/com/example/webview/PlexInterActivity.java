@@ -31,16 +31,19 @@ import org.jsoup.select.Elements;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PlexInterActivity extends AppCompatActivity {
     WebView mWebview;
     TextView textview;
     WebSettings mWebSettings;
     String url_plex="https://www.plexus-online.com";
-    String url_mobile="https://mobile.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
-    String firstPage="/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=513993";  //460129
+    String url_mobile="https://www.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
+    //String firstPage="/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=513993";  //460129
+    String firstPage="/Modules/SystemAdministration/MenuSystem/menu.aspx?Node=7405536";
     String session_ID="";
-    HashMap<String,String> headers=new HashMap<>();
+//    HashMap<String,String> headers=new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +59,9 @@ public class PlexInterActivity extends AppCompatActivity {
 
     @SuppressLint("SetJavaScriptEnabled")         //不报错
     private void init_view(){
-        String headerkey="User-Agent";
-        String headervalue="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36";
-        headers.put(headerkey,headervalue);
+//        String headerkey="User-Agent";
+//        String headervalue="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36";
+//        headers.put(headerkey,headervalue);
 
         textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         textview.setHeight(100);
@@ -92,18 +95,19 @@ public class PlexInterActivity extends AppCompatActivity {
                 return true;
             }
             private void runOverrideUrlLoading(WebView view,String url){
-                if(url.contains("/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx")){   //如mobile界面登录成功
-                    System.out.println("登录成功，存Cookie,跳转首页：");
-                    Uri uri=Uri.parse(url);
-                    session_ID=uri.getPathSegments().get(0);
-                    String cookieString=CookieManager.getInstance().getCookie(url_mobile);
-                    //登录成功后，把mobile 的cookie转给 www
-                    set_cookie(url_plex,cookieString);
-                    //go to inter-plant
-                    view.loadUrl(url_plex+"/"+session_ID+firstPage);
-                }else{
-                    view.loadUrl(url,headers);
-                }
+//                if(url.contains("/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx")){   //如mobile界面登录成功
+//                    System.out.println("登录成功，存Cookie,跳转首页：");
+//                    Uri uri=Uri.parse(url);
+//                    session_ID=uri.getPathSegments().get(0);
+//                    String cookieString=CookieManager.getInstance().getCookie(url_mobile);
+//                    //登录成功后，把mobile 的cookie转给 www
+//                    set_cookie(url_plex,cookieString);
+//                    //go to inter-plant
+//                    view.loadUrl(url_plex+"/"+session_ID+firstPage);
+//                }else{
+//                    view.loadUrl(url,headers);
+//                }
+                view.loadUrl(url);
             }
 
 //            @Override   //以下拦截代码：会拦截每一个请求 另：测试表明两个回调函数会重复运行，只需一个
@@ -135,17 +139,21 @@ public class PlexInterActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 System.out.println("结束加载:"+url);
-                //获取 webview 的html
-                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Modify.asp?Do=Load_Container&Interplant_Shipper_Key=513993&Serial_No=123456")){
+                //获取 webview 的html,以便提取信息
+                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key=")){
+                    System.out.println("准备注入 Javascript......");
                     view.loadUrl("javascript:window.java_obj.getSource('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+                }else if(url.equals("https://www.plexus-online.com/Modules/SystemAdministration/Login/Index.aspx")){     //////////////////
+                    System.out.println("onPageFinished: 登录成功，存Cookie,跳转首页：");
+                    String cookieString=CookieManager.getInstance().getCookie(url_mobile);
+                    Pattern pattern=Pattern.compile("Session_Key=\\{(.{36})\\}");    //正则：Session_Key={} 在花括号以内的任意字符
+                    Matcher m=pattern.matcher(cookieString);
+                    if(m.find()){
+                        session_ID=m.group(1);
+                    }
+                    //go to inter-plant
+                    view.loadUrl(url_plex+"/"+session_ID+firstPage);
                 }
-
-//                if(url.contains("Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")){  //如在Inter-Plant扫描加载界面
-//                        //注入javascript，然后页面刷新
-//                        view.loadUrl("javascript:window.java_obj.getSource('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
-//                }else if(url.contains("https://www.plexus-online.com/modules/systemadministration/login/index.aspx")){                //如果帐号过期，会转到这里
-//                    mWebview.loadUrl("https://mobile.plexus-online.com/modules/systemadministration/login/index.aspx");
-//                }
             }
         });
 

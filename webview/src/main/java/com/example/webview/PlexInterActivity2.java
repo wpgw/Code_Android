@@ -45,7 +45,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
     WebSettings mWebSettings;
     String url_plex = "https://www.plexus-online.com";
     String url_plex2="https://www.plexonline.com";
-    String url_mobile = "https://mobile.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
+    String url_mobile = "https://www.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
     String first_page="/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=513993"; //460129
     String session_ID = "";
     HashMap cookies;
