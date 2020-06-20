@@ -38,10 +38,9 @@ public class PlexInterActivity extends AppCompatActivity {
     WebView mWebview;
     TextView textview;
     WebSettings mWebSettings;
-    String url_plex="https://www.plexus-online.com";
-    String url_mobile="https://www.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
-    //String firstPage="/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=513993";  //460129
-    String firstPage="/Modules/SystemAdministration/MenuSystem/menu.aspx?Node=7405536";
+    String url_plex="https://www.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
+    String firstPage="/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=513993";  //460129
+//    String firstPage="/Modules/SystemAdministration/MenuSystem/menu.aspx?Node=7405536";
     String session_ID="";
 //    HashMap<String,String> headers=new HashMap<>();
 
@@ -54,7 +53,7 @@ public class PlexInterActivity extends AppCompatActivity {
         textview=findViewById(R.id.textView);
 
         init_view();
-        mWebview.loadUrl(url_mobile);
+        mWebview.loadUrl(url_plex);
     }
 
     @SuppressLint("SetJavaScriptEnabled")         //不报错
@@ -68,6 +67,8 @@ public class PlexInterActivity extends AppCompatActivity {
 
         mWebSettings = mWebview.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
+        mWebSettings.setJavaScriptCanOpenWindowsAutomatically(true);//支持js调用window.open方法
+        //mWebSettings.setSupportMultipleWindows(true);// 设置允许开启多窗口，在WebChromeClient.onCreateWindow中处理
         mWebSettings.setSaveFormData(true);         //看一看有无作用？
         mWebSettings.setBuiltInZoomControls(true);  // 可缩放
         //mWebSettings.setBlockNetworkImage(true);  //  不加载图片，快些
@@ -143,9 +144,9 @@ public class PlexInterActivity extends AppCompatActivity {
                 if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key=")){
                     System.out.println("准备注入 Javascript......");
                     view.loadUrl("javascript:window.java_obj.getSource('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
-                }else if(url.equals("https://www.plexus-online.com/Modules/SystemAdministration/Login/Index.aspx")){     //////////////////
+                }else if(url.contains("/Modules/SystemAdministration/MenuSystem/menu.aspx")){
                     System.out.println("onPageFinished: 登录成功，存Cookie,跳转首页：");
-                    String cookieString=CookieManager.getInstance().getCookie(url_mobile);
+                    String cookieString=CookieManager.getInstance().getCookie(url_plex);
                     Pattern pattern=Pattern.compile("Session_Key=\\{(.{36})\\}");    //正则：Session_Key={} 在花括号以内的任意字符
                     Matcher m=pattern.matcher(cookieString);
                     if(m.find()){

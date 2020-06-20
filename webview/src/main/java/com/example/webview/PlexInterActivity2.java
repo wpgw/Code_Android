@@ -42,10 +42,8 @@ import java.util.HashSet;
 public class PlexInterActivity2 extends AppCompatActivity {
     WebView mWebview;
     TextView textview;
-    WebSettings mWebSettings;
-    String url_plex = "https://www.plexus-online.com";
-    String url_plex2="https://www.plexonline.com";
-    String url_mobile = "https://www.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
+    String url_plex = "https://www.plexonline.com";
+    //String url_mobile = "https://www.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
     String first_page="/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=513993"; //460129
     String session_ID = "";
     HashMap cookies;
@@ -64,7 +62,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
         init_view();         //初始化 view
-        mWebview.loadUrl(url_mobile);  //开始登录
+        mWebview.loadUrl(url_plex);  //开始登录
     }
 
     @SuppressLint("SetJavaScriptEnabled")  //标记，让不报错
@@ -73,14 +71,14 @@ public class PlexInterActivity2 extends AppCompatActivity {
         textview.setHeight(100);
         textview.setVisibility(View.GONE);
 
-        mWebSettings = mWebview.getSettings();
-        mWebSettings.setJavaScriptEnabled(true);
-        mWebSettings.setSaveFormData(true);         //看一看有无作用？
+        WebSettings mWebSettings=mWebview.getSettings();
+        mWebSettings.setJavaScriptEnabled(true); // 设置支持javascript
+        mWebSettings.setJavaScriptCanOpenWindowsAutomatically(true);//支持js调用window.open方法
+        //mWebSettings.setSupportMultipleWindows(true);// 设置允许开启多窗口，在WebChromeClient.onCreateWindow中处理
+        mWebSettings.setDomStorageEnabled(true);
+        //mWebSettings.setSaveFormData(true);         //看一看有无作用？
         mWebSettings.setBuiltInZoomControls(true);  // 可缩放
         //mWebSettings.setBlockNetworkImage(true);  //  不加载图片，快些
-
-        //用于 运行jascript, 获取 webview的当前html
-        //mWebview.addJavascriptInterface(new InJavaScriptLocalObj(), "java_obj");
 
         //设置WebViewClient类  作用：处理各种通知 & 请求事件
         mWebview.setWebViewClient(new WebViewClient() {
@@ -106,10 +104,9 @@ public class PlexInterActivity2 extends AppCompatActivity {
                     System.out.println("登录成功,准备跳转：\n");
                     Uri uri = Uri.parse(url);
                     session_ID = uri.getPathSegments().get(0);
-                    String cookieString = CookieManager.getInstance().getCookie(url_mobile);
-                    //登录成功后，把mobile 的cookie转给 www
+                    String cookieString = CookieManager.getInstance().getCookie(url_plex);
+                    //登录成功后，把 mobile 的cookie转给 www
                     set_cookie(url_plex, cookieString);
-                    set_cookie(url_plex2,cookieString);
                     cookies = stringTomap(cookieString);
                     //go to inter-plant
                     view.loadUrl(url_plex + "/" + session_ID + first_page);
@@ -119,35 +116,38 @@ public class PlexInterActivity2 extends AppCompatActivity {
                 }
             }
 
-            @Override   //以下拦截代码：会拦截每一个请求 另：测试表明两个回调函数会重复运行，只需一个
-//            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-//                System.out.println("拦截 旧: "+url);
-//                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")) {
-//                        return myInterruptResponse(url);
-//                }
-//                return super.shouldInterceptRequest(view, url);
-//            }
+            @Override
+            /*
+            以下拦截代码：会拦截每一个请求 另：测试表明两个回调函数会重复运行，只需一个
+            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                System.out.println("拦截 旧: "+url);
+                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")) {
+                        return myInterruptResponse(url);
+                }
+                return super.shouldInterceptRequest(view, url);
+            }
+            */
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String url=request.getUrl().toString();
                 System.out.println("拦截 新: "+url);
                 //如果是 interplant加载界面，就拦截后，直接返回
                 if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")) {
-                    return myInterruptResponse(url);
+                    return myInterPlant(url);
                 }
                 return super.shouldInterceptRequest(view, request);
             }
-            private WebResourceResponse myInterruptResponse(String url){
+            private WebResourceResponse myInterPlant(String url){
                 //访问页面，并修改后，返回一个WebResourceReponse给拦截器
-                String targetHtml="";
+                String html="";
                 try{
-                    Element doc=getInterplantContainer(url,cookies);  //这里有调用网络操作，可能网络出错
-                    targetHtml=dealwith_interPlant(doc);
+                    Element doc=getUrl(url,cookies);  //这里有调用网络操作，可能网络出错
+                    html=dealwith_interPlant(doc);
                 }catch(Exception e){
                     //如网络操作出错，显示出错原因，并返回一个url当前跳转
                     System.out.println("网络操作出错，显示出错原因，并返回一个url当前跳转");
-                    targetHtml=e.getMessage()+ "<br><a href=\"" +url+"\">"+url+"</a>";
+                    html=e.getMessage()+ "<br><a href=\"" +url+"\">"+url+"</a>";
                 }
-                InputStream targetContent=new ByteArrayInputStream(targetHtml.getBytes());
+                InputStream targetContent=new ByteArrayInputStream(html.getBytes());
                 return new WebResourceResponse("text/html","utf-8",targetContent);
             }
 
@@ -161,13 +161,8 @@ public class PlexInterActivity2 extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 System.out.println("结束加载:" + url);
-                //如果帐号过期，会从www转到mobile的界面再次登录
-                if (url.contains("https://www.plexus-online.com/modules/systemadministration/login/index.aspx")) {
-                    mWebview.loadUrl("https://mobile.plexus-online.com/modules/systemadministration/login/index.aspx");
-                }
             }
         });
-
         //设置WebChromeClient类  作用：辅助 WebView 处理 Javascript 的对话框,网站图标,网站标题等等
         mWebview.setWebChromeClient(new WebChromeClient() {
             //获取网站标题
@@ -188,50 +183,11 @@ public class PlexInterActivity2 extends AppCompatActivity {
         });
     }
 
-//    final class InJavaScriptLocalObj {   //获取webview 的html并jsoup解读, 在onPageFinished中注入javascript
-//        @JavascriptInterface
-//        public void getSource(final String html) {
-//            //System.out.println("内容:\n"+html);
-//            mWebview.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Document document = Jsoup.parse(html);
-//                    Element element_table = document.getElementById("MainContainerLoadingGridTable");
-//                    Boolean flag_error = false;
-//                    //init info at textview
-//                    textview.setText("   信息栏： ");  //clear textview
-//                    textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-//                    if (element_table != null) {          //如果有 加载表格，处理表格
-//                        Elements elements = element_table.getElementsByTag("tbody").first().getElementsByTag("tr");
-//
-//                        for (Element element : elements) {
-//                            Elements eles = element.getElementsByTag("td");
-//                            //System.out.println(eles.get(3).text());
-//                            if (eles.get(3).text().contains("EPC")) {
-//                                //warning message at textview
-//                                textview.setBackgroundColor(getResources().getColor(R.color.colorRed));
-//                                textview.setHeight(textview.getHeight() + 50);
-//                                textview.setText("   信息栏： " + eles.get(1).text());
-//                                vibrate(500);
-//                                flag_error = true;
-//                            }
-//                        }
-//                        //mWebview.loadDataWithBaseURL(url_plex,document.outerHtml(), "text/html", "utf-8", null);
-//                        //mWebview.reload();
-//                        if (!flag_error) {
-//                            textview.setText("   信息栏： " + (elements.size() - 1));
-//                        }
-//
-//                    }
-//                }
-//            });
-//        }
-//    }
-
     private String dealwith_interPlant(Element element) {
         //主表格上的两个框框
-        Element ele_containers=element.getElementById("hdnContainerView").parent();  //用于改颜色，显箱数
-        Element input_table=element.getElementById("ContainerLoadingFilterTable").getElementsByTag("tbody").first(); //用于改颜色
+        Element ele_containers=element.getElementById("hdnContainerView").parent();  //标题框：用于改颜色，显箱数
+        Element input_table=element.getElementById("ContainerLoadingFilterTable")
+                                   .getElementsByTag("tbody").first();  //用于改颜色
         //获得主表格
         Element element_table = element.getElementById("MainContainerLoadingGridTable");
         if (element_table != null) {          //如果有 加载表格，处理表格
@@ -244,8 +200,8 @@ public class PlexInterActivity2 extends AppCompatActivity {
             //主表格的各数据行
             Elements table_rows = element_table.getElementsByTag("tbody").first().getElementsByTag("tr");
             //显示箱数
-            int count=(table_rows.size()-1);
-            ele_containers.text(count+" Containers");
+            int count=(table_rows.size()-1); ele_containers.text(count+" Containers");
+            //处理表格明细
             for (Element row : table_rows) {
                 Elements columns = row.getElementsByTag("td");
                 //表格行的最后两列去掉
@@ -254,13 +210,13 @@ public class PlexInterActivity2 extends AppCompatActivity {
                 //如果发现在EPC的箱号，变红色
                 if (columns.get(3).text().contains("EPC")) {
                     //warning message at textview
-//                    textview.setBackgroundColor(getResources().getColor(R.color.colorRed));
-//                    textview.setHeight(textview.getHeight() + 50);
+                    //textview.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                    //textview.setHeight(textview.getHeight() + 50);
                     vibrate(1000);
                     //问题行变红
                     row.attr("style","background-color:red");
                     //其它有关表头框框等变红
-                    input_table.removeAttr("style");
+                    input_table.removeAttr("style");  //先去掉style，再变红
                     input_table.attr("style","background-color:red");
                     ele_containers.attr("style","background-color:red");
                 }else if(columns.get(1).text().contains("Totals")){  //在底行第二列加上总箱数
@@ -368,18 +324,15 @@ public class PlexInterActivity2 extends AppCompatActivity {
     }
 
     //访问指定的网站
-    public Element getInterplantContainer(String url, HashMap<String, String> cookies) throws Exception {
+    public Element getUrl(String url, HashMap<String, String> cookies) throws Exception {
         try {
             Connection.Response res = this.request_get(url, cookies);
             Document doc = res.parse();
             return doc;
-
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("getInterplantContainer运行不成功 Exception。");
             throw e;
         }
     }
-
-
 }

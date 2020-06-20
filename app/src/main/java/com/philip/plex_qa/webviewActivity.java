@@ -42,7 +42,6 @@ public class webviewActivity extends AppCompatActivity {
         //mWebView.setLayoutParams(LinearLayout.LayoutParams.MATCH_PARENT);
 
         WebSettings mWebSettings=mWebView.getSettings();
-        mWebSettings = mWebView.getSettings();
         mWebSettings.setJavaScriptEnabled(true); // 设置支持javascript
         mWebSettings.setJavaScriptCanOpenWindowsAutomatically(true);//支持js调用window.open方法
         //mWebSettings.setSupportMultipleWindows(true);// 设置允许开启多窗口
@@ -135,9 +134,9 @@ public class webviewActivity extends AppCompatActivity {
                 transport.setWebView(newWebView);
                 resultMsg.sendToTarget();
                 return true;
-
                 // return super.onCreateWindow(view, isDialog, isUserGesture,resultMsg);
             }
+
 //            @Override   onCloseWindow
 //            public void onCloseWindow(WebView window) {//html中，用js调用.close(),会回调此函数
 //                super.onCloseWindow(window);
