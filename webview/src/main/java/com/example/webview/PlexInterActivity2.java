@@ -79,7 +79,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
         //mWebSettings.setSaveFormData(true);         //看一看有无作用？
         mWebSettings.setBuiltInZoomControls(true);  // 可缩放
         //mWebSettings.setBlockNetworkImage(true);  //  不加载图片，快些
-
+        mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         //设置WebViewClient类  作用：处理各种通知 & 请求事件
         mWebview.setWebViewClient(new WebViewClient() {
             //设置不用系统浏览器打开,直接显示在当前Webview
