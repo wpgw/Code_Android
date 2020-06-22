@@ -81,6 +81,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
         mWebSettings.setBuiltInZoomControls(true);  // 可缩放
         //mWebSettings.setBlockNetworkImage(true);  //  不加载图片，快些
         mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        //不能加，加了不能登录Plex, 需查原因
         //mWebSettings.setUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36");
 
         //设置WebViewClient类  作用：处理各种通知 & 请求事件
