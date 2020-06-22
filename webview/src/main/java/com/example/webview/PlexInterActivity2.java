@@ -44,7 +44,8 @@ public class PlexInterActivity2 extends AppCompatActivity {
     TextView textview;
     String url_plex = "https://www.plexonline.com";
     //String url_mobile = "https://www.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
-    String first_page="/Interplant_Shipper/Interplant_Shipper_Form.asp?Do=Update&Interplant_Shipper_Key=513993"; //460129
+    String first_page="/Interplant_Shipper/Interplant_Shipper.asp"; //_Form?Do=Update&Interplant_Shipper_Key=513993"; //460129
+
     String session_ID = "";
     HashMap cookies;
 
@@ -76,10 +77,12 @@ public class PlexInterActivity2 extends AppCompatActivity {
         mWebSettings.setJavaScriptCanOpenWindowsAutomatically(true);//支持js调用window.open方法
         //mWebSettings.setSupportMultipleWindows(true);// 设置允许开启多窗口，在WebChromeClient.onCreateWindow中处理
         mWebSettings.setDomStorageEnabled(true);
-        //mWebSettings.setSaveFormData(true);         //看一看有无作用？
+        mWebSettings.setSaveFormData(true);         //看一看有无作用？
         mWebSettings.setBuiltInZoomControls(true);  // 可缩放
         //mWebSettings.setBlockNetworkImage(true);  //  不加载图片，快些
         mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        //mWebSettings.setUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36");
+
         //设置WebViewClient类  作用：处理各种通知 & 请求事件
         mWebview.setWebViewClient(new WebViewClient() {
             //设置不用系统浏览器打开,直接显示在当前Webview
@@ -100,18 +103,17 @@ public class PlexInterActivity2 extends AppCompatActivity {
             }
             private void runOverrideUrlLoading(WebView view, String url){
                 //如mobile界面登录成功,保存cookie,跳转首页
-                if (url.contains("/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx")) {
+                if (url.contains("/Modules/SystemAdministration/MenuSystem/menu.aspx")) {
                     System.out.println("登录成功,准备跳转：\n");
                     Uri uri = Uri.parse(url);
                     session_ID = uri.getPathSegments().get(0);
                     String cookieString = CookieManager.getInstance().getCookie(url_plex);
                     //登录成功后，把 mobile 的cookie转给 www
-                    set_cookie(url_plex, cookieString);
+                    //set_cookie(url_plex, cookieString);
                     cookies = stringTomap(cookieString);
                     //go to inter-plant
                     view.loadUrl(url_plex + "/" + session_ID + first_page);
-                }
-             else {
+                }else {
                     view.loadUrl(url);
                 }
             }
@@ -140,7 +142,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
                 //访问页面，并修改后，返回一个WebResourceReponse给拦截器
                 String html="";
                 try{
-                    Element doc=getUrl(url,cookies);  //这里有调用网络操作，可能网络出错
+                    Element doc=request_get(url,cookies);  //这里有调用网络操作，可能网络出错
                     html=dealwith_interPlant(doc);
                 }catch(Exception e){
                     //如网络操作出错，显示出错原因，并返回一个url当前跳转
@@ -213,6 +215,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
                     //textview.setBackgroundColor(getResources().getColor(R.color.colorRed));
                     //textview.setHeight(textview.getHeight() + 50);
                     vibrate(1000);
+                    element.getElementById("txtItem").remove();
                     //问题行变红
                     row.attr("style","background-color:red");
                     //其它有关表头框框等变红
@@ -278,7 +281,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
             int index = value.indexOf('=');
             Cookies.put(value.substring(0, index), value.substring(index + 1));
         }
-        System.out.println(this.toString()+ Cookies);
+        //System.out.println(this.toString()+ Cookies);
         return Cookies;
     }
 
@@ -287,7 +290,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
         vibrator.vibrate(time);
     }
 
-    public Connection.Response request_get(String url, HashMap<String, String> cookies) throws Exception {
+    public Document request_get(String url, HashMap<String, String> cookies) throws Exception {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36");
         //headers.put("Host",host);
@@ -311,7 +314,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
             if (res.url().toString().toLowerCase().contains("change_password")) {
                 throw new Exception("你的密码过期了,请在电脑上更新密码!");
             }
-            return res;
+            return res.parse();
 
         } catch (SocketTimeoutException e) {
             throw new Exception("Time Out!网络连接超时,请重试!");
@@ -319,19 +322,6 @@ public class PlexInterActivity2 extends AppCompatActivity {
             throw new Exception("网络故障，找不到主机地址！");
         } catch (Exception e) {
             System.out.println("Catch Exception at request_get");
-            throw e;
-        }
-    }
-
-    //访问指定的网站
-    public Element getUrl(String url, HashMap<String, String> cookies) throws Exception {
-        try {
-            Connection.Response res = this.request_get(url, cookies);
-            Document doc = res.parse();
-            return doc;
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("getInterplantContainer运行不成功 Exception。");
             throw e;
         }
     }
