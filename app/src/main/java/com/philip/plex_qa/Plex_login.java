@@ -33,7 +33,7 @@ public class Plex_login {
 
     String viewstate="";
     String response_url="";   //to check if the Request is successful
-    public static String path="";
+    public static String path="";  // 本次指向/android/data/(package): Plex_qa.path = getApplicationContext().getExternalCacheDir().getPath();
 
     //构造函数
     public Plex_login(String host) {

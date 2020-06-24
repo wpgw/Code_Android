@@ -1,6 +1,9 @@
 
 package com.philip.plex_qa;
 
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.content.SyncStatusObserver;
 import android.os.Environment;
 
@@ -47,12 +50,13 @@ import javax.net.ssl.X509TrustManager;
 import static java.lang.Thread.*;
 
 public class Plex_qa{
-    public static String path="";   //may point to android /data/data app private path
+    public static String path="";   // 本次指向/android/data/(package): Plex_qa.path = getApplicationContext().getExternalCacheDir().getPath();
 
     public Map<String,String> headers =new HashMap<>();
     public Map<String,String> cookies;
     String host,url_pre;
     static String result;  // this variable is for multi-thread method of loaded_container
+
 
     //构造函数
     public Plex_qa(String host) {      //构造函数
@@ -170,7 +174,7 @@ public class Plex_qa{
     }
 
     public List<String> get_defect_list(String Session_Key) throws Exception{
-        String path= Plex_qa.path +"/.defect_list.xml";
+        String path= Plex_qa.path +"/defect_list.xml";
         File file=new File(path);
 
         try {
@@ -204,7 +208,7 @@ public class Plex_qa{
     }
 
     public Map<String,String> get_scrap_reason_file(String Session_Key) throws Exception{
-        String path= Plex_qa.path +"/.plex_scrap_reason.xml";
+        String path= Plex_qa.path +"/plex_scrap_reason.xml";
         File file =new File(path);
         //file.delete();
         try {
@@ -249,8 +253,9 @@ public class Plex_qa{
     }
 
     public TreeMap<String,String> get_workcenter_list(String Session_Key) throws Exception{
-        String path= Plex_qa.path +"/.workcenter_list.xml";  //path to save file
+        String path= Plex_qa.path +"/workcenter_list.xml";  //path to save file
         File file=new File(path);
+
         try {
             Document doc= null;
             if (!file.exists()) {
@@ -270,7 +275,7 @@ public class Plex_qa{
 
             //装入需排除的workcenter
             List<String> exclude_list =new ArrayList<String>();
-            exclude_list.add("Gene");exclude_list.add("LEAK");//exclude_list.add("A-En");
+            exclude_list.add("Gene"); //exclude_list.add("A-En");
 
             for(Element item:elements) {
                 String temp=item.text();
@@ -503,7 +508,7 @@ public class Plex_qa{
     }
 
     public String get_container_history(String Session_Key,String txtSerial_No) throws Exception{
-        String path= Plex_qa.path +"/.history.html";
+        String path= Plex_qa.path +"/history.html";
         File file=new File(path);
         try {
             Document doc= null;

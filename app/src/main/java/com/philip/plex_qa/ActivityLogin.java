@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
@@ -62,8 +63,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
         Log.d("ActivityLogin", "I am a ActivityLogin.");
 
         // set path to /data/data
-        Plex_login.path = getApplicationContext().getFilesDir().getPath();  //point to app private directory
-        Plex_qa.path = Plex_login.path;   //pass the path to class Plex_qa instance
+        Plex_login.path = getApplicationContext().getExternalCacheDir().getPath();   //.getFilesDir().getPath();  //point to app private directory
         // Plex_login.path=Environment.getExternalStorageDirectory().getPath()+"/Download"; //for sdcard
     }
 

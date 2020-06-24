@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
@@ -96,6 +97,8 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
         include_scrap=findViewById(R.id.include_scrap);
         //show hostname at bottom: production DB or test DB
         tv_message.setText(host+"\n * Powered by Philip *");
+
+        Plex_qa.path = getApplicationContext().getExternalCacheDir().getPath();
 
         tv_info.setMovementMethod(ScrollingMovementMethod.getInstance());
         Hide_Some_Views();
