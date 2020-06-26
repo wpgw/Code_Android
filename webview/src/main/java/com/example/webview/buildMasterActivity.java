@@ -9,27 +9,39 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.Vibrator;
+import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class buildMasterActivity extends AppCompatActivity {
     WebView mWebview;
+    TextView tvMessage,tvList;
     String url_plex = "https://mobile.plexus-online.com";
     String first_page="/Mobile/Inventory/Mobile_Build_Master_Unit.asp?Node=530174"; //build new master label
 
@@ -39,10 +51,12 @@ public class buildMasterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_build_master);
-
+        setContentView(R.layout.activity_build_master1);
 
         mWebview = findViewById(R.id.webview);
+        tvMessage=findViewById(R.id.tvMessage);
+        tvMessage.setMovementMethod(ScrollingMovementMethod.getInstance());
+        tvList=findViewById(R.id.tvList);
 
         //disable the strict polity that do not allows main thread network access
         if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -92,18 +106,42 @@ public class buildMasterActivity extends AppCompatActivity {
                     Uri uri = Uri.parse(url);
                     session_ID = uri.getPathSegments().get(0);
                     String cookieString = CookieManager.getInstance().getCookie(url_plex);
-                    cookies = stringTomap(cookieString);
+                    cookies = Utils.stringTomap(cookieString);
                     //go to next Activity
+                    //view.loadUrl(url_plex+"/"+session_ID+first_page);
                     view.loadUrl(url);
                 }else if(url.contains("/Mobile/Inventory/Mobile_Build_Master_Unit_Container.asp?MasterUnit=")){
                     Uri uri=Uri.parse(url);
-                    System.out.println(uri.getQueryParameters("MasterUnit"));  //master label号
+                    System.out.println(uri.getQueryParameter("MasterUnit"));  //master label号
                     //去掉remove label功能
                     //记录错误，并记录已扫描记录，用队列解决
                     view.loadUrl(url);
                 } else{
                     view.loadUrl(url);
                 }
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                Uri uri=request.getUrl();
+                System.out.println("拦截："+uri);
+                return super.shouldInterceptRequest(view, request);
+            }
+            private WebResourceResponse myInterPlant(String url){
+                //访问页面，并修改后，返回一个WebResourceReponse给拦截器
+                String html="";
+                try{
+                    //Map<String,String> data=new LinkedHashMap<>();   //这个保证顺序
+                    //data.put("RequestID","0");
+                    Element doc=Utils.request_get(url,cookies);  //这里有调用网络操作，可能网络出错
+                    //html=dealwith_interPlant(doc);
+                }catch(Exception e){
+                    //如网络操作出错，显示出错原因，并返回一个url当前跳转
+                    System.out.println("网络操作出错，显示出错原因，并返回一个url当前跳转");
+                    html=e.getMessage()+ "<br><a href=\"" +url+"\">"+url+"</a>";
+                }
+                InputStream targetContent=new ByteArrayInputStream(html.getBytes());
+                return new WebResourceResponse("text/html","utf-8",targetContent);
             }
 
             //设置加载前的函数
@@ -162,56 +200,8 @@ public class buildMasterActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    //把Cookie String转成Map
-    public HashMap<String, String> stringTomap(String cookieString) {
-        HashMap<String, String> Cookies = new HashMap<String, String>();
-        String[] values = cookieString.split(";");
-        for (String value : values) {
-            int index = value.indexOf('=');
-            Cookies.put(value.substring(0, index), value.substring(index + 1));
-        }
-        //System.out.println(this.toString()+ Cookies);
-        return Cookies;
-    }
-
     public void vibrate(int time) {
         Vibrator vibrator = (Vibrator) this.getSystemService(this.VIBRATOR_SERVICE);
         vibrator.vibrate(time);
-    }
-
-    public Document request_get(String url, HashMap<String, String> cookies) throws Exception {
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36");
-        //headers.put("Host",host);
-        headers.put("Connection", "keep-alive");
-        try {
-            //trustEveryone();
-            Connection con = Jsoup.connect(url);
-            con.headers(headers);
-            con.cookies(cookies);
-            con.timeout(1000 * 20);
-            con.ignoreHttpErrors(true);
-            con.ignoreContentType(true);
-            //con.proxy("127.0.0.1",8888);    //The settings is for Charles
-            //System.setProperty("javax.net.ssl.trustStore", "D:\\Code\\Java\\plex.jks");
-
-            Connection.Response res = con.method(Connection.Method.GET).execute();
-
-            if (res.url().toString().toLowerCase().contains("systemadministration/login/index.asp")) {
-                throw new Exception("你空闲时间过长,需重新登陆了!");
-            }
-            if (res.url().toString().toLowerCase().contains("change_password")) {
-                throw new Exception("你的密码过期了,请在电脑上更新密码!");
-            }
-            return res.parse();
-
-        } catch (SocketTimeoutException e) {
-            throw new Exception("Time Out!网络连接超时,请重试!");
-        } catch (UnknownHostException e) {
-            throw new Exception("网络故障，找不到主机地址！");
-        } catch (Exception e) {
-            System.out.println("Catch Exception at request_get");
-            throw e;
-        }
     }
 }
