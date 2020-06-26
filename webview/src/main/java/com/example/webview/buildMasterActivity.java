@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.Vibrator;
+import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,6 +21,8 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.jsoup.Connection;
@@ -41,7 +44,9 @@ import java.util.Map;
 
 public class buildMasterActivity extends AppCompatActivity {
     WebView mWebview;
+    EditText etMaster,etSerial;
     TextView tvMessage,tvList;
+    LinearLayout newPage;
     String url_plex = "https://mobile.plexus-online.com";
     String first_page="/Mobile/Inventory/Mobile_Build_Master_Unit.asp?Node=530174"; //build new master label
 
@@ -52,11 +57,6 @@ public class buildMasterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_build_master1);
-
-        mWebview = findViewById(R.id.webview);
-        tvMessage=findViewById(R.id.tvMessage);
-        tvMessage.setMovementMethod(ScrollingMovementMethod.getInstance());
-        tvList=findViewById(R.id.tvList);
 
         //disable the strict polity that do not allows main thread network access
         if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -69,6 +69,17 @@ public class buildMasterActivity extends AppCompatActivity {
 
     @SuppressLint("SetJavaScriptEnabled")  //标记，让不报错
     private void init_view() {
+        mWebview = findViewById(R.id.webview);
+
+        newPage=findViewById(R.id.newPage);
+        newPage.setVisibility(View.GONE);
+        etMaster=findViewById(R.id.etMaster);
+        etSerial=findViewById(R.id.etSerial);
+
+        tvMessage=findViewById(R.id.tvMessage);
+        tvMessage.setMovementMethod(ScrollingMovementMethod.getInstance());
+        tvList=findViewById(R.id.tvList);
+
         WebSettings mWebSettings=mWebview.getSettings();
         mWebSettings.setJavaScriptEnabled(true); // 设置支持javascript
         mWebSettings.setJavaScriptCanOpenWindowsAutomatically(true);//支持js调用window.open方法
@@ -99,7 +110,7 @@ public class buildMasterActivity extends AppCompatActivity {
                 runOverrideUrlLoading(view, url);
                 return true;
             }
-            private void runOverrideUrlLoading(WebView view, String url){
+            private void runOverrideUrlLoading(WebView view, String url) {
                 //如mobile界面登录成功,保存cookie,跳转首页
                 if (url.contains("/Modules/SystemAdministration/MenuSystem/Mobile/Menu.aspx?Node=")) {
                     System.out.println("登录成功,准备跳转：\n");
@@ -110,13 +121,7 @@ public class buildMasterActivity extends AppCompatActivity {
                     //go to next Activity
                     //view.loadUrl(url_plex+"/"+session_ID+first_page);
                     view.loadUrl(url);
-                }else if(url.contains("/Mobile/Inventory/Mobile_Build_Master_Unit_Container.asp?MasterUnit=")){
-                    Uri uri=Uri.parse(url);
-                    System.out.println(uri.getQueryParameter("MasterUnit"));  //master label号
-                    //去掉remove label功能
-                    //记录错误，并记录已扫描记录，用队列解决
-                    view.loadUrl(url);
-                } else{
+                }else{
                     view.loadUrl(url);
                 }
             }
@@ -124,7 +129,19 @@ public class buildMasterActivity extends AppCompatActivity {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 Uri uri=request.getUrl();
+                String url=uri.toString();
                 System.out.println("拦截："+uri);
+                if(url.contains("/Mobile/Inventory/Mobile_Build_Master_Unit_Container.asp?MasterUnit=")){
+                    //获得master label号
+                    String masterUnit=uri.getQueryParameter("MasterUnit");
+                    //newPage.setVisibility(View.VISIBLE);
+                    //etMaster.setText(uri.getQueryParameter("MasterUnit"));
+                    try {
+                        masterUnitHandler(session_ID,"M022654","smmp123456");      ///////////////////////////////////
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 return super.shouldInterceptRequest(view, request);
             }
             private WebResourceResponse myInterPlant(String url){
@@ -133,7 +150,7 @@ public class buildMasterActivity extends AppCompatActivity {
                 try{
                     //Map<String,String> data=new LinkedHashMap<>();   //这个保证顺序
                     //data.put("RequestID","0");
-                    Element doc=Utils.request_get(url,cookies);  //这里有调用网络操作，可能网络出错
+                    html=Utils.request_get(url,cookies);  //这里有调用网络操作，可能网络出错
                     //html=dealwith_interPlant(doc);
                 }catch(Exception e){
                     //如网络操作出错，显示出错原因，并返回一个url当前跳转
@@ -204,4 +221,29 @@ public class buildMasterActivity extends AppCompatActivity {
         Vibrator vibrator = (Vibrator) this.getSystemService(this.VIBRATOR_SERVICE);
         vibrator.vibrate(time);
     }
+
+    void masterUnitHandler(String session_ID,String master,String serial) throws Exception {
+        String url="https://www.plexus-online.com/"+session_ID+"/Modules/Inventory/MasterUnits/MasterUnitHandler.ashx?ApplicationKey=166143";
+        String html;
+        //查有关master label的基本数据
+        HashMap<String,String> data=new HashMap<>();
+        data.put("Action","GetMasterUnit");data.put("MasterUnitNo",master);
+        html=Utils.request_post(url, cookies, data);
+        System.out.println("读master基本数据：");
+        System.out.println(html);
+
+        //查有关箱号是否在master label中
+        data.clear();
+        data.put("Action","ValidateContainer");data.put("SerialNo",serial);
+        html=Utils.request_post(url, cookies, data);
+        System.out.println("验证：");
+        System.out.println(html);
+
+        //把相关箱号加入到指定的master label中
+        data.clear();
+        data.put("Action","BuildMasterUnit");data.put("MasterUnitKey","");data.put("MasterUnitNo","");
+        data.put("MasterUnitTypeKey","4605467");data.put("Location","");data.put("SerialNo",serial);
+        //html=Utils.request_post(url,cookies,data);
+    }
+
 }

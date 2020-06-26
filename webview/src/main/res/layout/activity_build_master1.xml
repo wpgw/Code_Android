@@ -6,12 +6,47 @@
     android:orientation="vertical"
     tools:context=".buildMasterActivity">
 
-    <WebView
-        android:id="@+id/webview"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="2"
+        android:orientation="vertical">
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
+        <LinearLayout
+            android:id="@+id/newPage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/etMaster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Master Label" />
+
+            <EditText
+                android:id="@+id/etSerial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="smmp123456" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +61,7 @@
             android:layout_weight="1"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
-            android:background="#CCF8FF"
+            android:background="#EEEEEE"
             android:layout_gravity="left"
             android:lines="12"
             android:maxLines="12"
@@ -42,7 +77,7 @@
             android:layout_weight="1"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
-            android:background="#CCF8FF"
+            android:background="#EEEEEE"
             android:layout_gravity="right"
             android:gravity="top"
             android:singleLine="false"
