@@ -7,9 +7,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.os.Vibrator;
+import android.text.Editable;
 import android.text.Layout;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,6 +25,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,17 +46,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class buildMasterActivity extends AppCompatActivity {
+    final int atPAGE=1,leftPAGE=2;
     WebView mWebview;
     EditText etMaster,etSerial;
     TextView tvMessage,tvList;
+    Button button;
     LinearLayout newPage;
     String url_plex = "https://mobile.plexus-online.com";
     String first_page="/Mobile/Inventory/Mobile_Build_Master_Unit.asp?Node=530174"; //build new master label
 
     String session_ID = "";
     HashMap cookies;
+    ConcurrentHashMap<String,ScanData> scandataMap=new ConcurrentHashMap();  /////////////这个内容没有顺序
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +83,17 @@ public class buildMasterActivity extends AppCompatActivity {
 
         newPage=findViewById(R.id.newPage);
         newPage.setVisibility(View.GONE);
+
         etMaster=findViewById(R.id.etMaster);
         etSerial=findViewById(R.id.etSerial);
+
+        button=findViewById(R.id.button);
+        button.setOnClickListener(new buttonLisener());
 
         tvMessage=findViewById(R.id.tvMessage);
         tvMessage.setMovementMethod(ScrollingMovementMethod.getInstance());
         tvList=findViewById(R.id.tvList);
+        tvList.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         WebSettings mWebSettings=mWebview.getSettings();
         mWebSettings.setJavaScriptEnabled(true); // 设置支持javascript
@@ -118,10 +133,14 @@ public class buildMasterActivity extends AppCompatActivity {
                     session_ID = uri.getPathSegments().get(0);
                     String cookieString = CookieManager.getInstance().getCookie(url_plex);
                     cookies = Utils.stringTomap(cookieString);
+
+                    sendMessage(leftPAGE,null);
                     //go to next Activity
-                    //view.loadUrl(url_plex+"/"+session_ID+first_page);
+                    view.loadUrl(url_plex+"/"+session_ID+first_page);
+                }else if(url.contains("/Mobile/Inventory/Mobile_Build_Master_Unit.asp?Node=")){
+                    sendMessage(leftPAGE,null);
                     view.loadUrl(url);
-                }else{
+                } else{
                     view.loadUrl(url);
                 }
             }
@@ -134,8 +153,8 @@ public class buildMasterActivity extends AppCompatActivity {
                 if(url.contains("/Mobile/Inventory/Mobile_Build_Master_Unit_Container.asp?MasterUnit=")){
                     //获得master label号
                     String masterUnit=uri.getQueryParameter("MasterUnit");
-                    //newPage.setVisibility(View.VISIBLE);
-                    //etMaster.setText(uri.getQueryParameter("MasterUnit"));
+                    //发消息，要求 显示 新扫描页面
+                    sendMessage(atPAGE,masterUnit);
                     try {
                         masterUnitHandler(session_ID,"M022654","smmp123456");      ///////////////////////////////////
                     } catch (Exception e) {
@@ -244,6 +263,68 @@ public class buildMasterActivity extends AppCompatActivity {
         data.put("Action","BuildMasterUnit");data.put("MasterUnitKey","");data.put("MasterUnitNo","");
         data.put("MasterUnitTypeKey","4605467");data.put("Location","");data.put("SerialNo",serial);
         //html=Utils.request_post(url,cookies,data);
+    }
+
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if(msg.what==atPAGE){
+                newPage.setVisibility(View.VISIBLE);
+                etMaster.setText(msg.obj.toString());
+                etSerial.setText("");   // clear条码框
+                etSerial.requestFocus();  //条码框 获得焦点
+            }else if(msg.what==leftPAGE){
+                newPage.setVisibility(View.GONE);
+                etSerial.setText("");
+            }
+        }};
+
+    class buttonLisener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            String str = etSerial.getText().toString();
+            str = str.replace("\r", "").replace("\n", "");
+            etSerial.setText("");    //清空条码框
+            etSerial.requestFocus(); //条码框获得焦点
+            String master = etMaster.getText().toString();
+            if (str.length() > 7 && master.length() > 5) {   //粗粗检查一下合法性
+                ScanData scandata = new ScanData(new Date(), master);
+                //加入前，判断是否已经扫过了，在列表中，如在，需提醒一下
+                if(scandataMap.get(str)!=null){
+                    vibrate(200);
+                }
+                scandataMap.put(str, scandata);
+                refresh_message();
+                etSerial.requestFocus(); //条码框获得焦点
+                etSerial.setSelection(0);    //这样 条码框并不能获得焦点 ////////////////////////
+                System.out.println("嘿嘿：" + scandataMap);     ///////////////////////////
+            }
+        }
+    }
+
+    //自定义数据，用于保存 scan data
+    private class ScanData{
+        public Date date;
+        String master;
+        public ScanData(Date date,String master){
+            this.date=date;this.master=master;
+        }
+    }
+
+    //显示 扫描任务清单
+    private void refresh_message(){
+        String strlist="";
+        for(Map.Entry<String,ScanData> entry: scandataMap.entrySet()){
+            String date=Utils.getDateTime(entry.getValue().date);
+            strlist+=String.format("%s  %s 时间：%s\n",entry.getKey(),entry.getValue().master,date);
+        }
+        tvList.setText(strlist);
+    }
+
+    private void sendMessage(int what,Object obj){
+        Message message1 = Message.obtain();
+        message1.what = what;  //1 means at newPage
+        message1.obj = obj;
+        mHandler.sendMessage(message1);
     }
 
 }

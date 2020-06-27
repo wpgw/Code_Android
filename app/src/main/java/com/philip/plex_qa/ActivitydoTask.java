@@ -520,7 +520,7 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
             if (str_raw.length()>2600){
                 str_raw=str_raw.substring(0,2400);
             }
-            tv_info.setText(str+"\n"+str_raw);
+            tv_info.setText(str+"\n"+str_raw);  //新内容加在前面
             tv_info.scrollTo(0,0);
             // 以下是顺序显示
             // tv_info.append("\n"+str);

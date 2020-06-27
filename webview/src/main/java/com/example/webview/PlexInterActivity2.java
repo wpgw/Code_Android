@@ -255,25 +255,6 @@ public class PlexInterActivity2 extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void set_cookie(String url, String cookieString) {
-        //参考 https://blog.csdn.net/kelaker/article/details/82751287
-        //CookieManager.getInstance().removeAllCookie();
-        //CookieManager.getInstance().removeSessionCookie();
-
-        String[] values = cookieString.split(";");
-        for (String value : values) {
-            CookieManager.getInstance().setCookie(url, value);
-        }
-        //同步 cookie修改
-        if (Build.VERSION.SDK_INT < 21) {
-            CookieSyncManager.createInstance(this);
-            CookieSyncManager.getInstance().sync();
-        } else {
-            CookieManager.getInstance().flush();
-        }
-        //System.out.println( "饼干："+CookieManager.getInstance().getCookie(url));
-    }
-
     //把Cookie String转成Map
     public HashMap<String, String> stringTomap(String cookieString) {
         HashMap<String, String> Cookies = new HashMap<String, String>();
