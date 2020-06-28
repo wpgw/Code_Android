@@ -49,8 +49,12 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -70,7 +74,8 @@ public class buildMasterActivity extends AppCompatActivity {
     Handler mChildHandler;
     Thread childThread;
     //ConcurrentHashMap<String,ScanData> scandataMap=new ConcurrentHashMap();  //这个内容没有顺序
-    ConcurrentSkipListMap<String,ScanData> scandataMap=new ConcurrentSkipListMap(new Comparator() {
+    //ConcurrentSkipListMap<String,ScanData> scandataMap=new ConcurrentSkipListMap(new Comparator() {
+    TreeMap<String,ScanData> scandataMap=new TreeMap(new Comparator() {
         @Override
         public int compare(Object o1, Object o2) {
             return 1;  //去掉默认的排序功能
@@ -118,7 +123,7 @@ public class buildMasterActivity extends AppCompatActivity {
                     }
                     scandataMap.put(serial, scandata);  //加入新数据
                     refresh_list();
-                    System.out.println("嘿嘿：" + scandataMap);     ///////////////////////////
+                    //System.out.println("嘿嘿：" + scandataMap);     ///////////////////////////
                     etSerial.requestFocus();     //条码框获得焦点
                     etSerial.setText("");    //清空条码框
                  }else if(serial.length()>0){   //发现清空后，还会激发一次click, 这次不报警
@@ -133,7 +138,7 @@ public class buildMasterActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("按钮：------------");
+                //System.out.println("按钮：------------");
                 etSerial.performClick();     //通过执行EditText的onClick
             }
         });
@@ -227,13 +232,13 @@ public class buildMasterActivity extends AppCompatActivity {
             //设置加载前的函数
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                System.out.println("开始加载:" + url);
+                //System.out.println("开始加载:" + url);
             }
 
             //设置结束加载函数
             @Override
             public void onPageFinished(WebView view, String url) {
-                System.out.println("结束加载:" + url);
+                //System.out.println("结束加载:" + url);
             }
         });
         //设置WebChromeClient类  作用：辅助 WebView 处理 Javascript 的对话框,网站图标,网站标题等等
@@ -241,7 +246,7 @@ public class buildMasterActivity extends AppCompatActivity {
             //获取网站标题
             @Override
             public void onReceivedTitle(WebView view, String title) {
-                System.out.println("标题在这里:" + title);
+                //System.out.println("标题在这里:" + title);
             }
 
             //获取加载进度
@@ -345,12 +350,17 @@ public class buildMasterActivity extends AppCompatActivity {
             while(!stopChild){
                 try {
                     if(scandataMap.size()>0){
-                        for(Map.Entry<String,ScanData> entry: scandataMap.entrySet()){
-                            String master=entry.getValue().master;
-                            String serial=entry.getKey();
-                            scandataMap.remove(serial);     //这里从队列中删除数据，如果处理失败，再加入队列
+                        System.out.println("调试："+scandataMap);
+                        Set<String> list=scandataMap.keySet();
+                        for(String serial:list) {
+                            Thread.sleep(1000);
+                            String master=scandataMap.get(serial).master;
+                            //String serial=entry.getKey();
+                            //scandataMap.remove(serial);     //这里从队列中删除数据，如果处理失败，再加入队列
+                            System.out.println("调试2："+scandataMap.size());
                             //refresh_list();         //需在UI中刷新
                             if(session_ID.length()>0) {  //session_ID是登录成功后才有值,肯定在scandataMap之前获得数据
+                                //操作 Build MasterUnit
                                 boolean success=masterUnitHandler(session_ID, master, serial);
                                 if(!success){
                                     //不成功，加进行，再来再处理
@@ -360,7 +370,7 @@ public class buildMasterActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    Thread.sleep(1000);
+                    Thread.sleep(5000);
                     System.out.println("Child Thread is running."+session_ID);   ////////////////////////////////
                 } catch (Exception e) {
                     System.out.println("子线程处理Exception.");
@@ -432,6 +442,5 @@ public class buildMasterActivity extends AppCompatActivity {
 
             }
         }
-
     }
 }
