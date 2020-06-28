@@ -84,7 +84,7 @@ public class Utils {
         }
     }
 
-    public static String request_post(String url, HashMap<String, String> cookies, Map<String,String> data) throws Exception{
+    public static Connection.Response request_post(String url, HashMap<String, String> cookies, Map<String,String> data) throws Exception{
         HashMap<String, String> headers = new HashMap<>();
         headers.put("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36");
         try {
@@ -106,7 +106,7 @@ public class Utils {
             if (res.url().toString().toLowerCase().contains("change_password")){
                 throw new Exception("你的密码过期了,请在电脑上更新密码!");
             }
-            return res.parse().html();
+            return res;
 
         }catch(SocketTimeoutException e){
             throw new Exception("Time Out!网络连接超时,请重试!");
@@ -132,8 +132,8 @@ public class Utils {
         return sdf.format(new Date());
     }
 
-    public static String getDateTime(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static String getMonthTime(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss");
         return sdf.format(date);
     }
 }

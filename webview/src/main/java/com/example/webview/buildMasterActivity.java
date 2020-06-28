@@ -29,7 +29,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+
+import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -42,12 +46,14 @@ import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 public class buildMasterActivity extends AppCompatActivity {
     final int atPAGE=1,leftPAGE=2;
@@ -61,7 +67,15 @@ public class buildMasterActivity extends AppCompatActivity {
 
     String session_ID = "";
     HashMap cookies;
-    ConcurrentHashMap<String,ScanData> scandataMap=new ConcurrentHashMap();  /////////////这个内容没有顺序
+    Handler mChildHandler;
+    Thread childThread;
+    //ConcurrentHashMap<String,ScanData> scandataMap=new ConcurrentHashMap();  //这个内容没有顺序
+    ConcurrentSkipListMap<String,ScanData> scandataMap=new ConcurrentSkipListMap(new Comparator() {
+        @Override
+        public int compare(Object o1, Object o2) {
+            return 1;  //去掉默认的排序功能
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +88,10 @@ public class buildMasterActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
         init_view();         //初始化 view
-        mWebview.loadUrl(url_plex);  //开始登录
+        mWebview.loadUrl(url_plex);  //开始登录Plex
+
+        childThread=new ChildThread();
+        childThread.start();
     }
 
     @SuppressLint("SetJavaScriptEnabled")  //标记，让不报错
@@ -86,11 +103,42 @@ public class buildMasterActivity extends AppCompatActivity {
 
         etMaster=findViewById(R.id.etMaster);
         etSerial=findViewById(R.id.etSerial);
+        //监听扫描数据的输入
+        etSerial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String serial = etSerial.getText().toString();
+                String master = etMaster.getText().toString();
+                if (serial.length() > 7 && master.length() > 5) {   //粗粗检查一下合法性  //////////////
+                    ScanData scandata = new ScanData(new Date(), master);
+                    //加入前，判断是否已经扫过了，在列表中，如在，需提醒一下
+                    if(scandataMap.get(serial)!=null){
+                        vibrate(200);
+                        scandataMap.remove(serial);     //去掉旧数据
+                    }
+                    scandataMap.put(serial, scandata);  //加入新数据
+                    refresh_list();
+                    System.out.println("嘿嘿：" + scandataMap);     ///////////////////////////
+                    etSerial.requestFocus();     //条码框获得焦点
+                    etSerial.setText("");    //清空条码框
+                 }else if(serial.length()>0){   //发现清空后，还会激发一次click, 这次不报警
+                    Toast.makeText(getApplicationContext(),"可能输入数据无效！",Toast.LENGTH_SHORT).show();
+                    vibrate(500);      //输入无效，报警
+                }
+                etSerial.setSelection(etSerial.getText().length());  //如果有文字，光标移到未尾
+            }
+        });
 
         button=findViewById(R.id.button);
-        button.setOnClickListener(new buttonLisener());
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("按钮：------------");
+                etSerial.performClick();     //通过执行EditText的onClick
+            }
+        });
 
-        tvMessage=findViewById(R.id.tvMessage);
+        tvMessage = findViewById(R.id.tvMessage);
         tvMessage.setMovementMethod(ScrollingMovementMethod.getInstance());
         tvList=findViewById(R.id.tvList);
         tvList.setMovementMethod(ScrollingMovementMethod.getInstance());
@@ -112,7 +160,7 @@ public class buildMasterActivity extends AppCompatActivity {
             //设置不用系统浏览器打开,直接显示在当前Webview
             @Override   //老机器用
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                System.out.println("转向旧: " + url);
+                //System.out.println("转向旧: " + url);
                 //登录成功后，保存cookie,跳转首页
                 runOverrideUrlLoading(view, url);
                 return true;
@@ -120,7 +168,7 @@ public class buildMasterActivity extends AppCompatActivity {
             @Override    //新机器用
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                System.out.println("转向新: " + url);
+                //System.out.println("转向新: " + url);
                 //登录成功后，保存cookie,跳转首页
                 runOverrideUrlLoading(view, url);
                 return true;
@@ -133,11 +181,12 @@ public class buildMasterActivity extends AppCompatActivity {
                     session_ID = uri.getPathSegments().get(0);
                     String cookieString = CookieManager.getInstance().getCookie(url_plex);
                     cookies = Utils.stringTomap(cookieString);
-
+                    //子线程向主线程发消息
                     sendMessage(leftPAGE,null);
                     //go to next Activity
                     view.loadUrl(url_plex+"/"+session_ID+first_page);
                 }else if(url.contains("/Mobile/Inventory/Mobile_Build_Master_Unit.asp?Node=")){
+                    //点了Back退出，不在build master扫描界面
                     sendMessage(leftPAGE,null);
                     view.loadUrl(url);
                 } else{
@@ -149,17 +198,12 @@ public class buildMasterActivity extends AppCompatActivity {
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 Uri uri=request.getUrl();
                 String url=uri.toString();
-                System.out.println("拦截："+uri);
+                //如查在Build Master扫描界面
                 if(url.contains("/Mobile/Inventory/Mobile_Build_Master_Unit_Container.asp?MasterUnit=")){
-                    //获得master label号
+                    //获得 master label号
                     String masterUnit=uri.getQueryParameter("MasterUnit");
-                    //发消息，要求 显示 新扫描页面
+                    //发消息，在UI显示 自定义的扫描页面
                     sendMessage(atPAGE,masterUnit);
-                    try {
-                        masterUnitHandler(session_ID,"M022654","smmp123456");      ///////////////////////////////////
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 }
                 return super.shouldInterceptRequest(view, request);
             }
@@ -212,7 +256,7 @@ public class buildMasterActivity extends AppCompatActivity {
         });
     }
 
-    //点击返回上一页面而不是退出Activity
+    //点击让webview返回上一页面, webview不能退了才退出Activity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && mWebview.canGoBack()) {
@@ -241,32 +285,9 @@ public class buildMasterActivity extends AppCompatActivity {
         vibrator.vibrate(time);
     }
 
-    void masterUnitHandler(String session_ID,String master,String serial) throws Exception {
-        String url="https://www.plexus-online.com/"+session_ID+"/Modules/Inventory/MasterUnits/MasterUnitHandler.ashx?ApplicationKey=166143";
-        String html;
-        //查有关master label的基本数据
-        HashMap<String,String> data=new HashMap<>();
-        data.put("Action","GetMasterUnit");data.put("MasterUnitNo",master);
-        html=Utils.request_post(url, cookies, data);
-        System.out.println("读master基本数据：");
-        System.out.println(html);
-
-        //查有关箱号是否在master label中
-        data.clear();
-        data.put("Action","ValidateContainer");data.put("SerialNo",serial);
-        html=Utils.request_post(url, cookies, data);
-        System.out.println("验证：");
-        System.out.println(html);
-
-        //把相关箱号加入到指定的master label中
-        data.clear();
-        data.put("Action","BuildMasterUnit");data.put("MasterUnitKey","");data.put("MasterUnitNo","");
-        data.put("MasterUnitTypeKey","4605467");data.put("Location","");data.put("SerialNo",serial);
-        //html=Utils.request_post(url,cookies,data);
-    }
-
-    private Handler mHandler = new Handler() {
+    private Handler mMainHandler = new Handler() {
         public void handleMessage(Message msg) {
+            //处理从子线程中来的消息
             if(msg.what==atPAGE){
                 newPage.setVisibility(View.VISIBLE);
                 etMaster.setText(msg.obj.toString());
@@ -278,27 +299,12 @@ public class buildMasterActivity extends AppCompatActivity {
             }
         }};
 
-    class buttonLisener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            String str = etSerial.getText().toString();
-            str = str.replace("\r", "").replace("\n", "");
-            etSerial.setText("");    //清空条码框
-            etSerial.requestFocus(); //条码框获得焦点
-            String master = etMaster.getText().toString();
-            if (str.length() > 7 && master.length() > 5) {   //粗粗检查一下合法性
-                ScanData scandata = new ScanData(new Date(), master);
-                //加入前，判断是否已经扫过了，在列表中，如在，需提醒一下
-                if(scandataMap.get(str)!=null){
-                    vibrate(200);
-                }
-                scandataMap.put(str, scandata);
-                refresh_message();
-                etSerial.requestFocus(); //条码框获得焦点
-                etSerial.setSelection(0);    //这样 条码框并不能获得焦点 ////////////////////////
-                System.out.println("嘿嘿：" + scandataMap);     ///////////////////////////
-            }
-        }
+    //向主线程发送消息
+    private void sendMessage(int what,Object obj){
+        Message message1 = Message.obtain();
+        message1.what = what;  //1 means at newPage
+        message1.obj = obj;
+        mMainHandler.sendMessage(message1);
     }
 
     //自定义数据，用于保存 scan data
@@ -311,20 +317,121 @@ public class buildMasterActivity extends AppCompatActivity {
     }
 
     //显示 扫描任务清单
-    private void refresh_message(){
+    private void refresh_list(){
         String strlist="";
+        int count=scandataMap.size();
         for(Map.Entry<String,ScanData> entry: scandataMap.entrySet()){
-            String date=Utils.getDateTime(entry.getValue().date);
-            strlist+=String.format("%s  %s 时间：%s\n",entry.getKey(),entry.getValue().master,date);
+            String date=Utils.getMonthTime(entry.getValue().date);
+            strlist+=String.format("%s  %s  时间：%s  %s\n",entry.getKey(),entry.getValue().master,date,count);
         }
         tvList.setText(strlist);
     }
 
-    private void sendMessage(int what,Object obj){
-        Message message1 = Message.obtain();
-        message1.what = what;  //1 means at newPage
-        message1.obj = obj;
-        mHandler.sendMessage(message1);
-    }
+    class ChildThread extends Thread{
+        private static final String Child_TAG="ChildThread";
+        boolean stopChild;   //子线程 停不停的标记
 
+        public ChildThread(){
+            this.stopChild=false;
+        }
+
+        public void setStop(boolean stopChild){
+            this.stopChild=stopChild;
+        }
+
+        @Override
+        public void run(){
+            this.setName("ChildThread");
+            while(!stopChild){
+                try {
+                    if(scandataMap.size()>0){
+                        for(Map.Entry<String,ScanData> entry: scandataMap.entrySet()){
+                            String master=entry.getValue().master;
+                            String serial=entry.getKey();
+                            scandataMap.remove(serial);     //这里从队列中删除数据，如果处理失败，再加入队列
+                            //refresh_list();         //需在UI中刷新
+                            if(session_ID.length()>0) {  //session_ID是登录成功后才有值,肯定在scandataMap之前获得数据
+                                boolean success=masterUnitHandler(session_ID, master, serial);
+                                if(!success){
+                                    //不成功，加进行，再来再处理
+                                    scandataMap.put(serial,new ScanData(new Date(),master));
+                                    //refresh_list();  //需在UI中刷新
+                                }
+                            }
+                        }
+                    }
+                    Thread.sleep(1000);
+                    System.out.println("Child Thread is running."+session_ID);   ////////////////////////////////
+                } catch (Exception e) {
+                    System.out.println("子线程处理Exception.");
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        private boolean masterUnitHandler(String session_ID,String master,String serial) throws Exception {
+            String url="https://www.plexus-online.com/"+session_ID+"/Modules/Inventory/MasterUnits/MasterUnitHandler.ashx?ApplicationKey=166143";
+            String jsonString;
+            Connection.Response res;
+
+            //查有关master label的基本数据
+            HashMap<String,String> data=new HashMap<>();
+            data.put("Action","GetMasterUnit");data.put("MasterUnitNo",master);
+            res=Utils.request_post(url, cookies, data);
+            jsonString=res.body();
+            System.out.println("读master label基本数据：");
+            Map<String,Object> objectMap= JSON.parseObject(jsonString,Map.class);
+            String strMasterUnitKey=objectMap.get("MasterUnitKey").toString();
+            String strMasterUnitNo=objectMap.get("MasterUnitNo").toString();
+            String strLocation=objectMap.get("Location").toString();
+            String strMasterUnitTypeKey=objectMap.get("MasterUnitTypeKey").toString();
+            boolean Active=(boolean)objectMap.get("Active");
+            System.out.println("嘿嘿Json1:"+strMasterUnitKey);
+
+            //如果 StrMasterUnitKey为空，则报错      /////////////////////
+            if(strMasterUnitKey.length()==0){
+                return false;
+            }
+
+            //查有关箱号是否在master label中
+            data.clear();objectMap.clear();
+            data.put("Action","ValidateContainer");data.put("SerialNo",serial);
+            res=Utils.request_post(url, cookies, data);
+            jsonString=res.body();
+            System.out.println("验证：");
+            System.out.println(jsonString);
+            objectMap= JSON.parseObject(jsonString,Map.class);
+            String strSerialNo=objectMap.get("SerialNo").toString();
+            boolean IsValid=(boolean)objectMap.get("IsValid");
+            System.out.println("嘿嘿Json2:"+strSerialNo);
+
+            //如果IsValid是真，报错      //////////////////////////
+            if(IsValid){
+                return false;
+            }
+
+            //把相关箱号加入到指定的master label中
+            data.clear();objectMap.clear();
+            data.put("Action","BuildMasterUnit");data.put("MasterUnitKey",strMasterUnitKey);data.put("MasterUnitNo",strMasterUnitNo);
+            data.put("MasterUnitTypeKey",strMasterUnitTypeKey);data.put("Location",strLocation);data.put("SerialNo",serial);
+            res=Utils.request_post(url,cookies,data);
+            jsonString=res.body();
+            System.out.println("执行：");
+            objectMap= JSON.parseObject(jsonString,Map.class);
+            boolean isSuccess =(boolean)objectMap.get("IsValid");
+            String strContainerCount="",strMessage="";
+            System.out.println("嘿嘿Json3:"+isSuccess);
+            if(isSuccess){
+                strContainerCount=objectMap.get("ContainerCount").toString();
+                //这里需发成功消息     /////////////////////////////////////
+                return true;
+            }else{
+                strMessage=objectMap.get("Message").toString();
+                //这里需发失败消息//////////////////////////////////////////
+                return false;
+
+            }
+        }
+
+    }
 }

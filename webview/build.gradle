@@ -33,4 +33,7 @@ dependencies {
 
     // below added by Philip
     implementation 'org.jsoup:jsoup:1.12.1'
+    implementation 'com.alibaba:fastjson:1.2.70'
+    implementation 'com.alibaba:fastjson:1.1.71.android'
+
 }
