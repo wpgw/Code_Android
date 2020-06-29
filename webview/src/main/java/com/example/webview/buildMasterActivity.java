@@ -82,6 +82,8 @@ public class buildMasterActivity extends AppCompatActivity {
         }
     });
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -318,6 +320,35 @@ public class buildMasterActivity extends AppCompatActivity {
         String master;
         public ScanData(Date date,String master){
             this.date=date;this.master=master;
+        }
+    }
+
+    private class ScanData1{
+        public String serial;
+        public String master;
+        public Date date;
+        public int count;   //记录入队列的次数
+        public ScanData1(String serial,String master,Date date,int count) {
+            this.serial = serial;
+            this.master = master;
+            this.date = date;
+            this.count = count;
+        }
+        @Override
+        public boolean equals(Object obj){
+            if(this == obj)
+                return true;
+            if(obj == null)
+                return false;
+            if(!(obj instanceof ScanData1))
+                return false;
+            ScanData1 other = (ScanData1)obj;
+            if(this.serial == null){
+                if(other.serial !=null)
+                    return false;
+            }else if(this.serial.equals(other.serial))
+                return true;
+            return false;
         }
     }
 
