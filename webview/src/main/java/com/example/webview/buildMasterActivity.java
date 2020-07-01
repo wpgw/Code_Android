@@ -55,12 +55,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class buildMasterActivity extends AppCompatActivity {
-    final int atPAGE=1,leftPAGE=2;
+    final int atPAGE=1,leftPAGE=2,REFRESH=3,MSG=4;
     WebView mWebview;
     EditText etMaster,etSerial;
     TextView tvMessage,tvList;
@@ -75,13 +77,14 @@ public class buildMasterActivity extends AppCompatActivity {
     Thread childThread;
     //ConcurrentHashMap<String,ScanData> scandataMap=new ConcurrentHashMap();  //这个内容没有顺序
     //ConcurrentSkipListMap<String,ScanData> scandataMap=new ConcurrentSkipListMap(new Comparator() {
-    TreeMap<String,ScanData> scandataMap=new TreeMap(new Comparator() {
-        @Override
-        public int compare(Object o1, Object o2) {
-            return 1;  //去掉默认的排序功能
-        }
-    });
+//    TreeMap<String,ScanData> scandataMap=new TreeMap(new Comparator() {
+//        @Override
+//        public int compare(Object o1, Object o2) {
+//            return 1;  //去掉默认的排序功能
+//        }
+//    });
 
+    LinkedBlockingDeque<ScanData1> queue=new LinkedBlockingDeque<ScanData1>();
 
 
     @Override
@@ -119,11 +122,12 @@ public class buildMasterActivity extends AppCompatActivity {
                 if (serial.length() > 7 && master.length() > 5) {   //粗粗检查一下合法性  //////////////
                     ScanData scandata = new ScanData(new Date(), master);
                     //加入前，判断是否已经扫过了，在列表中，如在，需提醒一下
-                    if(scandataMap.get(serial)!=null){
+                    ScanData1 scandata1= new ScanData1(serial,master,new Date(),0);
+                    if(queue.contains(scandata1)){
                         vibrate(200);
-                        scandataMap.remove(serial);     //去掉旧数据
                     }
-                    scandataMap.put(serial, scandata);  //加入新数据
+                    //加入新数据
+                    queue.offer(scandata1);    //poll(出)与offer(入)相互对应, 满会返回false   poll -->【若队列为空，返回null】
                     refresh_list();
                     //System.out.println("嘿嘿：" + scandataMap);     ///////////////////////////
                     etSerial.requestFocus();     //条码框获得焦点
@@ -284,6 +288,8 @@ public class buildMasterActivity extends AppCompatActivity {
             mWebview.destroy();
             mWebview = null;
         }
+        childThread.interrupt();  //中断子线程：子线程会产生interrupt exception,跳出loop
+
         super.onDestroy();
     }
 
@@ -303,6 +309,11 @@ public class buildMasterActivity extends AppCompatActivity {
             }else if(msg.what==leftPAGE){
                 newPage.setVisibility(View.GONE);
                 etSerial.setText("");
+            }else if(msg.what==REFRESH){
+                refresh_list();
+            }else if(msg.what==MSG){        //显示操作信息
+                String message=tvMessage.getText().toString();
+                tvMessage.setText(msg.obj.toString()+"\n"+message);
             }
         }};
 
@@ -350,63 +361,57 @@ public class buildMasterActivity extends AppCompatActivity {
                 return true;
             return false;
         }
+        public String toString(){
+            if(this.serial==null)
+                return "no data";
+            String date=Utils.getMonthTime(this.date);
+            return String.format("%s-->%s时间:%s次数:%s\n",this.serial,this.master,date,this.count);
+        }
     }
 
     //显示 扫描任务清单
-    private void refresh_list(){
-        String strlist="";
-        int count=scandataMap.size();
-        for(Map.Entry<String,ScanData> entry: scandataMap.entrySet()){
-            String date=Utils.getMonthTime(entry.getValue().date);
-            strlist+=String.format("%s  %s  时间：%s  %s\n",entry.getKey(),entry.getValue().master,date,count);
+    private void refresh_list(){   ////////////////要改成从queue中获取数据
+        System.out.println("刷新refresh_list!");
+        int count=queue.size();
+        String strlist="任务数："+count+"\n";
+        //遍历队列
+        for (ScanData1 scandata1 : queue) {
+            strlist+=scandata1.toString();
         }
         tvList.setText(strlist);
     }
 
     class ChildThread extends Thread{
         private static final String Child_TAG="ChildThread";
-        boolean stopChild;   //子线程 停不停的标记
-
-        public ChildThread(){
-            this.stopChild=false;
-        }
-
-        public void setStop(boolean stopChild){
-            this.stopChild=stopChild;
-        }
-
         @Override
         public void run(){
             this.setName("ChildThread");
-            while(!stopChild){
-                try {
-                    if(scandataMap.size()>0){
-                        System.out.println("调试："+scandataMap);
-                        Set<String> list=scandataMap.keySet();
-                        for(String serial:list) {
-                            Thread.sleep(1000);
-                            String master=scandataMap.get(serial).master;
-                            //String serial=entry.getKey();
-                            //scandataMap.remove(serial);     //这里从队列中删除数据，如果处理失败，再加入队列
-                            System.out.println("调试2："+scandataMap.size());
-                            //refresh_list();         //需在UI中刷新
-                            if(session_ID.length()>0) {  //session_ID是登录成功后才有值,肯定在scandataMap之前获得数据
-                                //操作 Build MasterUnit
-                                boolean success=masterUnitHandler(session_ID, master, serial);
-                                if(!success){
-                                    //不成功，加进行，再来再处理
-                                    scandataMap.put(serial,new ScanData(new Date(),master));
-                                    //refresh_list();  //需在UI中刷新
-                                }
+            try {
+                while(true){     //子程序可被Interrupt停止
+                    ScanData1 scanData1=queue.poll(); //poll(出)与offer(入)相互对应, 满会返回false
+                    sendMessage(REFRESH,null);
+                    if(scanData1!=null){              //poll(出)：若队列为空，返回null
+                        System.out.println("子线程发现数据："+scanData1.toString());
+                        String serial=scanData1.serial;
+                        String master=scanData1.master;
+                        try {                 //这里会抛出异常
+                            boolean success = masterUnitHandler(session_ID, master, serial);    ///////masterUnitHandler还要处理各种状况
+                            if(!success){
+                                scanData1.count++;   //数据的失败记录加1
+                                //进入队列，再来一次   ////////////////判断一下时间，太老的扫描数据就不加入队列了
+                                                      ////////////////还要有 手工停止程序的功能（看看子线程关了没）   有手工清除队列  关闭上传  停止上传
+                                queue.offer(scanData1);
+                                sendMessage(REFRESH,null);
                             }
+                        }catch(Exception e){
+                            e.printStackTrace();
                         }
                     }
-                    Thread.sleep(5000);
-                    System.out.println("Child Thread is running."+session_ID);   ////////////////////////////////
-                } catch (Exception e) {
-                    System.out.println("子线程处理Exception.");
-                    e.printStackTrace();
+                    Thread.sleep(2000);
                 }
+            }catch (InterruptedException e) {
+                System.out.println("子线程被Interrupted!");
+                //这里处理一下后事  /////////////////////////
             }
         }
 
@@ -414,6 +419,7 @@ public class buildMasterActivity extends AppCompatActivity {
             String url="https://www.plexus-online.com/"+session_ID+"/Modules/Inventory/MasterUnits/MasterUnitHandler.ashx?ApplicationKey=166143";
             String jsonString;
             Connection.Response res;
+            String strMasterUnitKey,strMasterUnitNo,strLocation,strMasterUnitTypeKey;
 
             //查有关master label的基本数据
             HashMap<String,String> data=new HashMap<>();
@@ -422,35 +428,45 @@ public class buildMasterActivity extends AppCompatActivity {
             jsonString=res.body();
             System.out.println("读master label基本数据：");
             Map<String,Object> objectMap= JSON.parseObject(jsonString,Map.class);
-            String strMasterUnitKey=objectMap.get("MasterUnitKey").toString();
-            String strMasterUnitNo=objectMap.get("MasterUnitNo").toString();
-            String strLocation=objectMap.get("Location").toString();
-            String strMasterUnitTypeKey=objectMap.get("MasterUnitTypeKey").toString();
-            boolean Active=(boolean)objectMap.get("Active");
-            System.out.println("嘿嘿Json1:"+strMasterUnitKey);
-
-            //如果 StrMasterUnitKey为空，则报错      /////////////////////
-            if(strMasterUnitKey.length()==0){
+            if(objectMap.get("MasterUnitKey")!=null){
+                strMasterUnitKey=objectMap.get("MasterUnitKey").toString();
+                strMasterUnitNo=objectMap.get("MasterUnitNo").toString();
+                strLocation=objectMap.get("Location").toString();
+                strMasterUnitTypeKey=objectMap.get("MasterUnitTypeKey").toString();
+                boolean Active=(boolean)objectMap.get("Active");
+                System.out.println("嘿嘿Json1:"+strMasterUnitNo);
+            }else{  //如果 StrMasterUnitKey为空，则报错
+                sendMessage(MSG,master+"出错：主条码号有问题！\n");
+                vibrate(300);
                 return false;
             }
 
-            //查有关箱号是否在master label中
-            data.clear();objectMap.clear();
-            data.put("Action","ValidateContainer");data.put("SerialNo",serial);
-            res=Utils.request_post(url, cookies, data);
-            jsonString=res.body();
-            System.out.println("验证：");
-            System.out.println(jsonString);
-            objectMap= JSON.parseObject(jsonString,Map.class);
-            String strSerialNo=objectMap.get("SerialNo").toString();
-            boolean IsValid=(boolean)objectMap.get("IsValid");
-            System.out.println("嘿嘿Json2:"+strSerialNo);
+            {
+                //查有关箱号是否在master label中
+                data.clear();
+                objectMap.clear();
+                data.put("Action", "ValidateContainer");
+                data.put("SerialNo", serial);
+                res = Utils.request_post(url, cookies, data);
+                jsonString = res.body();
+                System.out.println("验证：");
+                System.out.println(jsonString);
+                objectMap = JSON.parseObject(jsonString, Map.class);
+                if (objectMap.get("MasterUnitNo") != null) {    //masterUnit不一定会有
+                    String strMasterUnitNo_raw = objectMap.get("MasterUnitNo").toString();
+                    sendMessage(MSG, String.format("%s在已主条码%s中。\n", serial, strMasterUnitNo_raw));
+                }
+                boolean IsValid = (boolean) objectMap.get("IsValid");
+                System.out.println("嘿嘿Json2:" + serial);
 
-            //如果IsValid是真，报错      //////////////////////////
-            if(IsValid){
-                return false;
+                //如果IsValid不是真，报错
+                if (!IsValid) {
+                    vibrate(300);
+                    String strMessage = objectMap.get("Message").toString();
+                    sendMessage(MSG, serial + "出错：条码号有问题！\n      " + strMessage + "\n");
+                    return false;
+                }
             }
-
             //把相关箱号加入到指定的master label中
             data.clear();objectMap.clear();
             data.put("Action","BuildMasterUnit");data.put("MasterUnitKey",strMasterUnitKey);data.put("MasterUnitNo",strMasterUnitNo);
@@ -460,17 +476,15 @@ public class buildMasterActivity extends AppCompatActivity {
             System.out.println("执行：");
             objectMap= JSON.parseObject(jsonString,Map.class);
             boolean isSuccess =(boolean)objectMap.get("IsValid");
-            String strContainerCount="",strMessage="";
             System.out.println("嘿嘿Json3:"+isSuccess);
             if(isSuccess){
-                strContainerCount=objectMap.get("ContainerCount").toString();
-                //这里需发成功消息     /////////////////////////////////////
+                String strContainerCount=objectMap.get("ContainerCount").toString();
+                sendMessage(MSG,"成功："+serial+"成功加入"+master+". 现主码箱数："+strContainerCount+"\n");
                 return true;
             }else{
-                strMessage=objectMap.get("Message").toString();
-                //这里需发失败消息//////////////////////////////////////////
+                String strMessage=objectMap.get("Message").toString();
+                sendMessage(MSG,"失败："+serial+"加入"+master+"失败。 "+Utils.getMonthTime(new Date())+"\n           "+strMessage+"\n");
                 return false;
-
             }
         }
     }
