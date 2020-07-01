@@ -3,6 +3,8 @@ package com.example.webview;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -16,6 +18,8 @@ import android.text.Layout;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
@@ -62,6 +66,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class buildMasterActivity extends AppCompatActivity {
+    Context mActvity;
+    Menu mMenu;
     final int atPAGE=1,leftPAGE=2,REFRESH=3,MSG=4;
     WebView mWebview;
     EditText etMaster,etSerial;
@@ -73,16 +79,7 @@ public class buildMasterActivity extends AppCompatActivity {
 
     String session_ID = "";
     HashMap cookies;
-    Handler mChildHandler;
     Thread childThread;
-    //ConcurrentHashMap<String,ScanData> scandataMap=new ConcurrentHashMap();  //这个内容没有顺序
-    //ConcurrentSkipListMap<String,ScanData> scandataMap=new ConcurrentSkipListMap(new Comparator() {
-//    TreeMap<String,ScanData> scandataMap=new TreeMap(new Comparator() {
-//        @Override
-//        public int compare(Object o1, Object o2) {
-//            return 1;  //去掉默认的排序功能
-//        }
-//    });
 
     LinkedBlockingDeque<ScanData1> queue=new LinkedBlockingDeque<ScanData1>();
 
@@ -99,13 +96,11 @@ public class buildMasterActivity extends AppCompatActivity {
         }
         init_view();         //初始化 view
         mWebview.loadUrl(url_plex);  //开始登录Plex
-
-        childThread=new ChildThread();
-        childThread.start();
     }
 
     @SuppressLint("SetJavaScriptEnabled")  //标记，让不报错
     private void init_view() {
+        mActvity=this;
         mWebview = findViewById(R.id.webview);
 
         newPage=findViewById(R.id.newPage);
@@ -120,7 +115,6 @@ public class buildMasterActivity extends AppCompatActivity {
                 String serial = etSerial.getText().toString();
                 String master = etMaster.getText().toString();
                 if (serial.length() > 7 && master.length() > 5) {   //粗粗检查一下合法性  //////////////
-                    ScanData scandata = new ScanData(new Date(), master);
                     //加入前，判断是否已经扫过了，在列表中，如在，需提醒一下
                     ScanData1 scandata1= new ScanData1(serial,master,new Date(),0);
                     if(queue.contains(scandata1)){
@@ -190,8 +184,13 @@ public class buildMasterActivity extends AppCompatActivity {
                     System.out.println("登录成功,准备跳转：\n");
                     Uri uri = Uri.parse(url);
                     session_ID = uri.getPathSegments().get(0);
+
                     String cookieString = CookieManager.getInstance().getCookie(url_plex);
                     cookies = Utils.stringTomap(cookieString);
+
+                    childThread=new ChildThread();
+                    childThread.start();
+
                     //子线程向主线程发消息
                     sendMessage(leftPAGE,null);
                     //go to next Activity
@@ -267,6 +266,55 @@ public class buildMasterActivity extends AppCompatActivity {
         });
     }
 
+    @Override   //显示 选项菜单
+    public boolean onCreateOptionsMenu(Menu menu){
+            getMenuInflater().inflate(R.menu.option_menu, menu);
+            mMenu=menu;
+            return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.navigation_stop_child:
+                if(childThread.isAlive()) {
+                    childThread.interrupt();
+                }
+                if(!childThread.isAlive()){
+                    item.setEnabled(false);
+                    mMenu.findItem(R.id.navigation_start_child).setEnabled(true);  //激活另一个菜单项, 发现手工中断不一定成功（scanhandle中出throw异常），需判断清楚//////////
+                    childThread=null;
+                }
+                break;
+            case R.id.navigation_start_child:
+                if(childThread==null) {
+                    childThread=new ChildThread();
+                    childThread.start();
+                    item.setEnabled(false);
+                    mMenu.findItem(R.id.navigation_stop_child).setEnabled(true);
+                    //System.out.println(childThread.getState());   //terminated or runable
+                }
+                break;
+            case R.id.navigation_end:
+                //System.exit(0);    //比较下 finish, activity.onDestroy
+                //onDestroy();
+                finish();   //测试表明，这里finish, 也执行 onDestory
+                break;
+            case R.id.navigation_clearDB1:
+                //准备清除数据
+                item.setEnabled(false);   //关step 1
+                mMenu.findItem(R.id.navigation_clearDB2).setEnabled(true);//打开step 2
+                break;
+            case R.id.navigation_clearDB2:
+                queue.clear();
+                item.setEnabled(false);  //关step 2
+                mMenu.findItem(R.id.navigation_clearDB1).setEnabled(true); //打开step 1
+                refresh_list();
+                break;
+            default:
+        }
+        return true;
+    }
+
     //点击让webview返回上一页面, webview不能退了才退出Activity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -325,15 +373,7 @@ public class buildMasterActivity extends AppCompatActivity {
         mMainHandler.sendMessage(message1);
     }
 
-    //自定义数据，用于保存 scan data
-    private class ScanData{
-        public Date date;
-        String master;
-        public ScanData(Date date,String master){
-            this.date=date;this.master=master;
-        }
-    }
-
+    //自定义数据类型，用于保存 scan data
     private class ScanData1{
         public String serial;
         public String master;
@@ -365,7 +405,7 @@ public class buildMasterActivity extends AppCompatActivity {
             if(this.serial==null)
                 return "no data";
             String date=Utils.getMonthTime(this.date);
-            return String.format("%s-->%s时间:%s次数:%s\n",this.serial,this.master,date,this.count);
+            return String.format("%s-->%s 时间:%s 记数:%s\n",this.serial,this.master,date,this.count);
         }
     }
 
@@ -387,7 +427,7 @@ public class buildMasterActivity extends AppCompatActivity {
         public void run(){
             this.setName("ChildThread");
             try {
-                while(true){     //子程序可被Interrupt停止
+                while(true){     //子程序可被Interrupt停止   /////////////////////这里要改一下被中断的方式，发现手工中断可能丢数据
                     ScanData1 scanData1=queue.poll(); //poll(出)与offer(入)相互对应, 满会返回false
                     sendMessage(REFRESH,null);
                     if(scanData1!=null){              //poll(出)：若队列为空，返回null
@@ -452,7 +492,7 @@ public class buildMasterActivity extends AppCompatActivity {
                 System.out.println("验证：");
                 System.out.println(jsonString);
                 objectMap = JSON.parseObject(jsonString, Map.class);
-                if (objectMap.get("MasterUnitNo") != null) {    //masterUnit不一定会有
+                if (objectMap.get("MasterUnitNo") != null) {    //masterUnit不一定会有      //发现这里会抛出 null 异常, 且子程序被手工中断时会掉数据  ////////////////////////////////////
                     String strMasterUnitNo_raw = objectMap.get("MasterUnitNo").toString();
                     sendMessage(MSG, String.format("%s在已主条码%s中。\n", serial, strMasterUnitNo_raw));
                 }
@@ -475,7 +515,7 @@ public class buildMasterActivity extends AppCompatActivity {
             jsonString=res.body();
             System.out.println("执行：");
             objectMap= JSON.parseObject(jsonString,Map.class);
-            boolean isSuccess =(boolean)objectMap.get("IsValid");
+            boolean isSuccess =(boolean)objectMap.get("IsValid");     //发现这里会抛出 null 异常, 且子程序被手工中断时会掉数据  ////////////////////////////////////
             System.out.println("嘿嘿Json3:"+isSuccess);
             if(isSuccess){
                 String strContainerCount=objectMap.get("ContainerCount").toString();

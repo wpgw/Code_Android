@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="none">
+         <item
+            android:id="@+id/navigation_stop_child"
+            android:title="停止上传" />
+
+        <item
+            android:id="@+id/navigation_start_child"
+            android:enabled="false"
+            android:title="打开上传" />
+
+        <item
+            android:id="@+id/navigation_end"
+            android:title="退出程序" />
+
+    </group>
+
+    <group
+        android:id="@+id/group3"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/navigation_clearDB1"
+            android:title="准备清除数据" />
+
+        <item
+            android:id="@+id/navigation_clearDB2"
+            android:enabled="false"
+            android:title="执行清除数据" />
+
+
+    </group>
+</menu>
