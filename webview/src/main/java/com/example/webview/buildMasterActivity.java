@@ -426,33 +426,38 @@ public class buildMasterActivity extends AppCompatActivity {
         @Override
         public void run(){
             this.setName("ChildThread");
-            try {
-                while(true){     //子程序可被Interrupt停止   /////////////////////这里要改一下被中断的方式，发现手工中断可能丢数据
-                    ScanData1 scanData1=queue.poll(); //poll(出)与offer(入)相互对应, 满会返回false
-                    sendMessage(REFRESH,null);
-                    if(scanData1!=null){              //poll(出)：若队列为空，返回null
-                        System.out.println("子线程发现数据："+scanData1.toString());
-                        String serial=scanData1.serial;
-                        String master=scanData1.master;
-                        try {                 //这里会抛出异常
-                            boolean success = masterUnitHandler(session_ID, master, serial);    ///////masterUnitHandler还要处理各种状况
-                            if(!success){
-                                scanData1.count++;   //数据的失败记录加1
-                                //进入队列，再来一次   ////////////////判断一下时间，太老的扫描数据就不加入队列了
-                                                      ////////////////还要有 手工停止程序的功能（看看子线程关了没）   有手工清除队列  关闭上传  停止上传
-                                queue.offer(scanData1);
-                                sendMessage(REFRESH,null);
-                            }
-                        }catch(Exception e){
-                            e.printStackTrace();
+
+            while(true){     //子程序可被Interrupt停止   /////////////////////这里要改一下被中断的方式，发现手工中断可能丢数据
+                ScanData1 scanData1=queue.poll(); //poll(出)与offer(入)相互对应, 满会返回false
+                sendMessage(REFRESH,null);
+                if(scanData1!=null){              //poll(出)：若队列为空，返回null
+                    System.out.println("子线程发现数据："+scanData1.toString());
+                    String serial=scanData1.serial;
+                    String master=scanData1.master;
+                    try {                 //这里会抛出异常
+                        boolean success = masterUnitHandler(session_ID, master, serial);    ///////masterUnitHandler还要处理各种状况
+                        if(!success){
+                            scanData1.count++;   //数据的失败记录加1
+                            //进入队列，再来一次   ////////////////判断一下时间，太老的扫描数据就不加入队列了
+                                                  ////////////////还要有 手工停止程序的功能（看看子线程关了没）   有手工清除队列  关闭上传  停止上传
+                            queue.offer(scanData1);
+                            sendMessage(REFRESH,null);
                         }
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        sendMessage(MSG,e.getMessage());     //发出 出错信息
                     }
-                    Thread.sleep(2000);
                 }
-            }catch (InterruptedException e) {
-                System.out.println("子线程被Interrupted!");
-                //这里处理一下后事  /////////////////////////
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    System.out.println("子线程被打断！");
+                    sendMessage(MSG,"子线程被打断！");   //////这里要改菜单项
+                    break;      //停止本线程
+                }
             }
+
         }
 
         private boolean masterUnitHandler(String session_ID,String master,String serial) throws Exception {
