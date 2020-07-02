@@ -3,9 +3,7 @@ package com.example.webview;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,9 +11,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
 import android.os.Vibrator;
-import android.text.Editable;
-import android.text.Layout;
-import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -36,33 +31,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-
-import org.json.JSONObject;
 import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.Serializable;
-import java.net.SocketTimeoutException;
-import java.net.URI;
-import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class buildMasterActivity extends AppCompatActivity {
@@ -448,7 +423,6 @@ public class buildMasterActivity extends AppCompatActivity {
                         queue.offer(scanData1);
                         sendMessage(REFRESH,null);
                     }
-
                 }
                 try {
                     Thread.sleep(2000);
@@ -485,9 +459,7 @@ public class buildMasterActivity extends AppCompatActivity {
                 vibrate(300);
                 return false;
             }
-
-            {
-                //查有关箱号是否在master label中
+            { //查有关箱号是否在master label中
                 data.clear();
                 objectMap.clear();
                 data.put("Action", "ValidateContainer");
