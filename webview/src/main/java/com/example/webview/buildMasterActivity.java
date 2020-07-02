@@ -79,7 +79,7 @@ public class buildMasterActivity extends AppCompatActivity {
 
     String session_ID = "";
     HashMap cookies;
-    Thread childThread;
+    ChildThread childThread;
 
     LinkedBlockingDeque<ScanData1> queue=new LinkedBlockingDeque<ScanData1>();
 
@@ -276,13 +276,15 @@ public class buildMasterActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.navigation_stop_child:
-                if(childThread.isAlive()) {
-                    childThread.interrupt();
+                if(childThread!=null && childThread.isAlive()) {
+                    //childThread.interrupt();   //发现用Interrupt不好控制退出点，可能使Jsoup中断，在随机位置返回Null
+                    childThread.flag=false;      //标志位控制 子线程的开关（不会立即关，在下一个循环时关）
                 }
-                if(!childThread.isAlive()){
+                if(childThread!=null && !childThread.isAlive()){      //确认 子线程已关闭后，才同步菜单项
                     item.setEnabled(false);
-                    mMenu.findItem(R.id.navigation_start_child).setEnabled(true);  //激活另一个菜单项, 发现手工中断不一定成功（scanhandle中出throw异常），需判断清楚//////////
+                    mMenu.findItem(R.id.navigation_start_child).setEnabled(true);  //激活另一个菜单项
                     childThread=null;
+                    sendMessage(MSG,"已成功手工中断了上传。\n");
                 }
                 break;
             case R.id.navigation_start_child:
@@ -291,6 +293,7 @@ public class buildMasterActivity extends AppCompatActivity {
                     childThread.start();
                     item.setEnabled(false);
                     mMenu.findItem(R.id.navigation_stop_child).setEnabled(true);
+                    sendMessage(MSG,"已成功启动了上传。\n");
                     //System.out.println(childThread.getState());   //terminated or runable
                 }
                 break;
@@ -336,8 +339,8 @@ public class buildMasterActivity extends AppCompatActivity {
             mWebview.destroy();
             mWebview = null;
         }
-        childThread.interrupt();  //中断子线程：子线程会产生interrupt exception,跳出loop
-
+        //childThread.interrupt();  //中断子线程：子线程会产生interrupt exception,跳出loop
+        childThread.flag=false;
         super.onDestroy();
     }
 
@@ -422,42 +425,39 @@ public class buildMasterActivity extends AppCompatActivity {
     }
 
     class ChildThread extends Thread{
-        private static final String Child_TAG="ChildThread";
+        volatile boolean flag=true;
         @Override
         public void run(){
-            this.setName("ChildThread");
-
-            while(true){     //子程序可被Interrupt停止   /////////////////////这里要改一下被中断的方式，发现手工中断可能丢数据
+            while(flag){     //子程序可被Interrupt停止   /////////////////////这里要改一下被中断的方式，发现手工中断可能丢数据
                 ScanData1 scanData1=queue.poll(); //poll(出)与offer(入)相互对应, 满会返回false
                 sendMessage(REFRESH,null);
                 if(scanData1!=null){              //poll(出)：若队列为空，返回null
                     System.out.println("子线程发现数据："+scanData1.toString());
                     String serial=scanData1.serial;
                     String master=scanData1.master;
+                    boolean success=false;  //初始化 success 结果状态
                     try {                 //这里会抛出异常
-                        boolean success = masterUnitHandler(session_ID, master, serial);    ///////masterUnitHandler还要处理各种状况
-                        if(!success){
-                            scanData1.count++;   //数据的失败记录加1
-                            //进入队列，再来一次   ////////////////判断一下时间，太老的扫描数据就不加入队列了
-                                                  ////////////////还要有 手工停止程序的功能（看看子线程关了没）   有手工清除队列  关闭上传  停止上传
-                            queue.offer(scanData1);
-                            sendMessage(REFRESH,null);
-                        }
+                        success = masterUnitHandler(session_ID, master, serial);    ///////masterUnitHandler还要处理各种状况
                     }catch(Exception e){
                         e.printStackTrace();
                         sendMessage(MSG,e.getMessage());     //发出 出错信息
                     }
+                    if(!success){
+                        scanData1.count++;   //数据的失败记录加1
+                        //进入队列，再来一次   ////////////////判断一下时间，太老的扫描数据就不加入队列了
+                        queue.offer(scanData1);
+                        sendMessage(REFRESH,null);
+                    }
+
                 }
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                    System.out.println("子线程被打断！");
-                    sendMessage(MSG,"子线程被打断！");   //////这里要改菜单项
+                    sendMessage(MSG,"子线程被Interrupt！");   //////这里要改菜单项
                     break;      //停止本线程
                 }
             }
-
         }
 
         private boolean masterUnitHandler(String session_ID,String master,String serial) throws Exception {

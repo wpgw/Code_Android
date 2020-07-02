@@ -1,47 +1,35 @@
 package com.example.webview;
 
 public class EqualsDemo {
-    String b;
-    public EqualsDemo(String i){
-        this.b=i;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(this == obj)
-            return true;
-        if(obj == null)
-            return false;
-        if(!(obj instanceof EqualsDemo))
-            return false;
-        EqualsDemo other = (EqualsDemo)obj;
-        if(b == null){
-            if(other.b !=null)
-                return false;
-        }else if(b.equals(other.b))
-            return true;
-        return false;
-    }
-
     public static void main(String[] args) {
+        class mThread extends Thread{
+            volatile boolean flag=true;
+            @Override
+            public void run(){
+                int num=0;
+                while (!Thread.currentThread().isInterrupted()&&flag && num <= Integer.MAX_VALUE / 10) {
+                    if(num%1000==0) {
+                        System.out.println("1000的倍数" + num);
+                    }
+                    num++;
+                }
+            }
+        }
 
-        EqualsDemo a = new EqualsDemo("1");
-        EqualsDemo b = new EqualsDemo("1");
-        EqualsDemo d = new EqualsDemo("2");
-        EqualsDemo c = a;
+        mThread thread = new mThread();
+        //Thread thread = new Thread(mthread);
+        thread.start();
+        try
+            {
+                Thread.sleep(10);
+            } catch(
+            InterruptedException e)
 
-//        System.out.println(a==c);
-//        System.out.println(a==d);
-//        System.out.println(b==c);
-//        System.out.println(b==a);
-//
-//        System.out.println(a.equals(c));
-//        System.out.println(a.equals(d));
-//        System.out.println(b.equals(c));
-//        System.out.println(b.equals(a));
-//
-//        System.out.println("null==null"+null==null);
-
-
+            {
+                e.printStackTrace();
+            }
+        //thread.interrupt();
+        thread.flag=false;
+        }
     }
-}
+
