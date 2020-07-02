@@ -255,7 +255,7 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
             valid_barcode.add("ok"); valid_barcode.add("hold");valid_barcode.add("defective");
             valid_barcode.add("rework"); valid_barcode.add("suspect"); valid_barcode.add("warehouse receive status");
             if(user.equals("smmp.pwang")){   //pwang 有特殊权限
-                valid_barcode.add("scrap");  //scrap 用于修改报废
+                valid_barcode.add("scrap");  //scrap 用于修改报废 注意：数量还不能为0
             }
 
             //if carcode status is valid, then scrap/onHold/放行......

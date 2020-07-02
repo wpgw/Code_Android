@@ -432,6 +432,9 @@ public class buildMasterActivity extends AppCompatActivity {
                     break;      //停止本线程
                 }
             }
+            if(flag==false){
+                System.out.println("子线程退出!");
+            }
         }
 
         private boolean masterUnitHandler(String session_ID,String master,String serial) throws Exception {
