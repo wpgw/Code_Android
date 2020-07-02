@@ -11,7 +11,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
 import android.os.Vibrator;
+import android.speech.tts.TextToSpeech;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +39,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -57,7 +60,7 @@ public class buildMasterActivity extends AppCompatActivity {
     ChildThread childThread;
 
     LinkedBlockingDeque<ScanData1> queue=new LinkedBlockingDeque<ScanData1>();
-
+    private TextToSpeech textToSpeech = null;//创建自带语音对象
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +73,16 @@ public class buildMasterActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
         init_view();         //初始化 view
+        initTTS();          //初始化 语音
+
         mWebview.loadUrl(url_plex);  //开始登录Plex
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        say("about");
     }
 
     @SuppressLint("SetJavaScriptEnabled")  //标记，让不报错
@@ -315,7 +327,9 @@ public class buildMasterActivity extends AppCompatActivity {
             mWebview = null;
         }
         //childThread.interrupt();  //中断子线程：子线程会产生interrupt exception,跳出loop
-        childThread.flag=false;
+        if(childThread!=null){
+            childThread.flag=false;
+        }
         super.onDestroy();
     }
 
@@ -507,5 +521,47 @@ public class buildMasterActivity extends AppCompatActivity {
                 return false;
             }
         }
+    }
+
+    private void initTTS() {
+        //实例化自带语音对象
+        textToSpeech = new TextToSpeech(mActvity, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == textToSpeech.SUCCESS) {
+                    // Toast.makeText(MainActivity.this,"成功输出语音",
+                    // Toast.LENGTH_SHORT).show();
+                    // Locale loc1=new Locale("us");
+                    // Locale loc2=new Locale("china");
+
+                    textToSpeech.setPitch(1.0f);//方法用来控制音调
+                    textToSpeech.setSpeechRate(1.0f);//用来控制语速
+
+                    //判断是否支持下面两种语言
+                    int result1 = textToSpeech.setLanguage(Locale.US);
+                    //int result2 = textToSpeech.setLanguage(Locale.SIMPLIFIED_CHINESE);
+                    //boolean a = (result1 == TextToSpeech.LANG_MISSING_DATA || result1 == TextToSpeech.LANG_NOT_SUPPORTED);
+                    //boolean b = (result2 == TextToSpeech.LANG_MISSING_DATA || result2 == TextToSpeech.LANG_NOT_SUPPORTED);
+                    //Log.i("zhh_tts", "US支持否？--》" + a +
+                    //        "\nzh-CN支持否》--》" + b);
+
+                    if (result1 == TextToSpeech.LANG_MISSING_DATA || result1 == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Toast.makeText(mActvity, "语音包丢失或语音不支持", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(mActvity, "数据丢失或不支持", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+
+    private void say(String data) {
+        // 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
+        textToSpeech.setPitch(1.0f);
+        // 设置语速
+        textToSpeech.setSpeechRate(0.3f);
+        textToSpeech.speak(data,//输入中文，若不支持的设备则不会读出来
+                TextToSpeech.QUEUE_FLUSH, null);
     }
 }
