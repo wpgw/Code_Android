@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -49,7 +50,7 @@ public class buildMasterActivity extends AppCompatActivity {
     final int atPAGE=1,leftPAGE=2,REFRESH=3,MSG=4;
     WebView mWebview;
     EditText etMaster,etSerial;
-    TextView tvMessage,tvList;
+    TextView tvMessage,tvList,tvBackPlex;
     Button button;
     LinearLayout newPage;
     String url_plex = "https://mobile.plexus-online.com";
@@ -91,7 +92,7 @@ public class buildMasterActivity extends AppCompatActivity {
         mWebview = findViewById(R.id.webview);
 
         newPage=findViewById(R.id.newPage);
-        newPage.setVisibility(View.GONE);
+        newPage.setVisibility(View.GONE);  //只开Plex 界面
 
         etMaster=findViewById(R.id.etMaster);
         etSerial=findViewById(R.id.etSerial);
@@ -134,6 +135,15 @@ public class buildMasterActivity extends AppCompatActivity {
         tvMessage.setMovementMethod(ScrollingMovementMethod.getInstance());
         tvList=findViewById(R.id.tvList);
         tvList.setMovementMethod(ScrollingMovementMethod.getInstance());
+        tvBackPlex=findViewById(R.id.tvBackPlex);
+        tvBackPlex.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
+        tvList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mWebview.setVisibility(View.VISIBLE);
+                newPage.setVisibility(View.GONE);
+            }
+        });
 
         WebSettings mWebSettings=mWebview.getSettings();
         mWebSettings.setJavaScriptEnabled(true); // 设置支持javascript
@@ -341,13 +351,15 @@ public class buildMasterActivity extends AppCompatActivity {
     private Handler mMainHandler = new Handler() {
         public void handleMessage(Message msg) {
             //处理从子线程中来的消息
-            if(msg.what==atPAGE){
+            if(msg.what==atPAGE){    //显示新页面，去掉老Plex界面
                 newPage.setVisibility(View.VISIBLE);
+                mWebview.setVisibility(View.GONE);
                 etMaster.setText(msg.obj.toString());
                 etSerial.setText("");   // clear条码框
                 etSerial.requestFocus();  //条码框 获得焦点
-            }else if(msg.what==leftPAGE){
+            }else if(msg.what==leftPAGE){   //离开新页面
                 newPage.setVisibility(View.GONE);
+                mWebview.setVisibility(View.VISIBLE);
                 etSerial.setText("");
             }else if(msg.what==REFRESH){
                 refresh_list();
@@ -517,7 +529,7 @@ public class buildMasterActivity extends AppCompatActivity {
                 return true;
             }else{
                 String strMessage=objectMap.get("Message").toString();
-                sendMessage(MSG,"失败："+serial+"加入"+master+"失败。 "+Utils.getMonthTime(new Date())+"\n           "+strMessage+"\n");
+                sendMessage(MSG,"失败："+serial+"加入"+master+"失败。 "+Utils.getMonthTime(new Date())+"\n            "+strMessage+"\n");
                 return false;
             }
         }
