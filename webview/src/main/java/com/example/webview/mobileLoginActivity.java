@@ -58,7 +58,6 @@ public class mobileLoginActivity extends AppCompatActivity {
         }
         init_view();         //初始化 view
         mWebview.loadUrl(url_plex);  //开始登录
-
         intent=new Intent(this,buildMasterActivity.class);
     }
 

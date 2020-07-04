@@ -110,7 +110,9 @@ public class buildMasterActivity extends AppCompatActivity {
                     }
                     //加入新数据
                     queue.offer(scandata1);    //poll(出)与offer(入)相互对应, 满会返回false   poll -->【若队列为空，返回null】
-                    refresh_list();
+                    //语音提示
+                    say(serial.substring(serial.length()-3,serial.length()));
+                    refresh_list("加入新条码");
                     //System.out.println("嘿嘿：" + scandataMap);     ///////////////////////////
                     etSerial.requestFocus();     //条码框获得焦点
                     etSerial.setText("");    //清空条码框
@@ -126,7 +128,6 @@ public class buildMasterActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //System.out.println("按钮：------------");
                 etSerial.performClick();     //通过执行EditText的onClick
             }
         });
@@ -137,7 +138,7 @@ public class buildMasterActivity extends AppCompatActivity {
         tvList.setMovementMethod(ScrollingMovementMethod.getInstance());
         tvBackPlex=findViewById(R.id.tvBackPlex);
         tvBackPlex.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
-        tvList.setOnClickListener(new View.OnClickListener() {
+        tvBackPlex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mWebview.setVisibility(View.VISIBLE);
@@ -308,7 +309,7 @@ public class buildMasterActivity extends AppCompatActivity {
                 queue.clear();
                 item.setEnabled(false);  //关step 2
                 mMenu.findItem(R.id.navigation_clearDB1).setEnabled(true); //打开step 1
-                refresh_list();
+                refresh_list("清理数据");
                 break;
             default:
         }
@@ -328,6 +329,12 @@ public class buildMasterActivity extends AppCompatActivity {
     //销毁Webview
     @Override
     protected void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+            textToSpeech = null;
+        }
+
         if (mWebview != null) {
             mWebview.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
             mWebview.clearHistory();
@@ -362,9 +369,16 @@ public class buildMasterActivity extends AppCompatActivity {
                 mWebview.setVisibility(View.VISIBLE);
                 etSerial.setText("");
             }else if(msg.what==REFRESH){
-                refresh_list();
-            }else if(msg.what==MSG){        //显示操作信息
+                if(msg.obj!=null){
+                    refresh_list(msg.obj.toString());
+                }else{
+                    refresh_list("");
+                }
+            }else if(msg.what==MSG){          // 显示操作信息
                 String message=tvMessage.getText().toString();
+                if(message.length()>2000){    // 控制文字长度
+                    message.substring(0,2000);
+                }
                 tvMessage.setText(msg.obj.toString()+"\n"+message);
             }
         }};
@@ -414,10 +428,10 @@ public class buildMasterActivity extends AppCompatActivity {
     }
 
     //显示 扫描任务清单
-    private void refresh_list(){   ////////////////要改成从queue中获取数据
+    private void refresh_list(String head){   ////////////////要改成从queue中获取数据
         System.out.println("刷新refresh_list!");
         int count=queue.size();
-        String strlist="任务数："+count+"\n";
+        String strlist=head+" 任务数："+count+"\n";
         //遍历队列
         for (ScanData1 scandata1 : queue) {
             strlist+=scandata1.toString();
@@ -430,14 +444,14 @@ public class buildMasterActivity extends AppCompatActivity {
         @Override
         public void run(){
             while(flag){     //子程序可被Interrupt停止   /////////////////////这里要改一下被中断的方式，发现手工中断可能丢数据
-                ScanData1 scanData1=queue.poll(); //poll(出)与offer(入)相互对应, 满会返回false
-                sendMessage(REFRESH,null);
+                ScanData1 scanData1=queue.peek(); //poll(出)与offer(入)相互对应, 满会返回false
                 if(scanData1!=null){              //poll(出)：若队列为空，返回null
                     System.out.println("子线程发现数据："+scanData1.toString());
                     String serial=scanData1.serial;
                     String master=scanData1.master;
                     boolean success=false;  //初始化 success 结果状态
                     try {                 //这里会抛出异常
+                        sendMessage(REFRESH,"干活........");
                         success = masterUnitHandler(session_ID, master, serial);    ///////masterUnitHandler还要处理各种状况
                     }catch(Exception e){
                         e.printStackTrace();
@@ -445,12 +459,14 @@ public class buildMasterActivity extends AppCompatActivity {
                     }
                     if(!success){
                         scanData1.count++;   //数据的失败记录加1
-                        //进入队列，再来一次   ////////////////判断一下时间，太老的扫描数据就不加入队列了
-                        queue.offer(scanData1);
-                        sendMessage(REFRESH,null);
+                        //先出队列，再加到队尾   ////////////////判断一下时间，太老的扫描数据就不加入队列了
+                        queue.poll(); queue.offer(scanData1);
+                    }else{
+                        queue.poll(); //成功，就去掉已传数据
                     }
                 }
                 try {
+                    sendMessage(REFRESH,"休息......");
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -541,21 +557,13 @@ public class buildMasterActivity extends AppCompatActivity {
             @Override
             public void onInit(int status) {
                 if (status == textToSpeech.SUCCESS) {
-                    // Toast.makeText(MainActivity.this,"成功输出语音",
-                    // Toast.LENGTH_SHORT).show();
-                    // Locale loc1=new Locale("us");
-                    // Locale loc2=new Locale("china");
 
                     textToSpeech.setPitch(1.0f);//方法用来控制音调
                     textToSpeech.setSpeechRate(1.0f);//用来控制语速
 
                     //判断是否支持下面两种语言
-                    int result1 = textToSpeech.setLanguage(Locale.US);
-                    //int result2 = textToSpeech.setLanguage(Locale.SIMPLIFIED_CHINESE);
-                    //boolean a = (result1 == TextToSpeech.LANG_MISSING_DATA || result1 == TextToSpeech.LANG_NOT_SUPPORTED);
-                    //boolean b = (result2 == TextToSpeech.LANG_MISSING_DATA || result2 == TextToSpeech.LANG_NOT_SUPPORTED);
-                    //Log.i("zhh_tts", "US支持否？--》" + a +
-                    //        "\nzh-CN支持否》--》" + b);
+                    //int result1 = textToSpeech.setLanguage(Locale.US);
+                    int result1 = textToSpeech.setLanguage(Locale.SIMPLIFIED_CHINESE);
 
                     if (result1 == TextToSpeech.LANG_MISSING_DATA || result1 == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Toast.makeText(mActvity, "语音包丢失或语音不支持", Toast.LENGTH_SHORT).show();
@@ -572,7 +580,7 @@ public class buildMasterActivity extends AppCompatActivity {
         // 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
         textToSpeech.setPitch(1.0f);
         // 设置语速
-        textToSpeech.setSpeechRate(0.3f);
+        textToSpeech.setSpeechRate(0.5f);
         textToSpeech.speak(data,//输入中文，若不支持的设备则不会读出来
                 TextToSpeech.QUEUE_FLUSH, null);
     }
