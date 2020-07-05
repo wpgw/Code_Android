@@ -14,7 +14,6 @@ import android.os.StrictMode;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +29,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +48,7 @@ public class buildMasterActivity extends AppCompatActivity {
     Context mActvity;
     Menu mMenu;
     final int atPAGE=1,leftPAGE=2,REFRESH=3,MSG=4;
+    RadioButton rdOld,rdNew;
     WebView mWebview;
     EditText etMaster,etSerial;
     TextView tvMessage,tvList,tvBackPlex;
@@ -74,19 +75,12 @@ public class buildMasterActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
         init_view();         //初始化 view
+        init_webview();
         initTTS();          //初始化 语音
 
         mWebview.loadUrl(url_plex);  //开始登录Plex
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        say("about");
     }
 
-    @SuppressLint("SetJavaScriptEnabled")  //标记，让不报错
     private void init_view() {
         mActvity=this;
         mWebview = findViewById(R.id.webview);
@@ -145,7 +139,10 @@ public class buildMasterActivity extends AppCompatActivity {
                 newPage.setVisibility(View.GONE);
             }
         });
+    }
 
+    @SuppressLint("SetJavaScriptEnabled")  //标记，让不报错
+    private void init_webview(){
         WebSettings mWebSettings=mWebview.getSettings();
         mWebSettings.setJavaScriptEnabled(true); // 设置支持javascript
         mWebSettings.setJavaScriptCanOpenWindowsAutomatically(true);//支持js调用window.open方法
@@ -189,8 +186,8 @@ public class buildMasterActivity extends AppCompatActivity {
                     childThread=new ChildThread();
                     childThread.start();
 
-                    //子线程向主线程发消息
-                    sendMessage(leftPAGE,null);
+                    //子线程向主线程发消息,
+                    //sendMessage(leftPAGE,null);
                     //go to next Activity
                     view.loadUrl(url_plex+"/"+session_ID+first_page);
                 }else if(url.contains("/Mobile/Inventory/Mobile_Build_Master_Unit.asp?Node=")){
@@ -270,7 +267,7 @@ public class buildMasterActivity extends AppCompatActivity {
             mMenu=menu;
             return true;
     }
-    @Override
+    @Override  //有关 选项菜单
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.navigation_stop_child:
@@ -355,6 +352,7 @@ public class buildMasterActivity extends AppCompatActivity {
         vibrator.vibrate(time);
     }
 
+    //主线程处理消息
     private Handler mMainHandler = new Handler() {
         public void handleMessage(Message msg) {
             //处理从子线程中来的消息
@@ -428,7 +426,7 @@ public class buildMasterActivity extends AppCompatActivity {
     }
 
     //显示 扫描任务清单
-    private void refresh_list(String head){   ////////////////要改成从queue中获取数据
+    private void refresh_list(String head){   ////////////////要改成从database中获取数据
         System.out.println("刷新refresh_list!");
         int count=queue.size();
         String strlist=head+" 任务数："+count+"\n";
@@ -443,10 +441,10 @@ public class buildMasterActivity extends AppCompatActivity {
         volatile boolean flag=true;
         @Override
         public void run(){
-            while(flag){     //子程序可被Interrupt停止   /////////////////////这里要改一下被中断的方式，发现手工中断可能丢数据
-                ScanData1 scanData1=queue.peek(); //poll(出)与offer(入)相互对应, 满会返回false
+            while(flag){     //子程序可被Interrupt停止
+                ScanData1 scanData1=queue.peek(); //poll(出)与offer(入)相互对应, 满会返回false 另：peek不会去掉队首元素
                 if(scanData1!=null){              //poll(出)：若队列为空，返回null
-                    System.out.println("子线程发现数据："+scanData1.toString());
+                    //System.out.println("子线程发现数据："+scanData1.toString());
                     String serial=scanData1.serial;
                     String master=scanData1.master;
                     boolean success=false;  //初始化 success 结果状态
@@ -571,7 +569,6 @@ public class buildMasterActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(mActvity, "数据丢失或不支持", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
     }

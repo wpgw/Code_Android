@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".buildMasterActivity">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -35,11 +34,14 @@
                 android:textSize="16sp"
                 android:autoLink="all"
                 android:text="回Plex" />
+
+
+
             <TextView
                 android:id="@+id/tvMasterUnitMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="17dp"
+                android:layout_marginTop="10dp"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textSize="14sp"
