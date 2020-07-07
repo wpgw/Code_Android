@@ -578,7 +578,8 @@ public class buildMasterActivity extends AppCompatActivity {
         textToSpeech.setPitch(1.0f);
         // 设置语速
         textToSpeech.setSpeechRate(0.5f);
+        data=data.replace(""," ");   //加分隔符，以便读单数字
         textToSpeech.speak(data,//输入中文，若不支持的设备则不会读出来
-                TextToSpeech.QUEUE_FLUSH, null);
+                TextToSpeech.QUEUE_FLUSH, null,null);
     }
 }
