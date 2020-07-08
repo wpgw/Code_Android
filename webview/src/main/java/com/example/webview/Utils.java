@@ -15,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
     public static void set_cookie(String url, String cookieString) {
@@ -34,6 +36,23 @@ public class Utils {
             CookieManager.getInstance().flush();
         }
         //System.out.println( "饼干："+CookieManager.getInstance().getCookie(url));
+    }
+
+    public static String refine_label(String txtSerial_NO) {
+        String pattern="([a-zA-Z]{4}\\d{6,7}|\\d{6,7})";
+
+        Pattern re=Pattern.compile(pattern);
+        Matcher ma=re.matcher(txtSerial_NO);
+
+        if (ma.find()) {
+            String result=ma.group();
+            if (result.length()<9) {
+                result="smmp"+result;  //此时自动补上smmp
+            }
+            return result;
+        }else {
+            return "";
+        }
     }
 
     //把Cookie String转成Map

@@ -1,7 +1,5 @@
 package com.example.webview;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -32,6 +30,8 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.alibaba.fastjson.JSON;
 import org.jsoup.Connection;
@@ -96,16 +96,19 @@ public class buildMasterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String serial = etSerial.getText().toString();
                 String master = etMaster.getText().toString();
-                if (serial.length() > 7 && master.length() > 5) {   //粗粗检查一下合法性  //////////////
+                serial=Utils.refine_label(serial);                  //规范化读取的 bacode, 如barcode无效，将会是空""
+                if (serial.length() > 7 && master.length() > 5) {   //粗粗检查一下合法性
                     //加入前，判断是否已经扫过了，在列表中，如在，需提醒一下
                     ScanData1 scandata1= new ScanData1(serial,master,new Date(),0);
                     if(queue.contains(scandata1)){
                         vibrate(200);
+                        say("重复了！");
+                        //queue.remove(scandata1);     ////////////////这个想试一试，看看能否去掉指定的对象
                     }
                     //加入新数据
                     queue.offer(scandata1);    //poll(出)与offer(入)相互对应, 满会返回false   poll -->【若队列为空，返回null】
                     //语音提示
-                    say(serial.substring(serial.length()-3,serial.length()));
+                    say(serial.substring(serial.length()-3,serial.length()));   //读出最后三个数字
                     refresh_list("加入新条码");
                     //System.out.println("嘿嘿：" + scandataMap);     ///////////////////////////
                     etSerial.requestFocus();     //条码框获得焦点
