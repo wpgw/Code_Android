@@ -393,7 +393,7 @@ public class buildMasterActivity extends AppCompatActivity {
     }
 
     //自定义数据类型，用于保存 scan data
-    private class ScanData1{
+    public class ScanData1{
         public String serial;
         public String master;
         public Date date;
