@@ -25,12 +25,12 @@
         android:checkableBehavior="none">
         <item
             android:id="@+id/navigation_clearDB1"
-            android:title="准备清除数据" />
+            android:title="1-准备清除数据" />
 
         <item
             android:id="@+id/navigation_clearDB2"
             android:enabled="false"
-            android:title="执行清除数据" />
+            android:title="2-执行清除数据" />
 
 
     </group>

@@ -45,7 +45,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textSize="14sp"
-                android:text="总 码：" />
+                android:text="总 码：    " />
             <EditText
                 android:id="@+id/etMaster"
                 android:layout_width="match_parent"
@@ -56,7 +56,8 @@
                 android:inputType="textPersonName"
                 android:background="#F6F6E6"
                 android:gravity="center"
-                android:textSize="16sp" />
+                android:textSize="20sp"
+                android:hint="总码所在地......"/>
 
             <EditText
                 android:id="@+id/etSerial"
@@ -71,7 +72,7 @@
                 android:cursorVisible="true"
                 android:background="#F6F6E6"
                 android:gravity="center"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:text="smmp123456" />
 
             <Button

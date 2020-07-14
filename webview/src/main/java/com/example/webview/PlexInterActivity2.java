@@ -1,13 +1,10 @@
 package com.example.webview;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.Vibrator;
@@ -15,9 +12,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
-import android.webkit.JavascriptInterface;
-import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -37,7 +31,6 @@ import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class PlexInterActivity2 extends AppCompatActivity {
     WebView mWebview;
@@ -68,8 +61,8 @@ public class PlexInterActivity2 extends AppCompatActivity {
 
     @SuppressLint("SetJavaScriptEnabled")  //标记，让不报错
     private void init_view() {
-        textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        textview.setHeight(100);
+        //textview.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        //textview.setHeight(100);
         textview.setVisibility(View.GONE);
 
         WebSettings mWebSettings=mWebview.getSettings();
@@ -111,7 +104,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
                     String cookieString = CookieManager.getInstance().getCookie(url_plex);
                     //登录成功后，把 mobile 的cookie转给 www
                     //set_cookie(url_plex, cookieString);
-                    cookies = stringTomap(cookieString);
+                    cookies = stringTomap(cookieString);  //获得cookie, 以备后用
                     //go to inter-plant
                     view.loadUrl(url_plex + "/" + session_ID + first_page);
                 }else {
@@ -133,7 +126,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String url=request.getUrl().toString();
                 System.out.println("拦截 新: "+url);
-                //如果是 interplant加载界面，就拦截后，直接返回
+                //如果是 interplant发货扫描界面，就拦截它，自己处理
                 if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")) {
                     return myInterPlant(url);
                 }
@@ -144,7 +137,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
                 String html="";
                 try{
                     Element doc=request_get(url,cookies);  //这里有调用网络操作，可能网络出错
-                    html=dealwith_interPlant(doc);
+                    html=dealwith_interPlant(doc);         //操作获得的结果
                 }catch(Exception e){
                     //如网络操作出错，显示出错原因，并返回一个url当前跳转
                     System.out.println("网络操作出错，显示出错原因，并返回一个url当前跳转");
@@ -188,9 +181,9 @@ public class PlexInterActivity2 extends AppCompatActivity {
 
     private String dealwith_interPlant(Element element) {
         //主表格上的两个框框
-        Element ele_containers=element.getElementById("hdnContainerView").parent();  //标题框：用于改颜色，显箱数
+        Element ele_containers=element.getElementById("hdnContainerView").parent();  //标题框：改颜色，显箱数
         Element input_table=element.getElementById("ContainerLoadingFilterTable")
-                                   .getElementsByTag("tbody").first();  //用于改颜色
+                                   .getElementsByTag("tbody").first();     //包含输入栏的框：改颜色
         //获得主表格
         Element element_table = element.getElementById("MainContainerLoadingGridTable");
         if (element_table != null) {          //如果有 加载表格，处理表格
@@ -210,12 +203,10 @@ public class PlexInterActivity2 extends AppCompatActivity {
                 //表格行的最后两列去掉
                 columns.last().previousElementSibling().remove();
                 columns.last().remove();
-                //如果发现在EPC的箱号，变红色
-                if (columns.get(3).text().contains("EPC")) {
-                    //warning message at textview
-                    //textview.setBackgroundColor(getResources().getColor(R.color.colorRed));
-                    //textview.setHeight(textview.getHeight() + 50);
+                //如果发现库位在EPC的箱号，变红色
+                if (columns.get(3).text().startsWith("EPC")) {
                     vibrate(1000);
+                    //去掉扫描输入栏，不能扫描了
                     element.getElementById("txtItem").remove();
                     //问题行变红
                     row.attr("style","background-color:red");

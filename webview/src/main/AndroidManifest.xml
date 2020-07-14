@@ -20,15 +20,17 @@
             android:resource="@menu/option_menu" />
 
         <activity android:name=".buildMasterActivity">
+
+        </activity>
+        <activity android:name=".mobileLoginActivity"></activity>
+        <activity android:name=".PlexInterActivity" />
+        <activity android:name=".PlexInterActivity2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".mobileLoginActivity"></activity>
-        <activity android:name=".PlexInterActivity" />
-        <activity android:name=".PlexInterActivity2" />
     </application>
 
 </manifest>
