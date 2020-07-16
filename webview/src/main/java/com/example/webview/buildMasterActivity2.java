@@ -115,28 +115,29 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 String master = etMaster.getText().toString();
                 serial=Utils.refine_label(serial);                  //规范化读取的 bacode, 如barcode无效，将会是空""
                 String say_word="";
-                if (serial.length() > 7 && master.length() > 5) {   //粗粗检查一下合法性
+                if (serial.length()==11 && master.length() == 7) {   //粗粗检查一下合法性
                     //加入前，判断是否已经扫过了，在列表中，如在，需提醒一下
                     buildMasterActivity.ScanData1 scandata1= new buildMasterActivity.ScanData1(serial,master,null,0);  //date取数据库默认值
                     if(mydbhelper.contains(serial)){
-                        say_word="重复了！";
-                        vibrate(200);
+                        say_word=",重复!";  //说 重复了
+                        vibrate(400);
                         mydbhelper.delete("serial=?",new String[]{serial});
                     }
                     //加入新数据
                     mydbhelper.insert(scandata1);
                     //queue.offer(scandata1);    //poll(出)与offer(入)相互对应, 满会返回false   poll -->【若队列为空，返回null】
                     //语音提示
-                    say_word=serial.substring(serial.length()-3,serial.length())+say_word;
+                    say_word=serial.substring(serial.length()-4,serial.length())+say_word;
                     say(say_word);   //读出最后三个数字
                     refresh_list("加入新条码");
                     //System.out.println("嘿嘿：" + scandataMap);     ///////////////////////////
                     etSerial.requestFocus();     //条码框获得焦点
-                    etSerial.setText("");    //清空条码框
                 }else if(serial.length()>0){   //发现清空后，还会激发一次click, 这次不报警
-                    Toast.makeText(getApplicationContext(),"可能输入数据无效！",Toast.LENGTH_SHORT).show();
+                    say(serial+"错！");
+                    Toast.makeText(getApplicationContext(),"可能输入数据无效！"+serial,Toast.LENGTH_SHORT).show();
                     vibrate(500);      //输入无效，报警
                 }
+                etSerial.setText("");    //清空条码框
                 etSerial.setSelection(etSerial.getText().length());  //如果有文字，光标移到未尾
             }
         });
@@ -596,7 +597,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 if (status == textToSpeech.SUCCESS) {
 
                     textToSpeech.setPitch(1.0f);//方法用来控制音调
-                    textToSpeech.setSpeechRate(1.0f);//用来控制语速
+                    textToSpeech.setSpeechRate(1.2f);//用来控制语速
 
                     //判断是否支持下面两种语言
                     //int result1 = textToSpeech.setLanguage(Locale.US);
@@ -616,7 +617,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
         // 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
         textToSpeech.setPitch(1.0f);
         // 设置语速
-        textToSpeech.setSpeechRate(0.5f);
+        textToSpeech.setSpeechRate(1.2f);
         data=data.replace(""," ");   //加分隔符，以便读单数字
         textToSpeech.speak(data,//输入中文，若不支持的设备则不会读出来
                 TextToSpeech.QUEUE_FLUSH, null,null);
