@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".buildMasterActivity2">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+        android:orientation="vertical">
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:id="@+id/newPage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvBackPlex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:autoLink="all"
+                android:text="回Plex" />
+
+
+
+            <TextView
+                android:id="@+id/tvMasterUnitMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:text="总 码：    " />
+            <EditText
+                android:id="@+id/etMaster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:inputType="textPersonName"
+                android:background="#F6F6E6"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:hint="总码所在地......"/>
+
+            <EditText
+                android:id="@+id/etSerial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:hint="条码扫到这里......"
+                android:cursorVisible="true"
+                android:background="#F6F6E6"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:text="smmp123456" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="16sp"
+                android:text="确 认" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#F6F6E6"
+            android:layout_gravity="left"
+            android:lines="12"
+            android:maxLines="12"
+            android:scrollbars="vertical"
+            android:text="扫描清单:"
+            android:textColor="#4c4d51"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
+            android:background="#F6F6E6"
+            android:layout_gravity="right"
+            android:gravity="top"
+            android:singleLine="false"
+            android:lines="12"
+            android:maxLines="12"
+            android:scrollbars="vertical"
+            android:text="消息反馈："
+            android:textColor="#4c4d51"
+            android:textSize="13sp" />
+    </LinearLayout>
+</LinearLayout>

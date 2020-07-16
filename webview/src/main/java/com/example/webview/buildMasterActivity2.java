@@ -1,5 +1,7 @@
 package com.example.webview;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -31,20 +33,20 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.alibaba.fastjson.JSON;
+
 import org.jsoup.Connection;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 
-public class buildMasterActivity extends AppCompatActivity {
+public class buildMasterActivity2 extends AppCompatActivity {
     Context mActvity;
     Menu mMenu;
     final int atPAGE=1,leftPAGE=2,REFRESH=3,MSG=4;
@@ -59,34 +61,49 @@ public class buildMasterActivity extends AppCompatActivity {
 
     String session_ID = "";
     HashMap cookies;
-    ChildThread childThread;
+    buildMasterActivity2.ChildThread childThread;
 
-    LinkedBlockingDeque<ScanData1> queue=new LinkedBlockingDeque<ScanData1>();
+    //queue用于暂存数据
+    LinkedBlockingDeque<buildMasterActivity.ScanData1> queue=new LinkedBlockingDeque<buildMasterActivity.ScanData1>();
+    //sqlite用于长存数据
+    myDBHelper mydbhelper;
     private TextToSpeech textToSpeech = null;//创建自带语音对象
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_build_master1);
+        setContentView(R.layout.activity_build_master2);
+
+        //打开数据库
+        mydbhelper=myDBHelper.getInstance(this,1);
+        mydbhelper.openWriteLink();
+
+//        mydbhelper.delete("serial=?",new String[]{"smmp123456"});    //clear database
+//        //增加一行数据
+//        buildMasterActivity2.ScanData1 scandata=new buildMasterActivity2.ScanData1("smmp1234587","m12121",null,0);
+//        mydbhelper.insert(scandata);
+        mydbhelper.query();
+//        mydbhelper.closeLink();   /////////////////////////////////////
+
 
         //disable the strict polity that do not allows main thread network access
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        init_view();         //初始化 view
+        init();         //初始化 view
         init_webview();
         initTTS();          //初始化 语音
 
         mWebview.loadUrl(url_plex);  //开始登录Plex
     }
 
-    private void init_view() {
+    private void init() {
         mActvity=this;
+
         mWebview = findViewById(R.id.webview);
 
         newPage=findViewById(R.id.newPage); //旧的Plex界面
-        newPage.setVisibility(View.GONE);  //只开Plex 新界面
+        newPage.setVisibility(View.GONE);   //隐旧界面，只开Plex 新界面
 
         etMaster=findViewById(R.id.etMaster);
         etSerial=findViewById(R.id.etSerial);
@@ -97,23 +114,26 @@ public class buildMasterActivity extends AppCompatActivity {
                 String serial = etSerial.getText().toString();
                 String master = etMaster.getText().toString();
                 serial=Utils.refine_label(serial);                  //规范化读取的 bacode, 如barcode无效，将会是空""
+                String say_word="";
                 if (serial.length() > 7 && master.length() > 5) {   //粗粗检查一下合法性
                     //加入前，判断是否已经扫过了，在列表中，如在，需提醒一下
-                    ScanData1 scandata1= new ScanData1(serial,master,new Date(),0);
-                    if(queue.contains(scandata1)){
+                    buildMasterActivity.ScanData1 scandata1= new buildMasterActivity.ScanData1(serial,master,null,0);  //date取数据库默认值
+                    if(mydbhelper.contains(serial)){
+                        say_word="重复了！";
                         vibrate(200);
-                        say("重复了！");
-                        //queue.remove(scandata1);     ////////////////这个想试一试，看看能否去掉指定的对象
+                        mydbhelper.delete("serial=?",new String[]{serial});
                     }
                     //加入新数据
-                    queue.offer(scandata1);    //poll(出)与offer(入)相互对应, 满会返回false   poll -->【若队列为空，返回null】
+                    mydbhelper.insert(scandata1);
+                    //queue.offer(scandata1);    //poll(出)与offer(入)相互对应, 满会返回false   poll -->【若队列为空，返回null】
                     //语音提示
-                    say(serial.substring(serial.length()-3,serial.length()));   //读出最后三个数字
+                    say_word=serial.substring(serial.length()-3,serial.length())+say_word;
+                    say(say_word);   //读出最后三个数字
                     refresh_list("加入新条码");
                     //System.out.println("嘿嘿：" + scandataMap);     ///////////////////////////
                     etSerial.requestFocus();     //条码框获得焦点
                     etSerial.setText("");    //清空条码框
-                 }else if(serial.length()>0){   //发现清空后，还会激发一次click, 这次不报警
+                }else if(serial.length()>0){   //发现清空后，还会激发一次click, 这次不报警
                     Toast.makeText(getApplicationContext(),"可能输入数据无效！",Toast.LENGTH_SHORT).show();
                     vibrate(500);      //输入无效，报警
                 }
@@ -186,7 +206,8 @@ public class buildMasterActivity extends AppCompatActivity {
                     String cookieString = CookieManager.getInstance().getCookie(url_plex);
                     cookies = Utils.stringTomap(cookieString);
 
-                    childThread=new ChildThread();
+                    refresh_list("查看数据库！");
+                    childThread=new buildMasterActivity2.ChildThread();
                     childThread.start();
 
                     //子线程向主线程发消息,
@@ -266,9 +287,9 @@ public class buildMasterActivity extends AppCompatActivity {
 
     @Override   //显示 选项菜单
     public boolean onCreateOptionsMenu(Menu menu){
-            getMenuInflater().inflate(R.menu.option_menu, menu);
-            mMenu=menu;
-            return true;
+        getMenuInflater().inflate(R.menu.option_menu, menu);
+        mMenu=menu;
+        return true;
     }
     @Override  //有关 选项菜单
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -287,7 +308,7 @@ public class buildMasterActivity extends AppCompatActivity {
                 break;
             case R.id.navigation_start_child:
                 if(childThread==null) {
-                    childThread=new ChildThread();
+                    childThread=new buildMasterActivity2.ChildThread();
                     childThread.start();
                     item.setEnabled(false);
                     mMenu.findItem(R.id.navigation_stop_child).setEnabled(true);
@@ -307,10 +328,11 @@ public class buildMasterActivity extends AppCompatActivity {
                 break;
             case R.id.navigation_clearDB2:
                 //清除数据
-                queue.clear();
+                mydbhelper.delete(null,null);
+                //queue.clear();
+                refresh_list("清理数据");
                 item.setEnabled(false);  //关step 2
                 mMenu.findItem(R.id.navigation_clearDB1).setEnabled(true); //打开step 1
-                refresh_list("清理数据");
                 break;
             default:
         }
@@ -348,6 +370,9 @@ public class buildMasterActivity extends AppCompatActivity {
         if(childThread!=null){
             childThread.flag=false;
         }
+        //关闭数据库
+        mydbhelper.closeLink();
+
         super.onDestroy();
     }
 
@@ -411,9 +436,9 @@ public class buildMasterActivity extends AppCompatActivity {
                 return true;
             if(obj == null)
                 return false;
-            if(!(obj instanceof ScanData1))
+            if(!(obj instanceof buildMasterActivity.ScanData1))
                 return false;
-            ScanData1 other = (ScanData1)obj;
+            buildMasterActivity.ScanData1 other = (buildMasterActivity.ScanData1)obj;
             if(this.serial == null){
                 if(other.serial !=null)
                     return false;
@@ -429,15 +454,21 @@ public class buildMasterActivity extends AppCompatActivity {
         }
     }
 
-    //显示 扫描任务清单
-    private void refresh_list(String head){   ////////////////要改成从database中获取数据
+    //清队列，查数据库，填充队列，更新显示tvlist(扫描任务清单)
+    private void refresh_list(String head){
         System.out.println("刷新refresh_list!");
+        queue.clear();    //先清空, 接着填充
+        ArrayList<buildMasterActivity.ScanData1> list=new ArrayList<buildMasterActivity.ScanData1>();
+        list=mydbhelper.query();
+        if(!list.isEmpty()){
+            queue.addAll(list);   //再填充  ///////////需检查 数据集是否为空吗？
+        }
         int count=queue.size();
         String strlist=head+" 任务数："+count+"\n";
         //遍历队列
-        for (ScanData1 scandata1 : queue) {
+        for (buildMasterActivity.ScanData1 scandata1 : queue) {
             strlist+=scandata1.toString();
-        }
+        }  //显示出来
         tvList.setText(strlist);
     }
 
@@ -446,7 +477,7 @@ public class buildMasterActivity extends AppCompatActivity {
         @Override
         public void run(){
             while(flag){     //子程序可被Interrupt停止
-                ScanData1 scanData1=queue.peek(); //poll(出)与offer(入)相互对应, 满会返回false 另：peek不会去掉队首元素
+                buildMasterActivity.ScanData1 scanData1=queue.peek(); //poll(出)与offer(入)相互对应, 满会返回false 另：peek不会去掉队首元素
                 if(scanData1!=null){              //poll(出)：若队列为空，返回null
                     //System.out.println("子线程发现数据："+scanData1.toString());
                     String serial=scanData1.serial;
@@ -461,10 +492,14 @@ public class buildMasterActivity extends AppCompatActivity {
                     }
                     if(!success){
                         scanData1.count++;   //数据的失败记录加1
-                        //先出队列，再加到队尾   ////////////////判断一下时间，太老的扫描数据就不加入队列了
-                        queue.poll(); queue.offer(scanData1);
+                        //先出队列，再加到队尾
+                        mydbhelper.delete("serial=?",new String[]{serial});    //先删除失败的  ////如果有多个，也会删掉
+                        mydbhelper.insert(scanData1);       /////////注意scanData1中的日期数据insert之后的情况
+                        //queue.poll(); queue.offer(scanData1);
                     }else{
-                        queue.poll(); //成功，就去掉已传数据
+                        mydbhelper.delete("serial=?",new String[]{serial});    //删除已成功的
+                        //queue.poll(); //成功，就去掉已传数据
+
                     }
                 }
                 try {
@@ -587,3 +622,4 @@ public class buildMasterActivity extends AppCompatActivity {
                 TextToSpeech.QUEUE_FLUSH, null,null);
     }
 }
+

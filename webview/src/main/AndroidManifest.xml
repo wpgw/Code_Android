@@ -15,21 +15,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data
-            android:name="com.google.android.actions"
-            android:resource="@menu/option_menu" />
-
-        <activity android:name=".buildMasterActivity">
-
-        </activity>
-        <activity android:name=".mobileLoginActivity"></activity>
-        <activity android:name=".PlexInterActivity" />
-        <activity android:name=".PlexInterActivity2">
+        <activity android:name=".buildMasterActivity2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@menu/option_menu" />
+
+        <activity android:name=".buildMasterActivity"></activity>
+        <activity android:name=".mobileLoginActivity" />
+        <activity android:name=".PlexInterActivity" />
+        <activity android:name=".PlexInterActivity2">
+
         </activity>
     </application>
 
