@@ -115,7 +115,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 String master = etMaster.getText().toString();
                 serial=Utils.refine_label(serial);                  //规范化读取的 bacode, 如barcode无效，将会是空""
                 String say_word="";
-                if (serial.length()==11 && master.length() == 7) {   //粗粗检查一下合法性
+                if ((serial.length()==10||serial.length()==11) && master.length() == 7) {   //粗粗检查一下合法性
                     //加入前，判断是否已经扫过了，在列表中，如在，需提醒一下
                     buildMasterActivity.ScanData1 scandata1= new buildMasterActivity.ScanData1(serial,master,null,0);  //date取数据库默认值
                     if(mydbhelper.contains(serial)){
@@ -133,7 +133,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
                     //System.out.println("嘿嘿：" + scandataMap);     ///////////////////////////
                     etSerial.requestFocus();     //条码框获得焦点
                 }else if(serial.length()>0){   //发现清空后，还会激发一次click, 这次不报警
-                    say(serial+"错！");
+                    say(serial+"错误！");
                     Toast.makeText(getApplicationContext(),"可能输入数据无效！"+serial,Toast.LENGTH_SHORT).show();
                     vibrate(500);      //输入无效，报警
                 }

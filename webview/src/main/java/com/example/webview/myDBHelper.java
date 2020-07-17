@@ -74,7 +74,7 @@ public class myDBHelper extends SQLiteOpenHelper {
 
 //        String myDate =cursor.getString(cursor.getColumnIndex("datetime(timestamp,'localtime')"));
 //        SimpleDateFormat format = newSimpleDateFormat("yyyy-MM-dd HH:mm");
-//        Date date = format.parse(myDate)
+//        Date date = format.parse(myDate)    //字符串转日期
     }
 
 
@@ -95,18 +95,11 @@ public class myDBHelper extends SQLiteOpenHelper {
         //日期数据库有 默认值
         if (scanData.date!=null){
             //把本地时间显示转为 GMT 时间
-            String strdate;
-            {
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    Long timestamp=scanData.date.getTime();
-                int offset= TimeZone.getDefault().getRawOffset();  //获取和 格林威治标准时区 的偏移值
-                System.out.println("时区 的偏移值"+offset);
-                timestamp-=offset;
+            String strGMTdate;
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            strGMTdate=format.format(Utils.toGMTdate(scanData.date));
 
-                Date GMT_date=new Date(timestamp);
-                strdate=format.format(GMT_date);
-            }
-            cv.put("date",strdate);   /////////////这里 无法还原时间
+            cv.put("date",strGMTdate);   //这里数据库保存 GMT时间
         }
         //成功返回行号，失败返回 -1
         return mDB.insert(Table_Name,"",cv);
@@ -138,14 +131,17 @@ public class myDBHelper extends SQLiteOpenHelper {
             buildMasterActivity.ScanData1 scandata=new buildMasterActivity.ScanData1(serial,master,date,count);   ////////////////
             list.add(scandata);
         }
+        cursor.close();
         return list;
     }
 
     public boolean contains(String serial){
         Cursor cursor=mDB.rawQuery("select serial from "+Table_Name +" where serial=?",new String[]{serial});
         if (cursor.getCount()>0){
+            cursor.close();
             return true;
         }else{
+            cursor.close();
             return false;
         }
     }

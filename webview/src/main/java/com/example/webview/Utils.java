@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -154,5 +155,13 @@ public class Utils {
     public static String getMonthTime(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss");
         return sdf.format(date);
+    }
+
+    public static Date toGMTdate(Date date){
+        Long timestamp=date.getTime();            //到 70年的毫秒数
+        int offset= TimeZone.getDefault().getRawOffset();  //获取和 格林威治标准时区 的偏移值
+        timestamp-=offset;     //调成GMT时间
+        Date GMTdate=new Date(timestamp);
+        return GMTdate;
     }
 }
