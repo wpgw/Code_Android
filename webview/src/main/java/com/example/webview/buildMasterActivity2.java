@@ -50,7 +50,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
     Context mActvity;
     Menu mMenu;
     final int atPAGE=1,leftPAGE=2,REFRESH=3,MSG=4;
-    RadioButton rdOld,rdNew;
+    RadioButton rdOld,rdNew;  //想用于切换界面
     WebView mWebview;
     EditText etMaster,etSerial;
     TextView tvMessage,tvList,tvBackPlex;
@@ -99,7 +99,6 @@ public class buildMasterActivity2 extends AppCompatActivity {
 
     private void init() {
         mActvity=this;
-
         mWebview = findViewById(R.id.webview);
 
         newPage=findViewById(R.id.newPage); //旧的Plex界面
@@ -455,7 +454,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
         }
     }
 
-    //清队列，查数据库，填充队列，更新显示tvlist(扫描任务清单)
+    //清队列，查数据库，更新队列，更新显示tvlist(扫描任务清单)
     private void refresh_list(String head){
         System.out.println("刷新refresh_list!");
         queue.clear();    //先清空, 接着填充
@@ -495,12 +494,11 @@ public class buildMasterActivity2 extends AppCompatActivity {
                         scanData1.count++;   //数据的失败记录加1
                         //先出队列，再加到队尾
                         mydbhelper.delete("serial=?",new String[]{serial});    //先删除失败的  ////如果有多个，也会删掉
-                        mydbhelper.insert(scanData1);       /////////注意scanData1中的日期数据insert之后的情况
+                        mydbhelper.insert(scanData1);
                         //queue.poll(); queue.offer(scanData1);
                     }else{
                         mydbhelper.delete("serial=?",new String[]{serial});    //删除已成功的
                         //queue.poll(); //成功，就去掉已传数据
-
                     }
                 }
                 try {
