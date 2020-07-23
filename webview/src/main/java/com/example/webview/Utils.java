@@ -40,7 +40,8 @@ public class Utils {
     }
 
     public static String refine_label(String txtSerial_NO) {
-        String pattern="([a-zA-Z]{4}\\d{6,7}|\\d{6,7})";
+        //String pattern="([a-zA-Z]{4}\\d{6,7}|\\d{6,7})";
+        String pattern="([a-zA-Z]{4}\\d{6,7})";
 
         Pattern re=Pattern.compile(pattern);
         Matcher ma=re.matcher(txtSerial_NO);
@@ -48,7 +49,8 @@ public class Utils {
         if (ma.find()) {
             String result=ma.group();
             if (result.length()<9) {
-                result="smmp"+result;  //此时自动补上smmp
+                //result="smmp"+result;  //此时自动补上smmp
+                result="sm"+result;           //此时不自动补smmp
             }
             return result;
         }else {
