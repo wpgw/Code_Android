@@ -49,7 +49,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class buildMasterActivity2 extends AppCompatActivity {
     Context mActvity;
     Menu mMenu;
-    final int atPAGE=1,leftPAGE=2,REFRESH=3,MSG=4;
+    final int atPAGE=1,leftPAGE=2,REFRESH=3,MSG=4,STOP=5;
     RadioButton rdOld,rdNew;  //想用于切换界面
     WebView mWebview;
     EditText etMaster,etSerial;
@@ -298,12 +298,13 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 if(childThread!=null && childThread.isAlive()) {
                     //childThread.interrupt();   //发现用Interrupt不好控制退出点，可能使Jsoup中断，在随机位置返回Null
                     childThread.flag=false;      //标志位控制 子线程的开关（不会立即关，在下一个循环时关）
+                    sendMessage(STOP,"准备手工中断上传......");
                 }
                 if(childThread!=null && !childThread.isAlive()){      //确认 子线程已关闭后，才同步菜单项
                     item.setEnabled(false);
                     mMenu.findItem(R.id.navigation_start_child).setEnabled(true);  //激活另一个菜单项
                     childThread=null;
-                    sendMessage(MSG,"已成功手工中断了上传。\n");
+                    sendMessage(STOP,"已停止上传!\n");
                 }
                 break;
             case R.id.navigation_start_child:
@@ -400,6 +401,10 @@ public class buildMasterActivity2 extends AppCompatActivity {
                     refresh_list(msg.obj.toString());
                 }else{
                     refresh_list("");
+                }
+            }else if(msg.what==STOP){
+                if(msg.obj!=null){
+                    tvList.setText(msg.obj.toString());
                 }
             }else if(msg.what==MSG){          // 显示操作信息
                 String message=tvMessage.getText().toString();
