@@ -582,7 +582,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
             System.out.println("嘿嘿Json3:"+isSuccess);
             if(isSuccess){
                 String strContainerCount=objectMap.get("ContainerCount").toString();
-                sendMessage(MSG,"成功："+serial+"成功加入"+master+". 现主码箱数："+strContainerCount+"\n");
+                sendMessage(MSG,"成功："+serial+"成功加入"+master+".\n            主码箱数："+strContainerCount+"  库位："+strLocation+"\n");
                 return true;
             }else{
                 String strMessage=objectMap.get("Message").toString();
