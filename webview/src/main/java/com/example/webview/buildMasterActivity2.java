@@ -53,7 +53,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
     RadioButton rdOld,rdNew;  //想用于切换界面
     WebView mWebview;
     EditText etMaster,etSerial;
-    TextView tvMessage,tvList,tvBackPlex;
+    TextView tvMessage,tvList,tvBackPlex,tvMasterUnitMessage;
     Button button;
     LinearLayout newPage;
     String url_plex = "https://mobile.plexus-online.com";
@@ -110,28 +110,30 @@ public class buildMasterActivity2 extends AppCompatActivity {
         etSerial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String say_word="";
                 String serial = etSerial.getText().toString();
                 String master = etMaster.getText().toString();
-                serial=Utils.refine_label(serial);                  //规范化读取的 bacode, 如barcode无效，将会是空""
-                String say_word="";
+                serial=Utils.refine_label(serial);                  // 规范化读取的 bacode, 如barcode无效，将会是空""
                 if ((serial.length()==10||serial.length()==11) && master.length() == 7) {   //粗粗检查一下合法性
                     //加入前，判断是否已经扫过了，在列表中，如在，需提醒一下
                     buildMasterActivity.ScanData1 scandata1= new buildMasterActivity.ScanData1(serial,master,null,0);  //date取数据库默认值
                     if(mydbhelper.contains(serial)){
-                        say_word=",重复!";  //说 重复了
+                        say_word=",重复了!";  //说 重复了
                         vibrate(400);
                         mydbhelper.delete("serial=?",new String[]{serial});
                     }
                     //加入新数据
                     mydbhelper.insert(scandata1);
                     //queue.offer(scandata1);    //poll(出)与offer(入)相互对应, 满会返回false   poll -->【若队列为空，返回null】
+                    tvMasterUnitMessage.setText("你的最后成功一扫：" + serial);   // 显示最新的扫描结果
                     //语音提示
                     say_word=serial.substring(serial.length()-4,serial.length())+say_word;
                     say(say_word);   //读出最后三个数字
                     refresh_list("加入新条码");
                     //System.out.println("嘿嘿：" + scandataMap);     ///////////////////////////
                     etSerial.requestFocus();     //条码框获得焦点
-                }else if(serial.length()>0){   //发现清空后，还会激发一次click, 这次不报警
+                }else if(serial.length()>0){     //发现清空后，还会激发一次click, 这次不报警
+                    tvMasterUnitMessage.setText(serial+"扫描错误！");   // 显示最新的扫描结果
                     say(serial+"错误！");
                     Toast.makeText(getApplicationContext(),"可能输入数据无效！"+serial,Toast.LENGTH_SHORT).show();
                     vibrate(500);      //输入无效，报警
@@ -149,6 +151,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
             }
         });
 
+        tvMasterUnitMessage=findViewById(R.id.tvMasterUnitMessage);
         tvMessage = findViewById(R.id.tvMessage);
         tvMessage.setMovementMethod(ScrollingMovementMethod.getInstance());
         tvList=findViewById(R.id.tvList);
