@@ -69,7 +69,7 @@ public class myDBHelper extends SQLiteOpenHelper {
         String create_sql="CREATE TABLE IF NOT EXISTS "+Table_Name
                 +" (_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                 +"serial VARCHAR NOT NULL, master VARCHAR NOT NULL,"
-                +"date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, count INTEGER DEFAULT 0 NOT NULL)";
+                +"date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, count INTEGER DEFAULT 0 NOT NULL,status INTEGER DEFAULT 1)";
         db.execSQL(create_sql);
 
 //        String myDate =cursor.getString(cursor.getColumnIndex("datetime(timestamp,'localtime')"));
@@ -78,6 +78,7 @@ public class myDBHelper extends SQLiteOpenHelper {
     }
 
 
+    ///////////要加入改 status
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
@@ -98,13 +99,13 @@ public class myDBHelper extends SQLiteOpenHelper {
             String strGMTdate;
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             strGMTdate=format.format(Utils.toGMTdate(scanData.date));
-
             cv.put("date",strGMTdate);   //这里数据库保存 GMT时间
         }
         //成功返回行号，失败返回 -1
         return mDB.insert(Table_Name,"",cv);
     }
 
+    /////////ScanData1要重新写，加入status
     public ArrayList<buildMasterActivity.ScanData1> query(){
         System.out.println("------------开始查询：");
         ArrayList<buildMasterActivity.ScanData1> list=new ArrayList<buildMasterActivity.ScanData1>();

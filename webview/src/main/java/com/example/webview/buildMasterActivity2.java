@@ -49,8 +49,9 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class buildMasterActivity2 extends AppCompatActivity {
     Context mActvity;
     Menu mMenu;
-    final int atPAGE=1,leftPAGE=2,REFRESH=3,MSG=4,STOP=5;
+    final int atPAGE=1,leftPAGE=2,REFRESH=3,MSG=4,STOP=5,bigINFO=6,smallINFO=7;
     RadioButton rdOld,rdNew;  //想用于切换界面
+    LinearLayout layoutUpper;
     WebView mWebview;
     EditText etMaster,etSerial;
     TextView tvMessage,tvList,tvBackPlex,tvMasterUnitMessage;
@@ -99,6 +100,8 @@ public class buildMasterActivity2 extends AppCompatActivity {
 
     private void init() {
         mActvity=this;
+        layoutUpper=findViewById(R.id.layout_upper);
+        layoutUpper.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,1.2f));
         mWebview = findViewById(R.id.webview);
 
         newPage=findViewById(R.id.newPage); //旧的Plex界面
@@ -212,13 +215,12 @@ public class buildMasterActivity2 extends AppCompatActivity {
                     refresh_list("查看数据库！");
                     childThread=new buildMasterActivity2.ChildThread();
                     childThread.start();
-
-                    //子线程向主线程发消息,
-                    //sendMessage(leftPAGE,null);
                     //go to next Activity
                     view.loadUrl(url_plex+"/"+session_ID+first_page);
+                    //发消息，放大 信息栏
+                    sendMessage(bigINFO,null);
                 }else if(url.contains("/Mobile/Inventory/Mobile_Build_Master_Unit.asp?Node=")){
-                    //点了Back退出，不在build master扫描界面
+                    //点了Back退出，离开build master扫描界面
                     sendMessage(leftPAGE,null);
                     view.loadUrl(url);
                 } else{
@@ -415,6 +417,8 @@ public class buildMasterActivity2 extends AppCompatActivity {
                     message.substring(0,2000);
                 }
                 tvMessage.setText(msg.obj.toString()+"\n"+message);
+            }else if(msg.what==bigINFO){
+                layoutUpper.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,0.6f));
             }
         }};
 
