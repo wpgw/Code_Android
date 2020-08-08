@@ -509,7 +509,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
                     if(scanData1.count<1000){  //上传次数太多的，算无效条码，不再上传
                         try {
                             sendMessage(REFRESH,"干活........");
-                            success = masterUnitHandler(session_ID, master, serial);    ///////masterUnitHandler还要处理各种状况
+                            success = masterUnitHandler(session_ID, master, serial); //返回0：失败, 1：成功 或 1000:条码失效
                         }catch(Exception e){
                             e.printStackTrace();
                             sendMessage(MSG,e.getMessage());     //发出 出错信息
