@@ -500,29 +500,35 @@ public class buildMasterActivity2 extends AppCompatActivity {
         public void run(){
             while(flag){     //子程序可被Interrupt停止
                 buildMasterActivity.ScanData1 scanData1=queue.peek(); //poll(出)与offer(入)相互对应, 满会返回false 另：peek不会去掉队首元素
-                //上传次数太多的，算无效条码，不再上传
-                if(scanData1!=null&&scanData1.count<1000){              //poll(出)：若队列为空，返回null
+
+                if(scanData1!=null){              //poll(出)：若队列为空，返回null
                     //System.out.println("子线程发现数据："+scanData1.toString());
                     String serial=scanData1.serial;
                     String master=scanData1.master;
                     int success=0;  //初始化 success 结果状态
-                    try {                 //这里会抛出异常
-                        sendMessage(REFRESH,"干活........");
-                        success = masterUnitHandler(session_ID, master, serial);    ///////masterUnitHandler还要处理各种状况
-                    }catch(Exception e){
-                        e.printStackTrace();
-                        sendMessage(MSG,e.getMessage());     //发出 出错信息
+                    if(scanData1.count<1000){  //上传次数太多的，算无效条码，不再上传
+                        try {
+                            sendMessage(REFRESH,"干活........");
+                            success = masterUnitHandler(session_ID, master, serial);    ///////masterUnitHandler还要处理各种状况
+                        }catch(Exception e){
+                            e.printStackTrace();
+                            sendMessage(MSG,e.getMessage());     //发出 出错信息
+                        }
+                    }else{
+                        success=999;  //999代表，发现条码已设置停止上传了，本次没有上传
                     }
                     //已处理完，就去掉这个 serial
                     mydbhelper.delete("serial=?",new String[]{serial});    //删除已成功的
-                    //queue.poll(); //去掉数据
+                    //queue.poll();     //去掉数据
                     if(success==0){     //0代表上传不成功  1 代表上传成功
                         scanData1.count++;   //数据的失败记录加1
                         mydbhelper.insert(scanData1);  //加数据在末尾，准备重传
                         //queue.poll(); queue.offer(scanData1);
-                    }else if(success==1000){   //1000代表，发现条码无效
+                    }else if(success==1000){   //1000代表，子程序发现条码无效
                         scanData1.count=2000;
                         mydbhelper.insert(scanData1);  //加数据在末尾, 但因count大，不会重传
+                    }else if(success==999){
+                        mydbhelper.insert(scanData1);
                     }
                 }
                 try {
