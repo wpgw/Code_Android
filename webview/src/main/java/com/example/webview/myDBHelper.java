@@ -69,7 +69,7 @@ public class myDBHelper extends SQLiteOpenHelper {
         String create_sql="CREATE TABLE IF NOT EXISTS "+Table_Name
                 +" (_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                 +"serial VARCHAR NOT NULL, master VARCHAR NOT NULL,"
-                +"date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, count INTEGER DEFAULT 0 NOT NULL,status INTEGER DEFAULT 1)";
+                +"date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, count INTEGER DEFAULT 0 NOT NULL)";
         db.execSQL(create_sql);
 
 //        String myDate =cursor.getString(cursor.getColumnIndex("datetime(timestamp,'localtime')"));
@@ -78,10 +78,9 @@ public class myDBHelper extends SQLiteOpenHelper {
     }
 
 
-    ///////////要加入改 status
+    //修改数据库，执行表结构更改
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
     }
 
     public int delete(String condition,String[] args){
@@ -105,7 +104,6 @@ public class myDBHelper extends SQLiteOpenHelper {
         return mDB.insert(Table_Name,"",cv);
     }
 
-    /////////ScanData1要重新写，加入status
     public ArrayList<buildMasterActivity.ScanData1> query(){
         System.out.println("------------开始查询：");
         ArrayList<buildMasterActivity.ScanData1> list=new ArrayList<buildMasterActivity.ScanData1>();

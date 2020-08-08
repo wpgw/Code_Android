@@ -49,7 +49,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class buildMasterActivity2 extends AppCompatActivity {
     Context mActvity;
     Menu mMenu;
-    final int atPAGE=1,leftPAGE=2,REFRESH=3,MSG=4,STOP=5,bigINFO=6,smallINFO=7;
+    final int atPAGE=1,leftPAGE=2,REFRESH=3,MSG=4,STOP=5,bigINFO=6;
     RadioButton rdOld,rdNew;  //想用于切换界面
     LinearLayout layoutUpper;
     WebView mWebview;
@@ -100,12 +100,13 @@ public class buildMasterActivity2 extends AppCompatActivity {
 
     private void init() {
         mActvity=this;
-        layoutUpper=findViewById(R.id.layout_upper);
+        layoutUpper=findViewById(R.id.layout_upper);  //原始Plex界面
+        //缩小下边的Info区
         layoutUpper.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,1.2f));
         mWebview = findViewById(R.id.webview);
 
-        newPage=findViewById(R.id.newPage); //旧的Plex界面
-        newPage.setVisibility(View.GONE);   //隐旧界面，只开Plex 新界面
+        newPage=findViewById(R.id.newPage); //新的扫描
+        newPage.setVisibility(View.GONE);   //hide 新界面
 
         etMaster=findViewById(R.id.etMaster);
         etSerial=findViewById(R.id.etSerial);
@@ -118,7 +119,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 String master = etMaster.getText().toString();
                 serial=Utils.refine_label(serial);                  // 规范化读取的 bacode, 如barcode无效，将会是空""
                 if ((serial.length()==10||serial.length()==11) && master.length() == 7) {   //粗粗检查一下合法性
-                    //加入前，判断是否已经扫过了，在列表中，如在，需提醒一下
+                    //加入前，判断是否已经扫过了，如在列表中发现重复，提醒，并删除重复
                     buildMasterActivity.ScanData1 scandata1= new buildMasterActivity.ScanData1(serial,master,null,0);  //date取数据库默认值
                     if(mydbhelper.contains(serial)){
                         say_word=",重复了!";  //说 重复了
@@ -131,11 +132,11 @@ public class buildMasterActivity2 extends AppCompatActivity {
                     tvMasterUnitMessage.setText("你的最后成功一扫：" + serial);   // 显示最新的扫描结果
                     //语音提示
                     say_word=serial.substring(serial.length()-4,serial.length())+say_word;
-                    say(say_word);   //读出最后三个数字
+                    say(say_word);   //读出最后4个数字
                     refresh_list("加入新条码");
                     //System.out.println("嘿嘿：" + scandataMap);     ///////////////////////////
                     etSerial.requestFocus();     //条码框获得焦点
-                }else if(serial.length()>0){     //发现清空后，还会激发一次click, 这次不报警
+                }else if(serial.length()>0){     //另注：这个会激发两次click, 后一次serial为空，这次不报警
                     tvMasterUnitMessage.setText(serial+"扫描错误！");   // 显示最新的扫描结果
                     say(serial+"错误！");
                     Toast.makeText(getApplicationContext(),"可能输入数据无效！"+serial,Toast.LENGTH_SHORT).show();
@@ -164,8 +165,8 @@ public class buildMasterActivity2 extends AppCompatActivity {
         tvBackPlex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mWebview.setVisibility(View.VISIBLE);
-                newPage.setVisibility(View.GONE);
+                mWebview.setVisibility(View.VISIBLE);  //显原始Plex界面
+                newPage.setVisibility(View.GONE);      //hide新界面
             }
         });
     }
@@ -214,7 +215,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
 
                     refresh_list("查看数据库！");
                     childThread=new buildMasterActivity2.ChildThread();
-                    childThread.start();
+                    childThread.start();   //启动子线程开始上传扫描数据
                     //go to next Activity
                     view.loadUrl(url_plex+"/"+session_ID+first_page);
                     //发消息，放大 信息栏
@@ -241,7 +242,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 }
                 return super.shouldInterceptRequest(view, request);
             }
-            private WebResourceResponse myInterPlant(String url){
+            private WebResourceResponse myInterPlant(String url){   //这个没用
                 //访问页面，并修改后，返回一个WebResourceReponse给拦截器
                 String html="";
                 try{
@@ -307,7 +308,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 }
                 if(childThread!=null && !childThread.isAlive()){      //确认 子线程已关闭后，才同步菜单项
                     item.setEnabled(false);
-                    mMenu.findItem(R.id.navigation_start_child).setEnabled(true);  //激活另一个菜单项
+                    mMenu.findItem(R.id.navigation_start_child).setEnabled(true);  //激活 启动线程 菜单项
                     childThread=null;
                     sendMessage(STOP,"已停止上传!\n");
                 }
@@ -318,7 +319,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
                     childThread.start();
                     item.setEnabled(false);
                     mMenu.findItem(R.id.navigation_stop_child).setEnabled(true);
-                    sendMessage(MSG,"已成功启动了上传。\n");
+                    sendMessage(MSG,"已启动了上传。\n");
                     //System.out.println(childThread.getState());   //terminated or runable
                 }
                 break;
@@ -355,7 +356,6 @@ public class buildMasterActivity2 extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    //销毁Webview
     @Override
     protected void onDestroy() {
         if (textToSpeech != null) {
@@ -363,7 +363,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
             textToSpeech.shutdown();
             textToSpeech = null;
         }
-
+        //销毁Webview
         if (mWebview != null) {
             mWebview.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
             mWebview.clearHistory();
@@ -397,10 +397,14 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 etMaster.setText(msg.obj.toString());
                 etSerial.setText("");   // clear条码框
                 etSerial.requestFocus();  //条码框 获得焦点
+                //!!!!!!可考虑这里扩大下边的info区
+                //layoutUpper.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,0.6f));
             }else if(msg.what==leftPAGE){   //离开新页面
                 newPage.setVisibility(View.GONE);
                 mWebview.setVisibility(View.VISIBLE);
                 etSerial.setText("");
+                //缩小下边的info区
+                layoutUpper.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,1.2f));
             }else if(msg.what==REFRESH){
                 if(msg.obj!=null){
                     refresh_list(msg.obj.toString());
@@ -418,6 +422,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 }
                 tvMessage.setText(msg.obj.toString()+"\n"+message);
             }else if(msg.what==bigINFO){
+                //扩大下方的info区
                 layoutUpper.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,0.6f));
             }
         }};
@@ -476,7 +481,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
             queue.addAll(list);   //再填充  ///////////需检查 数据集是否为空吗？
         }
         int count=queue.size();
-        String strlist=head+" 任务数："+count+"\n";
+        String strlist=head+" 任务数："+count+"    (如记数大于1000，不上传！)\n";
         //遍历队列
         for (buildMasterActivity.ScanData1 scandata1 : queue) {
             strlist+=scandata1.toString();
@@ -490,11 +495,12 @@ public class buildMasterActivity2 extends AppCompatActivity {
         public void run(){
             while(flag){     //子程序可被Interrupt停止
                 buildMasterActivity.ScanData1 scanData1=queue.peek(); //poll(出)与offer(入)相互对应, 满会返回false 另：peek不会去掉队首元素
-                if(scanData1!=null){              //poll(出)：若队列为空，返回null
+                //上传次数太多的，算无效条码，不再上传
+                if(scanData1!=null&&scanData1.count<1000){              //poll(出)：若队列为空，返回null
                     //System.out.println("子线程发现数据："+scanData1.toString());
                     String serial=scanData1.serial;
                     String master=scanData1.master;
-                    boolean success=false;  //初始化 success 结果状态
+                    int success=0;  //初始化 success 结果状态
                     try {                 //这里会抛出异常
                         sendMessage(REFRESH,"干活........");
                         success = masterUnitHandler(session_ID, master, serial);    ///////masterUnitHandler还要处理各种状况
@@ -502,19 +508,20 @@ public class buildMasterActivity2 extends AppCompatActivity {
                         e.printStackTrace();
                         sendMessage(MSG,e.getMessage());     //发出 出错信息
                     }
-                    if(!success){
+                    //已处理完，就去掉这个 serial
+                    mydbhelper.delete("serial=?",new String[]{serial});    //删除已成功的
+                    //queue.poll(); //去掉数据
+                    if(success==0){     //0代表上传不成功  1 代表上传成功
                         scanData1.count++;   //数据的失败记录加1
-                        //先出队列，再加到队尾
-                        mydbhelper.delete("serial=?",new String[]{serial});    //先删除失败的  ////如果有多个，也会删掉
-                        mydbhelper.insert(scanData1);
+                        mydbhelper.insert(scanData1);  //加数据在末尾，准备重传
                         //queue.poll(); queue.offer(scanData1);
-                    }else{
-                        mydbhelper.delete("serial=?",new String[]{serial});    //删除已成功的
-                        //queue.poll(); //成功，就去掉已传数据
+                    }else if(success==1000){   //1000代表，发现条码无效
+                        scanData1.count=2000;
+                        mydbhelper.insert(scanData1);  //加数据在末尾, 但因count大，不会重传
                     }
                 }
                 try {
-                    sendMessage(REFRESH,"休息......");
+                    sendMessage(REFRESH,"休息中......");
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -527,7 +534,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
             }
         }
 
-        private boolean masterUnitHandler(String session_ID,String master,String serial) throws Exception {
+        private int masterUnitHandler(String session_ID,String master,String serial) throws Exception {
             String url="https://www.plexus-online.com/"+session_ID+"/Modules/Inventory/MasterUnits/MasterUnitHandler.ashx?ApplicationKey=166143";
             String jsonString;
             Connection.Response res;
@@ -550,7 +557,8 @@ public class buildMasterActivity2 extends AppCompatActivity {
             }else{  //如果 StrMasterUnitKey为空，则报错
                 sendMessage(MSG,master+"出错：主条码号有问题！\n");
                 vibrate(300);
-                return false;
+                //不成功，返回0
+                return 0;
             }
             { //查有关箱号是否在master label中
                 data.clear();
@@ -559,22 +567,23 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 data.put("SerialNo", serial);
                 res = Utils.request_post(url, cookies, data);
                 jsonString = res.body();
-                System.out.println("验证：");
-                System.out.println(jsonString);
+                //System.out.println("验证：");System.out.println(jsonString);
                 objectMap = JSON.parseObject(jsonString, Map.class);
+
+                //以下分析 查询结果：
                 if (objectMap.get("MasterUnitNo") != null) {    //masterUnit不一定会有      //发现这里会抛出 null 异常, 且子程序被手工中断时会掉数据  ////////////////////////////////////
                     String strMasterUnitNo_raw = objectMap.get("MasterUnitNo").toString();
                     sendMessage(MSG, String.format("%s在已主条码%s中。\n", serial, strMasterUnitNo_raw));
                 }
-                boolean IsValid = (boolean) objectMap.get("IsValid");
-                System.out.println("嘿嘿Json2:" + serial);
 
+                boolean IsValid = (boolean) objectMap.get("IsValid");
+                //System.out.println("嘿嘿Json2:" + serial);
                 //如果IsValid不是真，报错
                 if (!IsValid) {
                     vibrate(300);
                     String strMessage = objectMap.get("Message").toString();
                     sendMessage(MSG, serial + "出错：条码号有问题！\n      " + strMessage + "\n");
-                    return false;
+                    return 1000;  //发现条码无效，返回1000
                 }
             }
             //把相关箱号加入到指定的master label中
@@ -585,16 +594,22 @@ public class buildMasterActivity2 extends AppCompatActivity {
             jsonString=res.body();
             System.out.println("执行：");
             objectMap= JSON.parseObject(jsonString,Map.class);
-            boolean isSuccess =(boolean)objectMap.get("IsValid");     //发现这里会抛出 null 异常, 且子程序被手工中断时会掉数据  ////////////////////////////////////
+            //以下处理上传结果 objectMap
+            boolean isSuccess =(boolean)objectMap.get("IsValid"); //发现这里会抛出 null 异常, 子程序被手工interrupt时会掉数据
             System.out.println("嘿嘿Json3:"+isSuccess);
             if(isSuccess){
                 String strContainerCount=objectMap.get("ContainerCount").toString();
                 sendMessage(MSG,"成功："+serial+"成功加入"+master+".\n            主码箱数："+strContainerCount+"  库位："+strLocation+"\n");
-                return true;
-            }else{
+                return 1;   //成功，返回1
+            }
+            else{
                 String strMessage=objectMap.get("Message").toString();
                 sendMessage(MSG,"失败："+serial+"加入"+master+"失败。 "+Utils.getMonthTime(new Date())+"\n            "+strMessage+"\n");
-                return false;
+                if (strMessage.contains("not a valid container")){
+                    return 1000;  //发现条码无效，返回1000
+                }else{
+                    return 0;    //不成功，返回0}
+                }
             }
         }
     }
