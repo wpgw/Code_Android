@@ -481,10 +481,15 @@ public class buildMasterActivity2 extends AppCompatActivity {
             queue.addAll(list);   //再填充  ///////////需检查 数据集是否为空吗？
         }
         int count=queue.size();
-        String strlist=head+" 任务数："+count+"    (如记数大于1000，不上传！)\n";
+        String strlist=head+" 任务数："+count+"\n";
+
         //遍历队列
         for (buildMasterActivity.ScanData1 scandata1 : queue) {
             strlist+=scandata1.toString();
+            if(scandata1.count>999){  //上传记数1000以上，会被停传
+                strlist+=" 停";
+            }
+            strlist+="\n";  //换行
         }  //显示出来
         tvList.setText(strlist);
     }

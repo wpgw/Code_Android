@@ -425,7 +425,7 @@ public class buildMasterActivity extends AppCompatActivity {
             if(this.serial==null)
                 return "no data";
             String date=Utils.getMonthTime(this.date);
-            return String.format("%s-->%s 时间:%s 记数:%s\n",this.serial,this.master,date,this.count);
+            return String.format("%s-->%s 时间:%s 记数:%s",this.serial,this.master,date,this.count);
         }
     }
 
