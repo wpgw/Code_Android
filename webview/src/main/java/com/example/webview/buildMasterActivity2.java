@@ -397,8 +397,8 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 etMaster.setText(msg.obj.toString());
                 etSerial.setText("");   // clear条码框
                 etSerial.requestFocus();  //条码框 获得焦点
-                //!!!!!!可考虑这里扩大下边的info区
-                //layoutUpper.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,0.6f));
+                //扩大下边的info区
+                layoutUpper.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,0.6f));
             }else if(msg.what==leftPAGE){   //离开新页面
                 newPage.setVisibility(View.GONE);
                 mWebview.setVisibility(View.VISIBLE);
@@ -616,7 +616,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
             else{
                 String strMessage=objectMap.get("Message").toString();
                 sendMessage(MSG,"失败："+serial+"加入"+master+"失败。 "+Utils.getMonthTime(new Date())+"\n            "+strMessage+"\n");
-                if (strMessage.contains("not a valid container")){
+                if (strMessage.contains("not a valid container")||strMessage.contains("cannot be added")){
                     return 1000;  //发现条码无效，返回1000
                 }else{
                     return 0;    //不成功，返回0}

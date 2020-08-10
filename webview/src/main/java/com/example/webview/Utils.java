@@ -41,7 +41,8 @@ public class Utils {
 
     public static String refine_label(String txtSerial_NO) {
         //String pattern="([a-zA-Z]{4}\\d{6,7}|\\d{6,7})";
-        String pattern="([a-zA-Z]{4}\\d{6,7})";   //不接受 纯数字条码，必须含4位字母
+        //不接受 纯数字条码：必须 首4位字母:7位数字,或 6位数字，首位不能为1，2
+        String pattern="([a-zA-Z]{4}\\d{7}|[a-zA-Z]{4}[3-9]{1}\\d{5})";
 
         Pattern re=Pattern.compile(pattern);
         Matcher ma=re.matcher(txtSerial_NO);
