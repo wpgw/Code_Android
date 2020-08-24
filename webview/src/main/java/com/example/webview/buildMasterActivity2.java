@@ -413,7 +413,8 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 }
             }else if(msg.what==STOP){
                 if(msg.obj!=null){
-                    tvList.setText(msg.obj.toString());
+                    String temp="\n"+tvList.getText().toString();
+                    tvList.setText(msg.obj.toString()+temp);
                 }
             }else if(msg.what==MSG){          // 显示操作信息
                 String message=tvMessage.getText().toString();
@@ -487,7 +488,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
         for (buildMasterActivity.ScanData1 scandata1 : queue) {
             strlist+=scandata1.toString();
             if(scandata1.count>999){  //上传记数1000以上，会被停传
-                strlist+=" 停";
+                strlist+="停";
             }
             strlist+="\n";  //换行
         }  //显示出来
