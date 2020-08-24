@@ -118,7 +118,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 String serial = etSerial.getText().toString();
                 String master = etMaster.getText().toString();
                 serial=Utils.refine_label(serial);                  // 规范化读取的 bacode, 如barcode无效，将会是空""
-                if ((serial.length()==10||serial.length()==11) && master.length() == 7) {   //粗粗检查一下合法性
+                if ((serial.length()>=9) && master.length() == 7) {   //粗粗检查一下合法性
                     //加入前，判断是否已经扫过了，如在列表中发现重复，提醒，并删除重复
                     buildMasterActivity.ScanData1 scandata1= new buildMasterActivity.ScanData1(serial,master,null,0);  //date取数据库默认值
                     if(mydbhelper.contains(serial)){
