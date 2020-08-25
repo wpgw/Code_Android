@@ -497,6 +497,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
 
     class ChildThread extends Thread{
         volatile boolean flag=true;
+        int sleepTime=2000;  //正常时，每次上传间隔时间 (这个2000不起作用，后面有改)
         @Override
         public void run(){
             while(flag){     //子程序可被Interrupt停止
@@ -509,6 +510,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
                     int success=0;  //初始化 success 结果状态
                     if(scanData1.count<1000){  //上传次数太多的，算无效条码，不再上传
                         try {
+                            sleepTime=2000;
                             sendMessage(REFRESH,"干活........");
                             success = masterUnitHandler(session_ID, master, serial); //返回0：失败, 1：成功 或 1000:条码失效
                         }catch(Exception e){
@@ -516,25 +518,26 @@ public class buildMasterActivity2 extends AppCompatActivity {
                             sendMessage(MSG,e.getMessage());     //发出 出错信息
                         }
                     }else{
-                        success=999;  //999代表，发现条码已设置停止上传了，本次没有上传
+                        success=999;     //999代表，发现条码已设置停止上传了，本次没有上传
+                        sleepTime=2000;  //如果没有上传，等下一个的间隔时间可变短些（但太短，屏幕会跳得厉害）
                     }
                     //已处理完，就去掉这个 serial
-                    mydbhelper.delete("serial=?",new String[]{serial});    //删除已成功的
+                    mydbhelper.delete("serial=?",new String[]{serial});    //删除本次尝试过上传的条码
                     //queue.poll();     //去掉数据
                     if(success==0){     //0代表上传不成功  1 代表上传成功
                         scanData1.count++;   //数据的失败记录加1
                         mydbhelper.insert(scanData1);  //加数据在末尾，准备重传
                         //queue.poll(); queue.offer(scanData1);
-                    }else if(success==1000){   //1000代表，子程序发现条码无效
-                        scanData1.count=2000;
+                    }else if(success==1000){          //1000代表，子程序发现条码无效
+                        scanData1.count=2000;         //做标记，下次不再上传
                         mydbhelper.insert(scanData1);  //加数据在末尾, 但因count大，不会重传
                     }else if(success==999){
-                        mydbhelper.insert(scanData1);
+                        mydbhelper.insert(scanData1);  //本次没有上传，只是记录在数据库末尾
                     }
                 }
                 try {
-                    sendMessage(REFRESH,"休息中......");
-                    Thread.sleep(2000);
+                    sendMessage(REFRESH,"休息中......"+sleepTime);
+                    Thread.sleep(sleepTime);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     sendMessage(MSG,"子线程被Interrupt！");   //////这里要改菜单项
