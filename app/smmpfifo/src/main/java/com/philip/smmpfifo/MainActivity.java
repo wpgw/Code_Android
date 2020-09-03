@@ -1,7 +1,6 @@
-package com.example.webview;
+package com.philip.smmpfifo;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -34,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.example.webview.myDBHelper;
 
 import org.jsoup.Connection;
 
@@ -46,7 +46,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 
-public class buildMasterActivity2 extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
     Context mActvity;
     Menu mMenu;
     final int atPAGE=1,leftPAGE=2,REFRESH=3,MSG=4,STOP=5,bigINFO=6;
@@ -58,12 +58,11 @@ public class buildMasterActivity2 extends AppCompatActivity {
     Button button;
     LinearLayout newPage;
     String url_plex = "https://mobile.plexus-online.com";
-    String url_plex_www="https://www.plexus-online.com/";   //用www页面做master label容易些
     String first_page="/Mobile/Inventory/Mobile_Build_Master_Unit.asp?Node=530174"; //build new master label
 
     String session_ID = "";
     HashMap cookies;
-    buildMasterActivity2.ChildThread childThread;
+    ChildThread childThread;
 
     //queue用于暂存数据
     LinkedBlockingDeque<buildMasterActivity.ScanData1> queue=new LinkedBlockingDeque<buildMasterActivity.ScanData1>();
@@ -73,7 +72,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_build_master2);
+        setContentView(R.layout.activity_main);
 
         //打开数据库
         mydbhelper=myDBHelper.getInstance(this,1);
@@ -215,7 +214,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
                     cookies = Utils.stringTomap(cookieString);
 
                     refresh_list("查看数据库！");
-                    childThread=new buildMasterActivity2.ChildThread();
+                    childThread=new ChildThread();
                     childThread.start();   //启动子线程开始上传扫描数据
                     //go to next Activity
                     view.loadUrl(url_plex+"/"+session_ID+first_page);
@@ -243,7 +242,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 }
                 return super.shouldInterceptRequest(view, request);
             }
-            private WebResourceResponse myInterPlant(String url){   //////这个函数没用
+            private WebResourceResponse myInterPlant(String url){   //这个没用
                 //访问页面，并修改后，返回一个WebResourceReponse给拦截器
                 String html="";
                 try{
@@ -551,7 +550,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
         }
 
         private int masterUnitHandler(String session_ID,String master,String serial) throws Exception {
-            String url=url_plex_www+session_ID+"/Modules/Inventory/MasterUnits/MasterUnitHandler.ashx?ApplicationKey=166143";
+            String url="https://www.plexus-online.com/"+session_ID+"/Modules/Inventory/MasterUnits/MasterUnitHandler.ashx?ApplicationKey=166143";
             String jsonString;
             Connection.Response res;
             String strMasterUnitKey,strMasterUnitNo,strLocation,strMasterUnitTypeKey;
@@ -664,4 +663,3 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 TextToSpeech.QUEUE_FLUSH, null,null);
     }
 }
-
