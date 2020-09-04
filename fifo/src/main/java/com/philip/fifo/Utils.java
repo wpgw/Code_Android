@@ -1,4 +1,5 @@
-package com.example.webview;
+package com.philip.fifo;
+
 
 import android.os.Build;
 import android.webkit.CookieManager;
@@ -20,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
+    //把 Cookie硬塞给另一个url
     public static void set_cookie(String url, String cookieString) {
         //参考 https://blog.csdn.net/kelaker/article/details/82751287
         //CookieManager.getInstance().removeAllCookie();

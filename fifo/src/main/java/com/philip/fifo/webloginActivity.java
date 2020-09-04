@@ -81,7 +81,7 @@ public class webloginActivity extends AppCompatActivity {
                     Uri uri = Uri.parse(url);
                     session_ID = uri.getPathSegments().get(0);
                     String cookieString = CookieManager.getInstance().getCookie(url_plex);
-                    cookies = stringTomap(cookieString);
+                    cookies = Utils.stringTomap(cookieString);
                     //go to next Activity
                     System.out.println("Go to next page...-----------------------------");
                     // Transfer to next page
@@ -151,20 +151,20 @@ public class webloginActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    //把Cookie String转成Map
-    public HashMap<String, String> stringTomap(String cookieString) {
-        HashMap<String, String> Cookies = new HashMap<String, String>();
-        String[] values = cookieString.split(";");
-        for (String value : values) {
-            int index = value.indexOf('=');
-            Cookies.put(value.substring(0, index), value.substring(index + 1));
-        }
-        //System.out.println(this.toString()+ Cookies);
-        return Cookies;
-    }
-
-    public void vibrate(int time) {
-        Vibrator vibrator = (Vibrator) this.getSystemService(this.VIBRATOR_SERVICE);
-        vibrator.vibrate(time);
-    }
+//    //把Cookie String转成Map
+//    public HashMap<String, String> stringTomap(String cookieString) {
+//        HashMap<String, String> Cookies = new HashMap<String, String>();
+//        String[] values = cookieString.split(";");
+//        for (String value : values) {
+//            int index = value.indexOf('=');
+//            Cookies.put(value.substring(0, index).trim(), value.substring(index + 1));
+//        }
+//        //System.out.println(this.toString()+ Cookies);
+//        return Cookies;
+//    }
+//
+//    public void vibrate(int time) {
+//        Vibrator vibrator = (Vibrator) this.getSystemService(this.VIBRATOR_SERVICE);
+//        vibrator.vibrate(time);
+//    }
 }

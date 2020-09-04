@@ -217,7 +217,7 @@ public class Plex_login {
         Plex_login login=new Plex_login("test.plexus-online.com");
 
         try {
-            if (login.login("smmp.pwang","99887766","smmp")!=null) {//cookie在类login的public变量中
+            if (login.login("smmp.pwang","88776655","smmp")!=null) {//cookie在类login的public变量中
                 String session_key=login.cookies.get("Session_Key").toString();
                 session_key=session_key.substring(1,session_key.length()-1);  //去掉头尾的{}
                 System.out.println("\n "+session_key);

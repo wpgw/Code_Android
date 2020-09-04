@@ -1,75 +1,19 @@
-package com.example.webview;
-
-import android.os.Build;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
-import android.widget.TextView;
-
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+package com.philip.fifo;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
 
-public class Utils {
-    public static void set_cookie(String url, String cookieString) {
-        //参考 https://blog.csdn.net/kelaker/article/details/82751287
-        //CookieManager.getInstance().removeAllCookie();
-        //CookieManager.getInstance().removeSessionCookie();
-
-        String[] values = cookieString.split(";");
-        for (String value : values) {
-            CookieManager.getInstance().setCookie(url, value);
-        }
-        //同步 cookie修改
-        if (Build.VERSION.SDK_INT < 21) {
-            //CookieSyncManager.createInstance(this);
-            //CookieSyncManager.getInstance().sync();
-        } else {
-            CookieManager.getInstance().flush();
-        }
-        //System.out.println( "饼干："+CookieManager.getInstance().getCookie(url));
+public class setup_part {
+    public static void main(String[] args) {
+        System.out.println("Plex_login class Path:");
     }
 
-    public static String refine_label(String txtSerial_NO) {
-        //String pattern="([a-zA-Z]{4}\\d{6,7}|\\d{6,7})";
-        //不接受 纯数字条码：必须 首4位字母,6或7位数字，MLT后7位, T后8位
-        String pattern="([smmpSMMPwmltWMLT]{4}\\d{6,7}|MLT\\d{7}|T\\d{8})";
 
-        Pattern re=Pattern.compile(pattern);
-        Matcher ma=re.matcher(txtSerial_NO);
 
-        if (ma.find()) {
-            String result=ma.group();
-            if (result.length()<9) {
-                //result="smmp"+result;  //此时自动补上smmp
-                result="sm"+result;           //此时不自动补smmp
-            }
-            return result;
-        }else {
-            return "";
-        }
-    }
-
-    //把Cookie String转成Map
-    public static HashMap<String, String> stringTomap(String cookieString) {
-        HashMap<String, String> Cookies = new HashMap<String, String>();
-        String[] values = cookieString.split(";");
-        for (String value : values) {
-            int index = value.indexOf('=');
-            Cookies.put(value.substring(0, index).trim(), value.substring(index + 1));
-        }
-        //System.out.println(this.toString()+ Cookies);
-        return Cookies;
-    }
 
     public static String request_get(String url, HashMap<String, String> cookies) throws Exception {
         HashMap<String, String> headers = new HashMap<>();
@@ -141,30 +85,4 @@ public class Utils {
         }
     }
 
-    public static void refreshTextView(TextView tv, String msg){
-        //参考 https://www.cnblogs.com/tt2015-sz/p/4502341.html
-        tv.append(msg);
-        int offset=tv.getLineCount()*tv.getLineHeight();
-        if(offset>tv.getHeight()){
-            tv.scrollTo(0,offset-tv.getHeight());
-        }
-    }
-
-    public static String getNowDateTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(new Date());
-    }
-
-    public static String getMonthTime(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss");
-        return sdf.format(date);
-    }
-
-    public static Date toGMTdate(Date date){
-        Long timestamp=date.getTime();            //到 70年的毫秒数
-        int offset= TimeZone.getDefault().getRawOffset();  //获取和 格林威治标准时区 的偏移值
-        timestamp-=offset;     //调成GMT时间
-        Date GMTdate=new Date(timestamp);
-        return GMTdate;
-    }
 }
