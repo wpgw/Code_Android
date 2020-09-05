@@ -9,12 +9,15 @@ import android.widget.TextView;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -57,7 +60,7 @@ public class Utils {
             }
             return result;
         }else {
-            return "";
+            return "inValid barcode";
         }
     }
 
@@ -73,7 +76,7 @@ public class Utils {
         return Cookies;
     }
 
-    public static String request_get(String url, HashMap<String, String> cookies) throws Exception {
+    public static Connection.Response request_get(String url, HashMap<String, String> cookies) throws Exception {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36");
         //headers.put("Host",host);
@@ -97,7 +100,7 @@ public class Utils {
             if (res.url().toString().toLowerCase().contains("change_password")) {
                 throw new Exception("你的密码过期了,请在电脑上更新密码!");
             }
-            return res.parse().html();
+            return res;
 
         } catch (SocketTimeoutException e) {
             throw new Exception("Time Out!网络连接超时,请重试!");
@@ -141,6 +144,66 @@ public class Utils {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    public static Map<String,String> show_container_info(HashMap<String,String> cookies,String pre_url,String txtSerial_No) throws Exception{
+        //如果txtSerial_No不存在，会返回什么结果? 需处理
+        String url=pre_url+txtSerial_No;
+        try {  //////如果出网络出错，没有返回数据，怎么办？
+            Connection.Response res=request_get(url,cookies);
+            Document doc=res.parse();
+
+            Elements el_input=doc.select("input");
+
+            Map<String,String> map=new LinkedHashMap<>();
+            map.put("barcode",txtSerial_No);
+            map.put("txtPartNo", el_input.select("input[name=txtPartNo]").first().attr("value").trim());
+            map.put("txtQTY", el_input.select("input[name=numQuantity]").first().attr("value"));
+            map.put("txtLocation", el_input.select("input[name=txtLocation]").first().attr("value"));
+
+            //获得并转换 chkActive
+            String txtActive=el_input.select("input[name=chkActive]").first().attr("checked");
+            txtActive=(txtActive.equals("checked"))?"true":"false";  //三元运算
+            map.put("txtActive", txtActive);
+
+            map.put("curStatus", doc.select("option[selected=selected]").first().text());
+            map.put("txtNote",doc.select("textarea[id=txtNote]").first().text());
+
+            //System.out.println(map);
+            return map;
+
+        }catch(Exception e) {
+            System.out.println("catch Exception at show_container_info.");
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public static Map<String,String> check_fifo(HashMap<String,String> cookies,String url,String part_no) throws Exception{
+        //////看来要保存到数据库中，还是到集合中
+        Map<String,String> data=new LinkedHashMap<>();   //这个保证顺序
+        //////提交Post的数据
+        data.put("RequestID","0"); data.put("DatabaseName","Part");
+        data.put("ProcedureName","Scrap_Reasons_Link_Picker_Get"); //数字与下边的intput parameters对应
+        try{
+            Connection.Response res=request_post(url,cookies,data);
+            Document doc=res.parse();
+            /////////这里解析结果
+            Elements elements=doc.select("record");
+
+            Map<String,String> map=new LinkedHashMap<>();
+            /////////这里 解析表格
+            for(Element item:elements) {
+                String serial_no=item.select("field").first().text();
+                String qty=item.select("field").last().text();
+                map.put(serial_no,qty);
+            }
+            return map;
+        }catch(Exception e) {
+            System.out.println("catch Exception at check_fifo.");
+            e.printStackTrace();
+            throw e;
+    }
     }
 
     public static void refreshTextView(TextView tv, String msg){

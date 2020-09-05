@@ -1,7 +1,3 @@
-// should deal with the exception other than myExcept, such as network time out.
-// add scan function：1. to study icon   2, to study callback result
-// add et_info as log text
-
 package com.philip.plex_qa;
 
 import androidx.appcompat.app.AppCompatActivity;
