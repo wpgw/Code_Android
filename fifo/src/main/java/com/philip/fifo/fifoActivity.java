@@ -4,28 +4,44 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import org.jsoup.Connection;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class fifoActivity extends AppCompatActivity {
     HashMap<String,String> cookies=new HashMap<>();
     String pre_url,Session_Key;
-
-    //init Viewstv
+    final int MSG=1,showBarcodeInfo=2,showFIFOreport=3,STOP=5;
+    //init Views
     TextView tv_info,tv_message,tv_canlist,tv_cannotlist;
     EditText et_barcode,et_location;
     Button btn_confirm;
     ImageButton btn_scan;
     Button btn_move,btn_issue;
     RadioGroup radiogroup;
+
+    String barcode;   //用于存当前处理的条码号，传给thread
+    String part_no_inList;  //记录canlist中的物料号，用于扫描后判断当前canlist是否可用
+    ArrayList<Part_FIFO_Data> canlist=new ArrayList<Part_FIFO_Data>();
+    ArrayList<Part_FIFO_Data> cannotlist=new ArrayList<Part_FIFO_Data>();  //fifo允许的物料及不允许的物料
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,19 +107,22 @@ public class fifoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(v.getId()==R.id.btn_confirm){
                     //refine barcode
-                    String barcode=et_barcode.getText().toString();
+                    barcode=et_barcode.getText().toString();
                     barcode=Utils.refine_label(barcode);
                     et_barcode.setText(barcode);    //Textbox display the refined barcode
 
                     try {
-                        tv_info.setText("正在查条码......"+barcode);
-                        String url=pre_url+"/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=";
-                        Map<String,String> info=Utils.show_container_info(cookies,url,barcode);
-                        System.out.println("条码如下：");
-                        System.out.println(info.get("barcode")+"  "+info.get("txtPartNo")+"   "+info.get("txtQTY"));
+                        ChildThread thread=new ChildThread();
+                        thread.start();
+//                        tv_info.setText("正在查条码......"+barcode);
+//                        String url=pre_url+"/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=";
+//                        Map<String,String> info=Utils.show_container_info(cookies,url,barcode);
+//                        System.out.println("条码如下：");
+//                        System.out.println(info.get("barcode")+"  "+info.get("txtPartNo")+"   "+info.get("txtQTY"));
+//                        String txtPartNo=info.get("txtPartNo");
+//                        url=pre_url+"/Rendering_Engine/default.aspx?Request=Show&RequestData=SourceType(Screen)SourceKey(10617)";
+//                        Utils.get_fifo_report(cookies,url,txtPartNo);
 
-                        url=pre_url+"/Rendering_Engine/default.aspx?Request=Show&RequestData=SourceType(Screen)SourceKey(10617)";
-                        Utils.check_fifo(cookies,url,barcode);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -113,6 +132,135 @@ public class fifoActivity extends AppCompatActivity {
         });
     }
 
+    class ChildThread extends Thread{
+        @Override
+        public void run(){
+            //如果Barcode在canlist中，直接发货
+            //否则如果barcode与canlist的物料号相同，barcode栏变色，提示fifo不成功
+            //    如物料号也不相同，则清空txtpartno,canlist和cannotlist启动thread
+            try {
+                sendMessage(MSG,"1,正在查条码......"+barcode);
+                String url=pre_url+"/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=";
+                Map<String,String> barcodeInfo=Utils.show_container_info(cookies,url,barcode);
+                //显示查询结结果
+                String txtPartNo=barcodeInfo.get("txtPartNo");
+                sendMessage(showBarcodeInfo,txtPartNo);
+
+                sendMessage(MSG,"2,读取FIFO数据中......");
+                url=pre_url+"/Rendering_Engine/default.aspx?Request=Show&RequestData=SourceType(Screen)SourceKey(10617)";
+                ArrayList<Part_FIFO_Data> allList=get_fifo_report(cookies,url,txtPartNo);
+                System.out.println("size:"+ allList.size());
+                System.out.println(allList);
+
+                canlist.addAll(allList);  ////////////////////////要拆分allList
+                sendMessage(showFIFOreport,"");
+                sendMessage(MSG,"2,读取FIFO数据完成");
+                /////应把结果分类为 canList and cannotList
+                /////如果 barcode在canList中，直接操作移库
+                /////否则 barcode栏，变色，sendMessage说不能移库，需扫canlist中的barcode
+            } catch (Exception e) {
+                //要显示出错信息
+                //要清理txtPartNo,canList, cannotList   ???如果只是没有发料，则不必清理
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //主线程处理消息
+    private Handler mMainHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if(msg.what==MSG){
+                tv_info.setText(msg.obj.toString());
+            }else if(msg.what==showBarcodeInfo){
+                tv_info.setText("当前料号："+msg.obj.toString());
+            }else if(msg.what==showFIFOreport){
+                for(Part_FIFO_Data data:canlist){
+                    String temp=tv_canlist.getText().toString();
+                    tv_canlist.setText(temp+"\n"+data.toString());
+                }
+            }
+        }};
+
+    //子线程向主线程发送消息
+    private void sendMessage(int what,Object obj){
+        Message message1 = Message.obtain();
+        message1.what = what;  //1 means at newPage
+        message1.obj = obj;
+        mMainHandler.sendMessage(message1);
+    }
+
+    public static ArrayList<Part_FIFO_Data> get_fifo_report(HashMap<String,String> cookies,String url,String part_no) throws Exception{
+        Map<String,String> data=new LinkedHashMap<>();   //这个保证顺序
+        //////提交Post的数据
+        String strKeyHandle="172932/\\Part_No[]172933/\\Building_Key[]172934/\\Location[]172935/\\Container_Status[]172936/\\Shelf_Life_Type[]172937/\\Shelf_Life_Unit[]172938/\\Product_Type[]172939/\\Operation_Key[]172940/\\Customer_No[]172942/\\Department_Nos[]172943/\\Part_Types[]172944/\\Planner[]172945/\\Job_Key[]172960/\\Open_Release_Period[]172994/\\Show[]172995/\\Days_until_expiration";
+        data.put("__EVENTTARGET","Screen"); data.put("__EVENTARGUMENT","Search");
+        data.put("__LASTFOCUS","");data.put("__VIEWSTATE","/wEPDwUJOTg5NDMxNjIwZGSK//YD8K8d6i3pHog8e0fH85JbPQ==");
+        data.put("__VIEWSTATEGENERATOR","2811E9B3");data.put("hdnScreenTitle","Shelf Life Report");
+        data.put("hdnFilterElementsKeyHandle",strKeyHandle);data.put("ScreenParameters","");
+        data.put("RequestKey","1");
+        data.put("Layout1$el_172932",part_no);data.put("Layout1$el_172932_hf",part_no);data.put("Layout1$el_172932_hf_last_valid",part_no);
+        data.put("Layout1$el_172933","5824");  //means building: SMMP
+        data.put("Layout1$el_172935","OK");
+        try{
+            Connection.Response res=Utils.request_post(url,cookies,data);
+            Document doc=res.parse();
+            /////////这里解析结果
+            Element element_table=doc.getElementById("GRID_PANEL_3_28");
+            Elements table_rows=element_table.getElementsByTag("tbody").first().getElementsByTag("tr");
+            //System.out.println("222222__________\n"+element_table.outerHtml());
+
+            ArrayList<Part_FIFO_Data> allList=new ArrayList<Part_FIFO_Data>();
+            for (Element row : table_rows) {
+                Elements columns = row.getElementsByTag("td");
+                String serial=columns.get(2).getElementsByTag("span").first().html();
+                String QTY=columns.get(4).getElementsByTag("span").first().html();
+                String location=columns.get(5).getElementsByTag("span").first().html();
+                String data1=columns.get(7).getElementsByTag("span").first().html();
+                allList.add(new Part_FIFO_Data(serial,QTY,location,data1));
+            }
+            return allList;
+        }catch(Exception e) {
+            System.out.println("catch Exception at check_fifo.");
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    //自定义数据类型，用于保存记录
+    public static class Part_FIFO_Data{
+        public String serial;
+        public String QTY;
+        public String location;
+        public String date;
+        public Part_FIFO_Data(String serial,String QTY,String location,String date) {
+            this.serial = serial;
+            this.QTY = QTY;
+            this.location = location;
+            this.date = date;
+        }
+        @Override
+        public boolean equals(Object obj){
+            if(this == obj)
+                return true;
+            if(obj == null)
+                return false;
+            if(!(obj instanceof Part_FIFO_Data))
+                return false;
+            Part_FIFO_Data other = (Part_FIFO_Data)obj;
+            if(this.serial == null){
+                if(other.serial !=null)
+                    return false;
+            }else if(this.serial.equals(other.serial))
+                return true;
+            return false;
+        }
+        public String toString(){
+            if(this.serial==null)
+                return "no data";
+            //String date=Utils.getMonthTime(this.date);
+            return String.format("%s %s %s %s",this.serial,this.QTY,this.date,location);
+        }
+    }
 
 
 }
