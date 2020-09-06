@@ -97,10 +97,13 @@ public class fifoActivity extends AppCompatActivity {
 
                     try {
                         tv_info.setText("正在查条码......"+barcode);
-                        pre_url+="/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=";
-                        Map<String,String> info=Utils.show_container_info(cookies,pre_url,barcode);
+                        String url=pre_url+"/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=";
+                        Map<String,String> info=Utils.show_container_info(cookies,url,barcode);
+                        System.out.println("条码如下：");
                         System.out.println(info.get("barcode")+"  "+info.get("txtPartNo")+"   "+info.get("txtQTY"));
 
+                        url=pre_url+"/Rendering_Engine/default.aspx?Request=Show&RequestData=SourceType(Screen)SourceKey(10617)";
+                        Utils.check_fifo(cookies,url,barcode);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

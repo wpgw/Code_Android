@@ -183,21 +183,30 @@ public class Utils {
         //////看来要保存到数据库中，还是到集合中
         Map<String,String> data=new LinkedHashMap<>();   //这个保证顺序
         //////提交Post的数据
-        data.put("RequestID","0"); data.put("DatabaseName","Part");
-        data.put("ProcedureName","Scrap_Reasons_Link_Picker_Get"); //数字与下边的intput parameters对应
+        String strKeyHandle="172932/\\Part_No[]172933/\\Building_Key[]172934/\\Location[]172935/\\Container_Status[]172936/\\Shelf_Life_Type[]172937/\\Shelf_Life_Unit[]172938/\\Product_Type[]172939/\\Operation_Key[]172940/\\Customer_No[]172942/\\Department_Nos[]172943/\\Part_Types[]172944/\\Planner[]172945/\\Job_Key[]172960/\\Open_Release_Period[]172994/\\Show[]172995/\\Days_until_expiration";
+        data.put("__EVENTTARGET","Screen"); data.put("__EVENTARGUMENT","Search");
+        data.put("__LASTFOCUS","");data.put("__VIEWSTATE","/wEPDwUJOTg5NDMxNjIwZGSK//YD8K8d6i3pHog8e0fH85JbPQ==");
+        data.put("__VIEWSTATEGENERATOR","2811E9B3");data.put("hdnScreenTitle","Shelf Life Report");
+        data.put("hdnFilterElementsKeyHandle",strKeyHandle);data.put("ScreenParameters","");
+        data.put("RequestKey","1");
+        data.put("Layout1$el_172932",part_no);data.put("Layout1$el_172932_hf",part_no);data.put("Layout1$el_172932_hf_last_valid",part_no);
+        data.put("Layout1$el_172933","5824");  //means building: SMMP
+        data.put("Layout1$el_172935","OK");
         try{
             Connection.Response res=request_post(url,cookies,data);
             Document doc=res.parse();
             /////////这里解析结果
-            Elements elements=doc.select("record");
+            System.out.println("111111__________\n"+doc.outerHtml());
+            Element element=doc.getElementById("GRID_PANEL_3_28");
+            //System.out.println("222222__________\n"+element.outerHtml());
 
             Map<String,String> map=new LinkedHashMap<>();
             /////////这里 解析表格
-            for(Element item:elements) {
-                String serial_no=item.select("field").first().text();
-                String qty=item.select("field").last().text();
-                map.put(serial_no,qty);
-            }
+//            for(Element item:elements) {
+//                String serial_no=item.select("field").first().text();
+//                String qty=item.select("field").last().text();
+//                map.put(serial_no,qty);
+//            }
             return map;
         }catch(Exception e) {
             System.out.println("catch Exception at check_fifo.");
