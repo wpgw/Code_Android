@@ -34,4 +34,5 @@ dependencies {
     //implementation project(path: ':webview')
     implementation 'org.jsoup:jsoup:1.12.1'
     implementation 'com.alibaba:fastjson:1.2.70'
+    implementation project(path: ':app')    //但不并不能运行，只是消去complile报错
 }

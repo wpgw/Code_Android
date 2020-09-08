@@ -3,8 +3,10 @@ package com.philip.plex_qa;
 import java.io.BufferedReader;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -214,7 +216,7 @@ public class Plex_login {
     public static void main(String[] args) {
         String path = Plex_login.class.getResource("").getPath();
         System.out.println("Plex_login class Path:"+path);
-        Plex_login login=new Plex_login("test.plexus-online.com");
+        Plex_login login=new Plex_login("www.plexus-online.com");
 
         try {
             if (login.login("smmp.pwang","88776655","smmp")!=null) {//cookie在类login的public变量中
@@ -225,6 +227,7 @@ public class Plex_login {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 }
 
