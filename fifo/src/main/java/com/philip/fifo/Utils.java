@@ -6,6 +6,8 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -174,6 +176,32 @@ public class Utils {
 
         }catch(Exception e) {
             System.out.println("catch Exception at show_container_info.");
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public static HashMap<String,String> move_container(HashMap<String,String> cookies,String pre_url,String location,String barcode) throws Exception{
+        String url=pre_url+"/Modules/Inventory/InventoryTracking/MoveContainerHandler.ashx?ApplicationKey=165838";
+        HashMap<String,String> resultMap=new HashMap<>();
+
+        Map<String,String> data=new LinkedHashMap<>();
+        data.put("Action","MoveContainer");data.put("SerialNo",barcode);data.put("Location",location);data.put("PartNo","");
+
+        try {
+            Connection.Response res = request_post(url, cookies, data);
+            String jsonString=res.body();
+            Map<String,Object> objectMap= JSON.parseObject(jsonString,Map.class);
+            if(objectMap.get("IsValid")!=null) {  //如 收到移库成功与否的回应
+                String IsValid = objectMap.get("IsValid").toString();
+                String Message = objectMap.get("Message").toString();
+                resultMap.put("IsValid",IsValid);resultMap.put("Message",Message);
+                return resultMap;
+            }else{
+                return null;
+            }
+        }catch(Exception e) {
+            System.out.println("catch Exception at move_container.");
             e.printStackTrace();
             throw e;
         }

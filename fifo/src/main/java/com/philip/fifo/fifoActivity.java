@@ -2,6 +2,7 @@ package com.philip.fifo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,7 +28,7 @@ import java.util.Map;
 public class fifoActivity extends AppCompatActivity {
     HashMap<String,String> cookies=new HashMap<>();
     String pre_url,Session_Key;
-    final int MSG=1,showBarcode_PartNo=2,refreshFIFOlist=3,STOP=5;
+    final int MSG=1,showBarcode_PartNo=2,refreshFIFOlist=3,alartColor=4,normalColor=5;
     //init Views
     TextView tv_info,tv_message,tv_canlist,tv_cannotlist;
     EditText et_barcode,et_location;
@@ -37,7 +38,6 @@ public class fifoActivity extends AppCompatActivity {
     RadioGroup radiogroup;
 
     String barcode;   //用于存当前处理的条码号，传给thread
-    String part_no_inList;  //记录canlist中的物料号，用于扫描后判断当前canlist是否可用
     ArrayList<Part_FIFO_Data> alllist=new ArrayList<Part_FIFO_Data>();
     ArrayList<Part_FIFO_Data> canlist=new ArrayList<Part_FIFO_Data>();
     ArrayList<Part_FIFO_Data> cannotlist=new ArrayList<Part_FIFO_Data>();  //fifo允许的物料及不允许的物料
@@ -88,17 +88,21 @@ public class fifoActivity extends AppCompatActivity {
                 //clear barcode text
                 et_barcode.setText("");
                 et_location.setText("");
+                clear_list_and_display();  //每次变化，都初始化fifo数据与显示
                 //containerActive="否";  // 此时不能作任何操作 onhold/scrap
                 if (checkedId==R.id.rd_move){
                     //移库
                     tv_canlist.setVisibility(View.GONE);
                     tv_cannotlist.setVisibility(View.GONE);
+                    et_location.setText("");
+                    et_location.setEnabled(true);
                     //tv_info.setPadding(dip2px(5),0,0,0);
                 }else if(checkedId==R.id.rd_fifo_issue){
                     //发货
                     tv_canlist.setVisibility(View.VISIBLE);
                     tv_cannotlist.setVisibility(View.VISIBLE);
-                    clear_list_and_display();  //初始化fifo数据与显示
+                    et_location.setText("Assy");
+                    et_location.setEnabled(false);
                     //tv_info.setPadding(dip2px(5),dip2px(20),0,0);
                 }
             }
@@ -109,7 +113,7 @@ public class fifoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(v.getId()==R.id.btn_confirm){
                     //refine barcode
-                    barcode=et_barcode.getText().toString();
+                    barcode=et_barcode.getText().toString().toUpperCase();
                     barcode=Utils.refine_label(barcode);
                     et_barcode.setText(barcode);    //Textbox display the refined barcode
 
@@ -136,37 +140,71 @@ public class fifoActivity extends AppCompatActivity {
     class ChildThread extends Thread{
         @Override
         public void run(){
-            //////每次变回发货，需清零canlist和cannotlist
-            //////要把货物发到一个很怪的assy库位，用以 区别  alt+34147
-            //////每发货成功一下，删去一个canlist记录
-            //////如果Barcode在canlist中，直接发货
+            //////每次变回发货，需清零canlist和cannotlist   ok
+            //////要把货物发到一个很怪的assy库位，用以 区别  alt+34147   ok
+            //////每发货成功一下，删去一个canlist记录  ok
             //////否则如果barcode不在canlist中(canlist非空)，但与canlist的物料号相同， tvinfo栏变色，提示fifo不成功
             /////    如果barcode不在canlist中，物料号也不相同，则清空txtpartno,canlist和cannotlist启动thread，全面查询
-            try {
-                sendMessage(MSG,"1,正在查条码......"+barcode);
-                String url=pre_url+"/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=";
-                Map<String,String> barcodeInfo=Utils.show_container_info(cookies,url,barcode);
-                //显示查询结结果
-                String txtPartNo=barcodeInfo.get("txtPartNo");
-                sendMessage(showBarcode_PartNo,txtPartNo+" "+barcodeInfo.get("txtLocation")+"  Active:"+barcodeInfo.get("txtActive"));
+            try{
+                Part_FIFO_Data scandata=new Part_FIFO_Data(barcode,"","","","");
+                //如果Barcode在canlist中，直接发货
+                if(canlist.contains(scandata)){
+                    FIFO_issue(scandata);
+                }else{  //如果Barcode不在canlist中，则需检查
+                    sendMessage(MSG,"1,正在查条码......"+barcode);
+                    String url=pre_url+"/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=";
+                    Map<String,String> barcodeInfo=Utils.show_container_info(cookies,url,barcode);
+                    //显示查询结结果
+                    String txtPartNo=barcodeInfo.get("txtPartNo");
+                    sendMessage(showBarcode_PartNo,txtPartNo+" "+barcodeInfo.get("txtLocation")+"  Active:"+barcodeInfo.get("txtActive"));
 
-                sendMessage(MSG,"2,读取FIFO数据中......");
-                url=pre_url+"/Rendering_Engine/default.aspx?Request=Show&RequestData=SourceType(Screen)SourceKey(10617)";
-                clear_list_and_display(); //初始化 数据，因后边的查询可能会出错
-                alllist=get_fifo_report(cookies,url,txtPartNo);
-                split_fifo_report(alllist); //canlist和cannotlist会被充值，如Size为0，则canlist与cannotlist会被清空
-                sendMessage(refreshFIFOlist,"");
-                sendMessage(MSG,"2,读取FIFO数据完成");
-                /////应把结果分类为 canList and cannotList
-                /////如果 barcode在canList中，直接操作移库
-                /////否则 barcode栏，变色，sendMessage说不能发货，需扫canlist中的barcode
+                    sendMessage(MSG,"2,读取FIFO数据中......");
+                    url=pre_url+"/Rendering_Engine/default.aspx?Request=Show&RequestData=SourceType(Screen)SourceKey(10617)";
+                    clear_list_and_display(); //清空数据及显示，因后边的查询可能会出错
+                    alllist=get_fifo_report(cookies,url,txtPartNo);
+                    split_fifo_report(alllist); //canlist和cannotlist会被充值，如Size为0，则canlist与cannotlist会被清空
+                    if(canlist.contains(scandata)){
+                        FIFO_issue(scandata);  // 函数中会刷新显示及颜色
+                    }else{
+                        sendMessage(refreshFIFOlist,"");
+                        sendMessage(MSG,barcode+" 不符合 FIFO 发货标准！");
+                        sendMessage(alartColor,"");
+                    }
+                }
             } catch (Exception e) {
                 //要清理canList, cannotList   ???如果只是 发料 时出错，则不必清理
                 clear_list_and_display();
                 //显示出错信息
                 sendMessage(MSG,e.getMessage());
+                sendMessage(alartColor,"");
                 e.printStackTrace();
             }
+        }
+    }
+
+    void FIFO_issue(Part_FIFO_Data scandata) throws Exception{
+        HashMap<String,String> move_container_result=new HashMap<>();
+        String barcode=scandata.serial;
+        System.out.println("--FIFO发货 barcode"+barcode);
+        move_container_result=Utils.move_container(cookies,pre_url,"ASSY1",barcode);  //Assy卌
+        if(move_container_result!=null){  //分析move container 返回的结果
+            if(move_container_result.get("IsValid")=="true"){
+                System.out.println(barcode+"发料成功。");
+                sendMessage(MSG,barcode+"发料成功。\n "+move_container_result.get("Message"));
+                System.out.println("从canList中移除"+barcode);
+                canlist.remove(scandata);dd  //每发货成功一下，删去一个canlist记录
+                sendMessage(refreshFIFOlist,"");  //刷新
+                ////变白色
+                sendMessage(normalColor,"");
+            }else{
+                sendMessage(MSG,barcode+"发料不成功！\n "+move_container_result.get("Message"));
+                /////变红色
+                sendMessage(alartColor,"");
+            }
+        }else{ //如 move container 返回数据 null
+            sendMessage(MSG,barcode+"发料不成功！ 请检查原因！");
+            /////变红色
+            sendMessage(alartColor,"");
         }
     }
 
@@ -181,8 +219,8 @@ public class fifoActivity extends AppCompatActivity {
             if(msg.what==MSG){
                 tv_info.setText(msg.obj.toString());
             }else if(msg.what==showBarcode_PartNo){
-                tv_canlist.setText("当前条码料号："+msg.obj.toString());
-                tv_cannotlist.setText("当前条码料号："+msg.obj.toString());
+                tv_canlist.setText("条码号"+barcode+"："+msg.obj.toString()+"\n");
+                tv_cannotlist.setText("条码号"+barcode+"："+msg.obj.toString()+"\n");
             }else if(msg.what==refreshFIFOlist){
                 //显示 canlist
                 for(Part_FIFO_Data data:canlist){
@@ -193,6 +231,12 @@ public class fifoActivity extends AppCompatActivity {
                     String temp=tv_cannotlist.getText().toString();
                     tv_cannotlist.setText(temp+"\n"+data.toString());
                 }
+            }else if(msg.what==alartColor){
+                tv_info.setBackgroundColor(Color.RED);
+                et_barcode.setBackgroundColor(Color.RED);
+            }else if(msg.what==normalColor){
+                tv_info.setBackgroundColor(Color.WHITE);
+                et_barcode.setBackgroundColor(Color.WHITE);
             }
         }};
 
@@ -222,7 +266,7 @@ public class fifoActivity extends AppCompatActivity {
             Connection.Response res=Utils.request_post(url,cookies,data);
             Document doc=res.parse();
             /////////这里解析结果
-            System.out.println(doc.html());
+            //System.out.println(doc.html());
             Element element_table=doc.getElementById("GRID_PANEL_3_28");
             Elements table_rows=element_table.getElementsByTag("tbody").first().getElementsByTag("tr");
             //System.out.println("222222__________\n"+element_table.outerHtml());
@@ -233,8 +277,8 @@ public class fifoActivity extends AppCompatActivity {
                 String serial=columns.get(2).getElementsByTag("span").first().html();
                 String QTY=columns.get(4).getElementsByTag("span").first().html();
                 String location=columns.get(5).getElementsByTag("span").first().html();
-                String data1=columns.get(7).getElementsByTag("span").first().html();
-                allList.add(new Part_FIFO_Data(serial,QTY,location,data1));
+                String strdate=columns.get(7).getElementsByTag("span").first().html();
+                allList.add(new Part_FIFO_Data(serial,part_no,QTY,location,strdate));
             }
             return allList;
         }catch(NullPointerException e){
@@ -267,31 +311,44 @@ public class fifoActivity extends AppCompatActivity {
     //自定义数据类型，用于保存记录
     public static class Part_FIFO_Data{
         public String serial;
+        public String part_no;
         public String QTY;
         public String location;
         public String date;
-        public Part_FIFO_Data(String serial,String QTY,String location,String date) {
+        public Part_FIFO_Data(String serial,String part_no,String QTY,String location,String date) {
             this.serial = serial;
+            this.part_no= part_no;
             this.QTY = QTY;
             this.location = location;
             this.date = date;
         }
         @Override
+//        public boolean equals(Object obj){
+//            if(this == obj)
+//                return true;
+//            if(obj == null)
+//                return false;
+//            if(!(obj instanceof Part_FIFO_Data))
+//                return false;
+//            Part_FIFO_Data other = (Part_FIFO_Data)obj;
+//            if(this.serial == null){
+//                if(other.serial !=null)
+//                    return false;
+//            }else if(this.serial.equals(other.serial))
+//                return true;
+//            return false;
+//        }
         public boolean equals(Object obj){
-            if(this == obj)
+            if(this == obj)   //地址相同
                 return true;
             if(obj == null)
                 return false;
-            if(!(obj instanceof Part_FIFO_Data))
-                return false;
-            Part_FIFO_Data other = (Part_FIFO_Data)obj;
-            if(this.serial == null){
-                if(other.serial !=null)
-                    return false;
-            }else if(this.serial.equals(other.serial))
-                return true;
+            if(obj instanceof Part_FIFO_Data) {  //不分大小写的比较
+                return ((Part_FIFO_Data) obj).serial.toUpperCase().equals(this.serial.toUpperCase());
+            }
             return false;
         }
+
         public String toString(){
             if(this.serial==null)
                 return "no data";
