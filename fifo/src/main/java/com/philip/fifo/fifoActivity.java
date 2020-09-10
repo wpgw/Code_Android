@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
 import android.text.method.ScrollingMovementMethod;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -95,7 +96,8 @@ public class fifoActivity extends AppCompatActivity {
                     tv_canlist.setVisibility(View.GONE);
                     tv_cannotlist.setVisibility(View.GONE);
                     et_location.setText("");
-                    et_location.setEnabled(true);
+                    et_location.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                    //et_location.setEnabled(true);
                     //tv_info.setPadding(dip2px(5),0,0,0);
                 }else if(checkedId==R.id.rd_fifo_issue){
                     //发货
@@ -149,7 +151,7 @@ public class fifoActivity extends AppCompatActivity {
                 Part_FIFO_Data scandata=new Part_FIFO_Data(barcode,"","","","");
                 //如果Barcode在canlist中，直接发货
                 if(canlist.contains(scandata)){
-                    FIFO_issue(scandata);
+                    FIFO_issue(barcode);
                 }else{  //如果Barcode不在canlist中，则需检查
                     sendMessage(MSG,"1,正在查条码......"+barcode);
                     String url=pre_url+"/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=";
@@ -164,7 +166,7 @@ public class fifoActivity extends AppCompatActivity {
                     alllist=get_fifo_report(cookies,url,txtPartNo);
                     split_fifo_report(alllist); //canlist和cannotlist会被充值，如Size为0，则canlist与cannotlist会被清空
                     if(canlist.contains(scandata)){
-                        FIFO_issue(scandata);  // 函数中会刷新显示及颜色
+                        FIFO_issue(barcode);  // 函数中会刷新显示及颜色
                     }else{
                         sendMessage(refreshFIFOlist,"");
                         sendMessage(MSG,barcode+" 不符合 FIFO 发货标准！");
@@ -182,22 +184,21 @@ public class fifoActivity extends AppCompatActivity {
         }
     }
 
-    void FIFO_issue(Part_FIFO_Data scandata) throws Exception{
-        HashMap<String,String> move_container_result=new HashMap<>();
-        String barcode=scandata.serial;
+    void FIFO_issue(String barcode) throws Exception{
         System.out.println("--FIFO发货 barcode"+barcode);
-        move_container_result=Utils.move_container(cookies,pre_url,"ASSY1",barcode);  //Assy卌
-        if(move_container_result!=null){  //分析move container 返回的结果
-            if(move_container_result.get("IsValid")=="true"){
+        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,"ASSY1",barcode);  //Assy卌
+        if(move_result!=null){  //分析move container 返回的结果
+            if(move_result.get("IsValid")=="true"){
                 System.out.println(barcode+"发料成功。");
-                sendMessage(MSG,barcode+"发料成功。\n "+move_container_result.get("Message"));
+                sendMessage(MSG,barcode+"发料成功。\n "+move_result.get("Message"));
                 System.out.println("从canList中移除"+barcode);
-                canlist.remove(scandata);dd  //每发货成功一下，删去一个canlist记录
+                canlist.remove(new Part_FIFO_Data(barcode,"","","",""));//每发货成功一下，删去一个canlist记录
+                //canlist.removeIf(s->s.serial.equals(barcode));
                 sendMessage(refreshFIFOlist,"");  //刷新
                 ////变白色
                 sendMessage(normalColor,"");
             }else{
-                sendMessage(MSG,barcode+"发料不成功！\n "+move_container_result.get("Message"));
+                sendMessage(MSG,barcode+"发料不成功！\n "+move_result.get("Message"));
                 /////变红色
                 sendMessage(alartColor,"");
             }
@@ -219,10 +220,11 @@ public class fifoActivity extends AppCompatActivity {
             if(msg.what==MSG){
                 tv_info.setText(msg.obj.toString());
             }else if(msg.what==showBarcode_PartNo){
-                tv_canlist.setText("条码号"+barcode+"："+msg.obj.toString()+"\n");
-                tv_cannotlist.setText("条码号"+barcode+"："+msg.obj.toString()+"\n");
+                et_location.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
+                et_location.setText(barcode+"："+msg.obj.toString()+"\n");
             }else if(msg.what==refreshFIFOlist){
                 //显示 canlist
+                tv_canlist.setText("");tv_cannotlist.setText("");
                 for(Part_FIFO_Data data:canlist){
                     String temp=tv_canlist.getText().toString();
                     tv_canlist.setText(temp+"\n"+data.toString());
@@ -345,6 +347,7 @@ public class fifoActivity extends AppCompatActivity {
                 return false;
             if(obj instanceof Part_FIFO_Data) {  //不分大小写的比较
                 return ((Part_FIFO_Data) obj).serial.toUpperCase().equals(this.serial.toUpperCase());
+                //return ((Part_FIFO_Data) obj).serial.equals(this.serial);
             }
             return false;
         }
@@ -353,8 +356,25 @@ public class fifoActivity extends AppCompatActivity {
             if(this.serial==null)
                 return "no data";
             //String date=Utils.getMonthTime(this.date);
-            return String.format("%s %s %sKg %s",this.serial,this.date,this.QTY,location);
+            return String.format("%s 日期：%s 数量：%s %s",this.serial,this.date,this.QTY,location);
         }
+    }
+
+    public static void main(String[] args){
+        ArrayList<Part_FIFO_Data> array=new ArrayList<>();
+        Part_FIFO_Data data1=new Part_FIFO_Data("smmp123456","1","","","");
+        Part_FIFO_Data data2=new Part_FIFO_Data("smmP123456","2","","","");
+        Part_FIFO_Data data3=new Part_FIFO_Data("smmp123457","1","","","");
+        array.add(data1);
+        array.add(data2);
+        array.add(data3);
+
+        System.out.println(array);
+        System.out.println(array.remove(new Part_FIFO_Data("smmP123456","2","","","")));
+        System.out.println(array);
+        System.out.println(array.remove(new Part_FIFO_Data("smmP123456","2","","","")));
+        System.out.println(array);
+
     }
 
 }

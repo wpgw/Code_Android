@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="24dp"
-        android:ems="10"
+        android:ems="20"
         android:hint="库位..."
         android:inputType="textPersonName" />
 
@@ -83,7 +83,7 @@
             android:id="@+id/tvInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:layout_marginStart="40dp"
             android:text="Info:" />
 
