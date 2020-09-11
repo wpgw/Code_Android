@@ -238,7 +238,7 @@ public class set_part_shelf_life {
 //            if (res.url().toString().toLowerCase().contains("change_password")){
 //                throw new Exception("你的密码过期了,请在电脑上更新密码!");
 //            }
-//            if (res.url().toString().toLowerCase().contains("unavailable")){
+//            if (res.url().toString().toLowerCase().contains("unavailable")){   //这个可能没用，因为上面的优先了
 //                throw new Exception("系统正在维护!");
 //            }
 //            return res;

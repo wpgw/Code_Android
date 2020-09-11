@@ -29,14 +29,15 @@ import java.util.Map;
 public class fifoActivity extends AppCompatActivity {
     HashMap<String,String> cookies=new HashMap<>();
     String pre_url,Session_Key;
-    final int MSG=1,showBarcode_PartNo=2,refreshFIFOlist=3,alartColor=4,normalColor=5;
+    final int MSG=1,showBarcode_PartNo=2,refreshFIFOlist=3,alartColor=4,normalColor=5,MOVED=6;
     //init Views
-    TextView tv_info,tv_message,tv_canlist,tv_cannotlist;
+    TextView tv_info,tv_BarcodeInfo,tv_canlist,tv_cannotlist,tv_movedlist;  //记录移动成功的条码
     EditText et_barcode,et_location;
     Button btn_confirm;
     ImageButton btn_scan;
     Button btn_move,btn_issue;
     RadioGroup radiogroup;
+    int movedCount; //用以记当扫描成功的记数
 
     String barcode;   //用于存当前处理的条码号，传给thread
     ArrayList<Part_FIFO_Data> alllist=new ArrayList<Part_FIFO_Data>();
@@ -69,16 +70,17 @@ public class fifoActivity extends AppCompatActivity {
     private void init(){
         radiogroup=findViewById(R.id.radioGroup);
         et_barcode=findViewById(R.id.et_barcode);btn_confirm=findViewById(R.id.btn_confirm);btn_scan=findViewById(R.id.btn_scan);
-        et_location=findViewById(R.id.et_location);
+        et_location=findViewById(R.id.et_location);tv_BarcodeInfo=findViewById(R.id.tvBarcodeInfo);
         tv_info=findViewById(R.id.tvInfo);
-        tv_canlist=findViewById(R.id.tv_canList);tv_cannotlist=findViewById(R.id.tv_cannotList);
-        tv_canlist.setMovementMethod(ScrollingMovementMethod.getInstance());tv_cannotlist.setMovementMethod(ScrollingMovementMethod.getInstance());
+        tv_movedlist=findViewById(R.id.tv_movedList);tv_canlist=findViewById(R.id.tv_canList);tv_cannotlist=findViewById(R.id.tv_cannotList);
+        tv_movedlist.setMovementMethod(ScrollingMovementMethod.getInstance());tv_canlist.setMovementMethod(ScrollingMovementMethod.getInstance());tv_cannotlist.setMovementMethod(ScrollingMovementMethod.getInstance());
+        movedCount=0;
 
         //开始时不显示有关控件
         et_barcode.setVisibility(View.GONE);btn_confirm.setVisibility(View.GONE);btn_scan.setVisibility(View.GONE);
-        et_location.setVisibility(View.GONE);
+        et_location.setVisibility(View.GONE);tv_BarcodeInfo.setVisibility(View.GONE);
         tv_info.setVisibility(View.GONE);
-        tv_canlist.setVisibility(View.GONE);tv_cannotlist.setVisibility(View.GONE);
+        tv_movedlist.setVisibility(View.GONE);tv_canlist.setVisibility(View.GONE);tv_cannotlist.setVisibility(View.GONE);
 
         radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -87,23 +89,26 @@ public class fifoActivity extends AppCompatActivity {
                 et_location.setVisibility(View.VISIBLE);
                 tv_info.setVisibility(View.VISIBLE);
                 //clear barcode text
-                et_barcode.setText("");
-                et_location.setText("");
+                et_barcode.setText("");et_location.setText("");tv_info.setText("");
+                sendMessage(normalColor,""); //信息栏显成白色
+                movedCount=0;tv_movedlist.setText("");tv_info.setText("Info:");  //清空记数及info显示
                 clear_list_and_display();  //每次变化，都初始化fifo数据与显示
                 //containerActive="否";  // 此时不能作任何操作 onhold/scrap
                 if (checkedId==R.id.rd_move){
                     //移库
                     tv_canlist.setVisibility(View.GONE);
                     tv_cannotlist.setVisibility(View.GONE);
-                    et_location.setText("");
-                    et_location.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                    tv_BarcodeInfo.setText("");tv_BarcodeInfo.setVisibility(View.GONE);  //不显示条码信息
+                    et_location.setText("");et_location.setVisibility(View.VISIBLE);     //显示 location
+                    //et_location.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
                     //et_location.setEnabled(true);
                     //tv_info.setPadding(dip2px(5),0,0,0);
-                }else if(checkedId==R.id.rd_fifo_issue){
+                }else if(checkedId==R.id.rd_fifo_issue){  //如 FIFO发货
                     //发货
                     tv_canlist.setVisibility(View.VISIBLE);
                     tv_cannotlist.setVisibility(View.VISIBLE);
-                    et_location.setText("Assy");
+                    tv_BarcodeInfo.setText("");tv_BarcodeInfo.setVisibility(View.VISIBLE);  //显示条码信息
+                    et_location.setText("");et_location.setVisibility(View.GONE);        //不显 location
                     et_location.setEnabled(false);
                     //tv_info.setPadding(dip2px(5),dip2px(20),0,0);
                 }
@@ -190,7 +195,7 @@ public class fifoActivity extends AppCompatActivity {
         if(move_result!=null){  //分析move container 返回的结果
             if(move_result.get("IsValid")=="true"){
                 System.out.println(barcode+"发料成功。");
-                sendMessage(MSG,barcode+"发料成功。\n "+move_result.get("Message"));
+                sendMessage(MOVED,barcode+"发料成功。\n "+move_result.get("Message"));
                 System.out.println("从canList中移除"+barcode);
                 canlist.remove(new Part_FIFO_Data(barcode,"","","",""));//每发货成功一下，删去一个canlist记录
                 //canlist.removeIf(s->s.serial.equals(barcode));
@@ -220,10 +225,10 @@ public class fifoActivity extends AppCompatActivity {
             if(msg.what==MSG){
                 tv_info.setText(msg.obj.toString());
             }else if(msg.what==showBarcode_PartNo){
-                et_location.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
-                et_location.setText(barcode+"："+msg.obj.toString()+"\n");
+                //tv_BarcodeInfo.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
+                tv_BarcodeInfo.setText(barcode+"："+msg.obj.toString()+"\n");
             }else if(msg.what==refreshFIFOlist){
-                //显示 canlist
+                //刷新显示 canlist,cannotlist
                 tv_canlist.setText("");tv_cannotlist.setText("");
                 for(Part_FIFO_Data data:canlist){
                     String temp=tv_canlist.getText().toString();
@@ -239,6 +244,11 @@ public class fifoActivity extends AppCompatActivity {
             }else if(msg.what==normalColor){
                 tv_info.setBackgroundColor(Color.WHITE);
                 et_barcode.setBackgroundColor(Color.WHITE);
+            }else if(msg.what==MOVED){
+                movedCount++;
+                String temp=tv_BarcodeInfo.getText().toString();
+                tv_movedlist.setText(temp+movedCount+"--"+barcode+"  ");  //显示已移库的条码
+                tv_info.setText(msg.obj.toString());
             }
         }};
 

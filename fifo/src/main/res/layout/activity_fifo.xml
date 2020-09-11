@@ -40,6 +40,14 @@
         android:hint="库位..."
         android:inputType="textPersonName" />
 
+    <TextView
+        android:id="@+id/tvBarcodeInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="24dp"
+        android:text="Barcode Info:" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -93,6 +101,21 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_movedList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:gravity="top"
+            android:singleLine="false"
+            android:lines="12"
+            android:maxLines="12"
+            android:scrollbars="vertical"
+            android:text="FIFO完成清单："
+            android:textSize="13sp"
+            android:background="#F6F6E6" />
 
         <TextView
             android:id="@+id/tv_canList"
@@ -100,7 +123,7 @@
             android:layout_height="0dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="top"
             android:singleLine="false"
             android:lines="12"
