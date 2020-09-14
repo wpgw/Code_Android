@@ -8,11 +8,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
 import android.text.method.ScrollingMovementMethod;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -29,15 +29,16 @@ import java.util.Map;
 public class fifoActivity extends AppCompatActivity {
     HashMap<String,String> cookies=new HashMap<>();
     String pre_url,Session_Key;
-    final int MSG=1,showBarcode_PartNo=2,refreshFIFOlist=3,alartColor=4,normalColor=5,MOVED=6;
+    final int MSG=1, showBarcode_info =2, refresh_FIFOlist_on_UI =3,alartColor=4,normalColor=5,MOVED=6,enableRadioGroup=7;
     //init Views
     TextView tv_info,tv_BarcodeInfo,tv_canlist,tv_cannotlist,tv_movedlist;  //记录移动成功的条码
     EditText et_barcode,et_location;
     Button btn_confirm;
     ImageButton btn_scan;
-    Button btn_move,btn_issue;
+    RadioButton rd_move,rd_issue;
     RadioGroup radiogroup;
     int movedCount; //用以记当扫描成功的记数
+    int issueLock;  //用以锁定发货，以防一个未完，就连击另一个 0：开放   1：加锁
 
     String barcode;   //用于存当前处理的条码号，传给thread
     ArrayList<Part_FIFO_Data> alllist=new ArrayList<Part_FIFO_Data>();
@@ -50,10 +51,10 @@ public class fifoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fifo);
 
         //disable the strict polity that do not allows main thread network access
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
+//        if (android.os.Build.VERSION.SDK_INT > 9) {
+//            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//            StrictMode.setThreadPolicy(policy);
+//        }
 
         //get cookies and session_id from Intent
         Bundle bundle = getIntent().getExtras();
@@ -68,13 +69,13 @@ public class fifoActivity extends AppCompatActivity {
     }
 
     private void init(){
-        radiogroup=findViewById(R.id.radioGroup);
+        radiogroup=findViewById(R.id.radioGroup);rd_move=findViewById(R.id.rd_move);rd_issue=findViewById(R.id.rd_issue);
         et_barcode=findViewById(R.id.et_barcode);btn_confirm=findViewById(R.id.btn_confirm);btn_scan=findViewById(R.id.btn_scan);
         et_location=findViewById(R.id.et_location);tv_BarcodeInfo=findViewById(R.id.tvBarcodeInfo);
         tv_info=findViewById(R.id.tvInfo);
         tv_movedlist=findViewById(R.id.tv_movedList);tv_canlist=findViewById(R.id.tv_canList);tv_cannotlist=findViewById(R.id.tv_cannotList);
         tv_movedlist.setMovementMethod(ScrollingMovementMethod.getInstance());tv_canlist.setMovementMethod(ScrollingMovementMethod.getInstance());tv_cannotlist.setMovementMethod(ScrollingMovementMethod.getInstance());
-        movedCount=0;
+        movedCount=0;issueLock=0;enableRadioGroup(radiogroup);
 
         //开始时不显示有关控件
         et_barcode.setVisibility(View.GONE);btn_confirm.setVisibility(View.GONE);btn_scan.setVisibility(View.GONE);
@@ -91,8 +92,8 @@ public class fifoActivity extends AppCompatActivity {
                 //clear barcode text
                 et_barcode.setText("");et_location.setText("");tv_info.setText("");
                 sendMessage(normalColor,""); //信息栏显成白色
-                movedCount=0;tv_movedlist.setText("");tv_info.setText("Info:");  //清空记数及info显示
-                clear_list_and_display();  //每次变化，都初始化fifo数据与显示
+                movedCount=0;issueLock=0;enableRadioGroup(radiogroup);tv_movedlist.setText("");tv_info.setText("Info:");  //清空记数及info显示
+                clear_list_data_and_UI_display();  //每次变化，都初始化fifo数据与显示
                 //containerActive="否";  // 此时不能作任何操作 onhold/scrap
                 if (checkedId==R.id.rd_move){
                     //移库
@@ -103,7 +104,7 @@ public class fifoActivity extends AppCompatActivity {
                     //et_location.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
                     //et_location.setEnabled(true);
                     //tv_info.setPadding(dip2px(5),0,0,0);
-                }else if(checkedId==R.id.rd_fifo_issue){  //如 FIFO发货
+                }else if(checkedId==R.id.rd_issue){  //如 FIFO发货
                     //发货
                     tv_canlist.setVisibility(View.VISIBLE);
                     tv_cannotlist.setVisibility(View.VISIBLE);
@@ -118,25 +119,24 @@ public class fifoActivity extends AppCompatActivity {
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(v.getId()==R.id.btn_confirm){
+                if((v.getId()==R.id.btn_confirm)&&(rd_issue.isChecked())&&issueLock==0){
                     //refine barcode
                     barcode=et_barcode.getText().toString().toUpperCase();
-                    barcode=Utils.refine_label(barcode);
+                    barcode=Utils.refine_label(barcode);  //会自动转upper，无效返回 inValid serial
                     et_barcode.setText(barcode);    //Textbox display the refined barcode
 
                     try {
-                        ChildThread thread=new ChildThread();
-                        thread.start();
-//                        tv_info.setText("正在查条码......"+barcode);
-//                        String url=pre_url+"/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=";
-//                        Map<String,String> info=Utils.show_container_info(cookies,url,barcode);
-//                        System.out.println("条码如下：");
-//                        System.out.println(info.get("barcode")+"  "+info.get("txtPartNo")+"   "+info.get("txtQTY"));
-//                        String txtPartNo=info.get("txtPartNo");
-//                        url=pre_url+"/Rendering_Engine/default.aspx?Request=Show&RequestData=SourceType(Screen)SourceKey(10617)";
-//                        Utils.get_fifo_report(cookies,url,txtPartNo);
+                        issueThread issuethread=new issueThread();
+                        if(issueLock==0){
+                            issueLock=1;  //加锁，不能再开issuethread
+                            disableRadioGroup(radiogroup);
+                            issuethread.start();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        issueLock=0;  //开锁
+                        enableRadioGroup(radiogroup);
+                        sendMessage(MSG,e.getMessage());
                     }
                     //check_container_info_fifo(barcode);
                 }
@@ -144,7 +144,7 @@ public class fifoActivity extends AppCompatActivity {
         });
     }
 
-    class ChildThread extends Thread{
+    class issueThread extends Thread{
         @Override
         public void run(){
             //////每次变回发货，需清零canlist和cannotlist   ok
@@ -157,107 +157,94 @@ public class fifoActivity extends AppCompatActivity {
                 //如果Barcode在canlist中，直接发货
                 if(canlist.contains(scandata)){
                     FIFO_issue(barcode);
-                }else{  //如果Barcode不在canlist中，则需检查
-                    sendMessage(MSG,"1,正在查条码......"+barcode);
-                    String url=pre_url+"/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=";
-                    Map<String,String> barcodeInfo=Utils.show_container_info(cookies,url,barcode);
-                    //显示查询结结果
-                    String txtPartNo=barcodeInfo.get("txtPartNo");
-                    sendMessage(showBarcode_PartNo,txtPartNo+" "+barcodeInfo.get("txtLocation")+"  Active:"+barcodeInfo.get("txtActive"));
-
+                    issueLock=0;
+                    sendMessage(enableRadioGroup,"");
+                    return;    //终止运行
+                }else if(cannotlist.contains(scandata)){
+                    String txtPartNo=cannotlist.get(0).part_no;
+                    //先清理canList, cannotList
+                    clear_list_data_and_UI_display();
                     sendMessage(MSG,"2,读取FIFO数据中......");
-                    url=pre_url+"/Rendering_Engine/default.aspx?Request=Show&RequestData=SourceType(Screen)SourceKey(10617)";
-                    clear_list_and_display(); //清空数据及显示，因后边的查询可能会出错
-                    alllist=get_fifo_report(cookies,url,txtPartNo);
-                    split_fifo_report(alllist); //canlist和cannotlist会被充值，如Size为0，则canlist与cannotlist会被清空
+                    get_fifo_list(txtPartNo);   //此时scannotlist中就保有现存的Part No
+                }else if(alllist.contains(scandata)){     //即不在canlist,也不在cannotlist，但在alllist中的
+                    sendMessage(MSG,"你已发货过"+barcode);
+                    sendMessage(alartColor,"");
+                    issueLock=0;
+                    sendMessage(enableRadioGroup,"");
+                    return;   //终止运行
+                }else {  //如果Barcode不在canlist和cannotlist中，则需全面检查
+                    sendMessage(MSG, "1,正在查条码......" + barcode);
+                    String url = pre_url + "/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=";
+                    Map<String, String> barcodeInfo = Utils.show_container_info(cookies, url, barcode);
+                    //显示查询结结果
+                    String txtPartNo = barcodeInfo.get("txtPartNo");
+                    sendMessage(showBarcode_info, txtPartNo + "     " + barcodeInfo.get("txtLocation") + "\n激活:" + barcodeInfo.get("txtActive") + "  状态:" + barcodeInfo.get("curStatus"));
+
+                    //先清理canList, cannotList
+                    clear_list_data_and_UI_display();
+                    sendMessage(MSG, "2,读取FIFO数据中......");
+                    if(txtPartNo.length()>1){
+                        get_fifo_list(txtPartNo);
+                    }
+                }
+                {
+                    //前面更新fifo list后，再次试试能否发货
                     if(canlist.contains(scandata)){
                         FIFO_issue(barcode);  // 函数中会刷新显示及颜色
                     }else{
-                        sendMessage(refreshFIFOlist,"");
+                        sendMessage(refresh_FIFOlist_on_UI,"");
                         sendMessage(MSG,barcode+" 不符合 FIFO 发货标准！");
                         sendMessage(alartColor,"");
                     }
                 }
+                issueLock=0;
+                sendMessage(enableRadioGroup,"");
             } catch (Exception e) {
-                //要清理canList, cannotList   ???如果只是 发料 时出错，则不必清理
-                clear_list_and_display();
                 //显示出错信息
                 sendMessage(MSG,e.getMessage());
                 sendMessage(alartColor,"");
                 e.printStackTrace();
+                issueLock=0;   //开锁
+                sendMessage(enableRadioGroup,"");
             }
         }
     }
 
+    void get_fifo_list(String txtPartNo) throws Exception{
+        //读取FIFO数据中......
+        String url=pre_url+"/Rendering_Engine/default.aspx?Request=Show&RequestData=SourceType(Screen)SourceKey(10617)";
+        clear_list_data_and_UI_display(); //清空数据及显示，因后边的查询可能会出错
+        alllist=get_fifo_report(cookies,url,txtPartNo);
+        split_fifo_report(alllist); //canlist和cannotlist会被充值，如Size为0，则canlist与cannotlist会被清空
+    }
     void FIFO_issue(String barcode) throws Exception{
-        System.out.println("--FIFO发货 barcode"+barcode);
+        System.out.println("--现在FIFO发货 barcode"+barcode);
         HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,"ASSY1",barcode);  //Assy卌
         if(move_result!=null){  //分析move container 返回的结果
             if(move_result.get("IsValid")=="true"){
+                System.out.println("从canList中移除"+barcode);
+                //每发货成功一下，删去一个canlist记录
+                canlist.remove(new Part_FIFO_Data(barcode,"","","",""));  //修改放在开头，以免引起显示时的 concurrent modify报错
                 System.out.println(barcode+"发料成功。");
                 sendMessage(MOVED,barcode+"发料成功。\n "+move_result.get("Message"));
-                System.out.println("从canList中移除"+barcode);
-                canlist.remove(new Part_FIFO_Data(barcode,"","","",""));//每发货成功一下，删去一个canlist记录
-                //canlist.removeIf(s->s.serial.equals(barcode));
-                sendMessage(refreshFIFOlist,"");  //刷新
                 ////变白色
                 sendMessage(normalColor,"");
+                //canlist.removeIf(s->s.serial.equals(barcode));   //java 1.8用法
+                sendMessage(refresh_FIFOlist_on_UI,"");  //刷新fifo list
             }else{
                 sendMessage(MSG,barcode+"发料不成功！\n "+move_result.get("Message"));
-                /////变红色
+                //变红色
                 sendMessage(alartColor,"");
             }
-        }else{ //如 move container 返回数据 null
+        }else{ //如 move container 返回数据为 null
             sendMessage(MSG,barcode+"发料不成功！ 请检查原因！");
             /////变红色
             sendMessage(alartColor,"");
         }
     }
-
-    void clear_list_and_display(){
+    void clear_list_data_and_UI_display(){
         alllist.clear();canlist.clear();cannotlist.clear(); //初始化 数据
-        sendMessage(refreshFIFOlist,"");
-    }
-
-    //主线程处理消息
-    private Handler mMainHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if(msg.what==MSG){
-                tv_info.setText(msg.obj.toString());
-            }else if(msg.what==showBarcode_PartNo){
-                //tv_BarcodeInfo.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
-                tv_BarcodeInfo.setText(barcode+"："+msg.obj.toString()+"\n");
-            }else if(msg.what==refreshFIFOlist){
-                //刷新显示 canlist,cannotlist
-                tv_canlist.setText("");tv_cannotlist.setText("");
-                for(Part_FIFO_Data data:canlist){
-                    String temp=tv_canlist.getText().toString();
-                    tv_canlist.setText(temp+"\n"+data.toString());
-                } //显示 cannotlist
-                for(Part_FIFO_Data data:cannotlist){
-                    String temp=tv_cannotlist.getText().toString();
-                    tv_cannotlist.setText(temp+"\n"+data.toString());
-                }
-            }else if(msg.what==alartColor){
-                tv_info.setBackgroundColor(Color.RED);
-                et_barcode.setBackgroundColor(Color.RED);
-            }else if(msg.what==normalColor){
-                tv_info.setBackgroundColor(Color.WHITE);
-                et_barcode.setBackgroundColor(Color.WHITE);
-            }else if(msg.what==MOVED){
-                movedCount++;
-                String temp=tv_BarcodeInfo.getText().toString();
-                tv_movedlist.setText(temp+movedCount+"--"+barcode+"  ");  //显示已移库的条码
-                tv_info.setText(msg.obj.toString());
-            }
-        }};
-
-    //子线程向主线程发送消息
-    private void sendMessage(int what,Object obj){
-        Message message1 = Message.obtain();
-        message1.what = what;  //1 means at newPage
-        message1.obj = obj;
-        mMainHandler.sendMessage(message1);
+        sendMessage(refresh_FIFOlist_on_UI,"");
     }
 
     public ArrayList<Part_FIFO_Data> get_fifo_report(HashMap<String,String> cookies,String url,String part_no) throws Exception{
@@ -301,10 +288,8 @@ public class fifoActivity extends AppCompatActivity {
             throw e;
         }
     }
-
     void split_fifo_report(ArrayList<Part_FIFO_Data> alllist){
-        canlist.clear();  //清空
-        canlist.clear();
+        canlist.clear(); cannotlist.clear(); //清空
         if(alllist.size()>0){ //alllist不能为空
             //获取第一条记录
             Part_FIFO_Data first=alllist.get(0);
@@ -317,6 +302,62 @@ public class fifoActivity extends AppCompatActivity {
                     cannotlist.add(item);
                 }
             }
+        }
+        sendMessage(MSG,"已读到fifo Report");
+        sendMessage(refresh_FIFOlist_on_UI,"");
+    }
+    //主线程处理消息
+    private Handler mMainHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if(msg.what==MSG){
+                tv_info.setText(msg.obj.toString());
+            }else if(msg.what== showBarcode_info){
+                //tv_BarcodeInfo.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
+                tv_BarcodeInfo.setText(barcode+"："+msg.obj.toString()+"\n");
+            }else if(msg.what== refresh_FIFOlist_on_UI){
+                //刷新显示 canlist,cannotlist  注：一旦 canlist和cannotlist有变化，需运行这个
+                tv_canlist.setText("");tv_cannotlist.setText("");
+                for(Part_FIFO_Data data:canlist){
+                    String temp=tv_canlist.getText().toString();
+                    tv_canlist.setText(temp+"\n"+data.toString());
+                } //显示 cannotlist
+                for(Part_FIFO_Data data:cannotlist){
+                    String temp=tv_cannotlist.getText().toString();
+                    tv_cannotlist.setText(temp+"\n"+data.toString());
+                }
+            }else if(msg.what==alartColor){
+                tv_info.setBackgroundColor(Color.RED);
+                et_barcode.setBackgroundColor(Color.RED);
+            }else if(msg.what==normalColor){
+                tv_info.setBackgroundColor(Color.WHITE);
+                et_barcode.setBackgroundColor(Color.WHITE);
+            }else if(msg.what==MOVED){
+                movedCount++;
+                String temp=tv_movedlist.getText().toString();
+                tv_movedlist.setText(movedCount+"--"+barcode+"  "+temp);  //显示已移库的条码
+                tv_movedlist.setVisibility(View.VISIBLE);
+                tv_info.setText(msg.obj.toString());
+            }else if(msg.what==enableRadioGroup){
+                enableRadioGroup(radiogroup);
+            }
+        }};
+
+    //子线程向主线程发送消息
+    private void sendMessage(int what,Object obj){
+        Message message1 = Message.obtain();
+        message1.what = what;  //1 means at newPage
+        message1.obj = obj;
+        mMainHandler.sendMessage(message1);
+    }
+
+    public void disableRadioGroup(RadioGroup testRadioGroup) {
+        for (int i = 0; i < testRadioGroup.getChildCount(); i++) {
+            testRadioGroup.getChildAt(i).setEnabled(false);
+        }
+    }
+    public void enableRadioGroup(RadioGroup testRadioGroup) {
+        for (int i = 0; i < testRadioGroup.getChildCount(); i++) {
+            testRadioGroup.getChildAt(i).setEnabled(true);
         }
     }
 

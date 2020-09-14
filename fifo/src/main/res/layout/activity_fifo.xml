@@ -22,7 +22,7 @@
             android:text="移 库" />
 
         <RadioButton
-            android:id="@+id/rd_fifo_issue"
+            android:id="@+id/rd_issue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="60dp"
@@ -104,14 +104,13 @@
         <TextView
             android:id="@+id/tv_movedList"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_weight="1"
             android:gravity="top"
             android:singleLine="false"
-            android:lines="12"
-            android:maxLines="12"
+            android:lines="4"
+            android:maxLines="4"
             android:scrollbars="vertical"
             android:text="FIFO完成清单："
             android:textSize="13sp"

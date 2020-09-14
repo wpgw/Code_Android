@@ -48,8 +48,9 @@ public class Utils {
 
     public static String refine_label(String txtSerial_NO) {
         //String pattern="([a-zA-Z]{4}\\d{6,7}|\\d{6,7})";
-        //不接受 纯数字条码：必须 首4位字母,6或7位数字，MLT后7位, T后8位
-        String pattern="([smmpSMMPwmltWMLT]{4}\\d{6,7}|MLT\\d{7}|T\\d{8})";
+        //不接受 纯数字条码：必须 首4位字母后跟6或7位数字，MLT后7位, T后8位
+        txtSerial_NO.toUpperCase();
+        String pattern="(SMMP\\d{6,7}|WMLT\\d{6,7}|MLT\\d{7}|T\\d{8})";
 
         Pattern re=Pattern.compile(pattern);
         Matcher ma=re.matcher(txtSerial_NO);
@@ -58,11 +59,10 @@ public class Utils {
             String result=ma.group();
             if (result.length()<9) {
                 //result="smmp"+result;  //此时自动补上smmp
-                result="sm"+result;           //此时不自动补smmp
             }
             return result;
         }else {
-            return "inValid barcode";
+            return "inValid serial";
         }
     }
 
