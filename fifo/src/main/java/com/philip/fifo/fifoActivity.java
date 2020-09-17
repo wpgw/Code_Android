@@ -112,7 +112,7 @@ public class fifoActivity extends AppCompatActivity {
                     tv_cannotlist.setVisibility(View.VISIBLE);
                     tv_BarcodeInfo.setText("");tv_BarcodeInfo.setVisibility(View.VISIBLE);  //显示条码信息
                     et_location.setText("");et_location.setVisibility(View.GONE);        //不显 location
-                    et_location.setEnabled(false);
+                    //et_location.setEnabled(false);
                     //tv_info.setPadding(dip2px(5),dip2px(20),0,0);
                 }
             }
@@ -123,14 +123,14 @@ public class fifoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if((v.getId()==R.id.btn_confirm)&&(rd_issue.isChecked())&&issueLock==0) {
                     //refine barcode
-                    barcode = et_barcode.getText().toString().toUpperCase();
-                    barcode = Utils.refine_label(barcode);  //会自动转upper，无效返回 ""
+                    String scan_raw_data = et_barcode.getText().toString().toUpperCase();
+                    barcode = Utils.refine_label(scan_raw_data);  //会自动转upper，无效返回 ""
                     et_barcode.setText(barcode);    //Textbox display the refined barcode
                     if (barcode.length() >= 9){     //粗看一下合法性
                         try {
                             issueThread issuethread = new issueThread();
                             if (issueLock == 0) {
-                                issueLock = 1;  //加锁，不能再开issuethread
+                                issueLock = 1;  //加锁，不能再多开issuethread
                                 disableRadioGroup(radiogroup);
                                 issuethread.start();
                             }
@@ -140,8 +140,22 @@ public class fifoActivity extends AppCompatActivity {
                             enableRadioGroup(radiogroup);
                             sendMessage(MSG, e.getMessage());
                         }
-                        //check_container_info_fifo(barcode);
                     }
+                }else if((v.getId()==R.id.btn_confirm)&&(rd_move.isChecked())&&issueLock==0){
+                    String scan_raw_data=et_barcode.getText().toString().toUpperCase();
+                    String location=Utils.check_if_location(scan_raw_data);
+                    if(location.length()>2){
+                        et_location.setText(location);
+                        et_barcode.setText("");
+                    }else{
+                        barcode=Utils.refine_label(scan_raw_data);
+                        et_barcode.setText(barcode);
+                        location=et_location.getText().toString();  //也可能直接在et_location上输入
+                        if(barcode.length()>=9&&location.length()>2){
+                            System.out.println("现在开始移库！");
+                        }
+                    }
+
                 }
             }
         });
