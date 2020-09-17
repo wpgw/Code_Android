@@ -16,6 +16,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.philip.plex_qa.Plex_login;
+
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -219,7 +221,7 @@ public class fifoActivity extends AppCompatActivity {
     }
     void FIFO_issue(String barcode) throws Exception{
         System.out.println("--现在FIFO发货 barcode"+barcode);
-        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,"ASSY1",barcode);  //Assy卌
+        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,"ASSY1_",barcode);  //Assy卌
         if(move_result!=null){  //分析move container 返回的结果
             if(move_result.get("IsValid")=="true"){
                 System.out.println("从canList中移除"+barcode);

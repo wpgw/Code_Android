@@ -1,4 +1,4 @@
 include ':fifo'
-include ':app',':base', ':wpcameral'
+include ':app', ':wpcameral'
 rootProject.name='Plex_QA'
 include ':webview'

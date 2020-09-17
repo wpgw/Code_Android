@@ -43,12 +43,13 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
         //display user ID
         et_userid = findViewById(R.id.et_userid);
         et_password = findViewById(R.id.et_password);
-        et_userid.setText(plex.get_userInfo().get(0));
+        et_userid.setText(plex.get_userInfo().get(0));  //从文件中读取userid
         if (host.equals("test.plexus-online.com")) {
             et_userid.setText("smmp.pwang");   ////////shortcut only for Test DB
-            et_password.setText("99887766");
+            et_password.setText("77665544");
         }
         intent = new Intent(this, ActivitydoTask.class);
+
         count = 0;
 
         findViewById(R.id.button).setOnClickListener(this);
