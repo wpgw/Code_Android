@@ -18,12 +18,14 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.philip.comm.Utils;
+
 import java.io.Serializable;
 import java.util.HashMap;
 
 public class webloginActivity extends AppCompatActivity {
     WebView mWebview;
-    String url_plex = "https://mobile.plexus-online.com";
+    String host,url_plex = "https://mobile.plexus-online.com";
     Intent intent=null;
     String first_page="/Interplant_Shipper/Interplant_Shipper.asp"; //_Form?Do=Update&Interplant_Shipper_Key=513993"; //460129
 
@@ -36,7 +38,7 @@ public class webloginActivity extends AppCompatActivity {
 
         mWebview = findViewById(R.id.webview);
 
-
+        host="www.plexus-online.com";
         init_view();         //初始化 view
         mWebview.loadUrl(url_plex);  //开始登录
         intent=new Intent(this,fifoActivity.class);
@@ -86,7 +88,7 @@ public class webloginActivity extends AppCompatActivity {
                     System.out.println("Go to next page...-----------------------------");
                     // Transfer to next page
                     Bundle bundle = new Bundle();
-                    bundle.putString("url", url_plex);
+                    bundle.putString("host", host);
                     bundle.putSerializable("cookies", (Serializable) cookies);
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -150,21 +152,4 @@ public class webloginActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
-
-//    //把Cookie String转成Map
-//    public HashMap<String, String> stringTomap(String cookieString) {
-//        HashMap<String, String> Cookies = new HashMap<String, String>();
-//        String[] values = cookieString.split(";");
-//        for (String value : values) {
-//            int index = value.indexOf('=');
-//            Cookies.put(value.substring(0, index).trim(), value.substring(index + 1));
-//        }
-//        //System.out.println(this.toString()+ Cookies);
-//        return Cookies;
-//    }
-//
-//    public void vibrate(int time) {
-//        Vibrator vibrator = (Vibrator) this.getSystemService(this.VIBRATOR_SERVICE);
-//        vibrator.vibrate(time);
-//    }
 }

@@ -34,6 +34,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.alibaba.fastjson.JSON;
+import com.philip.comm.Utils;
+
 import org.jsoup.Connection;
 
 import java.io.ByteArrayInputStream;
@@ -43,6 +45,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
+
+import static com.philip.comm.Utils.request_get;
 
 public class buildMasterActivity extends AppCompatActivity {
     Context mActvity;
@@ -96,7 +100,7 @@ public class buildMasterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String serial = etSerial.getText().toString();
                 String master = etMaster.getText().toString();
-                serial=Utils.refine_label(serial);                  //规范化读取的 bacode, 如barcode无效，将会是空""
+                serial= Utils.refine_label(serial);                  //规范化读取的 bacode, 如barcode无效，将会是空""
                 if (serial.length() > 7 && master.length() > 5) {   //粗粗检查一下合法性
                     //加入前，判断是否已经扫过了，在列表中，如在，需提醒一下
                     ScanData1 scandata1= new ScanData1(serial,master,new Date(),0);
@@ -221,7 +225,8 @@ public class buildMasterActivity extends AppCompatActivity {
                 try{
                     //Map<String,String> data=new LinkedHashMap<>();   //这个保证顺序
                     //data.put("RequestID","0");
-                    html=Utils.request_get(url,cookies);  //这里有调用网络操作，可能网络出错
+                    Connection.Response res=request_get(url,cookies);    //这里有调用网络操作，可能网络出错
+                    html= res.parse().html();
                     //html=dealwith_interPlant(doc);
                 }catch(Exception e){
                     //如网络操作出错，显示出错原因，并返回一个url当前跳转

@@ -1,32 +1,19 @@
-package com.philip.plex_qa;
-
-import java.io.BufferedReader;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+package com.philip.comm;
 
 import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.net.URL;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Plex_login {
     public Map<String,String> headers =new HashMap<>();
@@ -49,7 +36,7 @@ public class Plex_login {
         cookies.put("POLThemeKey","1");
     }
 
-    public void get_post(String url,Map<String,String> data,Connection.Method method) throws Exception{
+    public void get_post(String url, Map<String,String> data, Method method) throws Exception{
         try {
             Connection con=Jsoup.connect(url);
             if (method.equals(Method.POST)) {

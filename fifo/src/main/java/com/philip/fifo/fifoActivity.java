@@ -16,7 +16,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.philip.plex_qa.Plex_login;
+import com.philip.comm.Utils;
 
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class fifoActivity extends AppCompatActivity {
     HashMap<String,String> cookies=new HashMap<>();
-    String pre_url,Session_Key;
+    String pre_url,Session_Key,host,user;
     final int MSG=1, showBarcode_info =2, refresh_FIFOlist_on_UI =3,alartColor=4,normalColor=5,MOVED=6,enableRadioGroup=7;
     //init Views
     TextView tv_info,tv_BarcodeInfo,tv_canlist,tv_cannotlist,tv_movedlist;  //记录移动成功的条码
@@ -60,12 +60,12 @@ public class fifoActivity extends AppCompatActivity {
 
         //get cookies and session_id from Intent
         Bundle bundle = getIntent().getExtras();
-        //this.host=bundle.getString("host");
-        //this.user=bundle.getString("user");
+        this.host=bundle.getString("host");
+        this.user=bundle.getString("user");
         this.cookies=(HashMap<String,String>)bundle.getSerializable("cookies");
         this.Session_Key=this.cookies.get("Session_Key");
         this.Session_Key=Session_Key.substring(1,Session_Key.length()-1);  //去掉头尾的字符{}
-        pre_url="https://www.plexus-online.com/"+Session_Key;
+        pre_url="https://"+host+"/"+Session_Key;
 
         init();
     }
@@ -121,26 +121,27 @@ public class fifoActivity extends AppCompatActivity {
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if((v.getId()==R.id.btn_confirm)&&(rd_issue.isChecked())&&issueLock==0){
+                if((v.getId()==R.id.btn_confirm)&&(rd_issue.isChecked())&&issueLock==0) {
                     //refine barcode
-                    barcode=et_barcode.getText().toString().toUpperCase();
-                    barcode=Utils.refine_label(barcode);  //会自动转upper，无效返回 inValid serial
+                    barcode = et_barcode.getText().toString().toUpperCase();
+                    barcode = Utils.refine_label(barcode);  //会自动转upper，无效返回 ""
                     et_barcode.setText(barcode);    //Textbox display the refined barcode
-
-                    try {
-                        issueThread issuethread=new issueThread();
-                        if(issueLock==0){
-                            issueLock=1;  //加锁，不能再开issuethread
-                            disableRadioGroup(radiogroup);
-                            issuethread.start();
+                    if (barcode.length() >= 9){     //粗看一下合法性
+                        try {
+                            issueThread issuethread = new issueThread();
+                            if (issueLock == 0) {
+                                issueLock = 1;  //加锁，不能再开issuethread
+                                disableRadioGroup(radiogroup);
+                                issuethread.start();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            issueLock = 0;  //开锁
+                            enableRadioGroup(radiogroup);
+                            sendMessage(MSG, e.getMessage());
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        issueLock=0;  //开锁
-                        enableRadioGroup(radiogroup);
-                        sendMessage(MSG,e.getMessage());
+                        //check_container_info_fifo(barcode);
                     }
-                    //check_container_info_fifo(barcode);
                 }
             }
         });
@@ -409,7 +410,7 @@ public class fifoActivity extends AppCompatActivity {
             if(this.serial==null)
                 return "no data";
             //String date=Utils.getMonthTime(this.date);
-            return String.format("%s 日期：%s 数量：%s %s",this.serial,this.date,this.QTY,location);
+            return String.format("%s 日期:%s 数量:%s %s",this.serial,this.date,this.QTY,location);
         }
     }
 

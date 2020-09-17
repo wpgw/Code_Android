@@ -1,9 +1,8 @@
-package com.philip.fifo;
+package com.philip.comm;
 
 
 import android.os.Build;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -11,7 +10,6 @@ import com.alibaba.fastjson.JSON;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.net.SocketTimeoutException;
@@ -46,10 +44,25 @@ public class Utils {
         //System.out.println( "饼干："+CookieManager.getInstance().getCookie(url));
     }
 
+    public static String check_if_location(String barcode){
+        barcode=barcode.toUpperCase();
+        //+表示至少一次  * 可零次
+        String pattern="(^WH\\S+|^OS-\\S+|^ASSY\\S*|^METAL-\\S+|^IN-\\S+|^CNC|^DCM|^EPC|^PKG\\S*|^XJ-\\S+|^WAREHOUSE\\S*|^XUJIN|^SEND TO\\S+|^RECEIVING)";
+        Pattern re=Pattern.compile(pattern);
+        Matcher ma=re.matcher(barcode);
+
+        if(ma.find()){
+            String result=ma.group();
+            return result;
+        }else{
+            return "";
+        }
+    }
+
     public static String refine_label(String txtSerial_NO) {
         //String pattern="([a-zA-Z]{4}\\d{6,7}|\\d{6,7})";
         //不接受 纯数字条码：必须 首4位字母后跟6或7位数字，MLT后7位, T后8位
-        txtSerial_NO.toUpperCase();
+        txtSerial_NO=txtSerial_NO.toUpperCase();
         String pattern="(SMMP\\d{6,7}|WMLT\\d{6,7}|MLT\\d{7}|T\\d{8})";
 
         Pattern re=Pattern.compile(pattern);
@@ -62,7 +75,7 @@ public class Utils {
             }
             return result;
         }else {
-            return "inValid serial";
+            return "";
         }
     }
 

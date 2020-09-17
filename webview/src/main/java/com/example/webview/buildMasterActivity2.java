@@ -34,8 +34,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.philip.comm.Utils;
+import static com.philip.comm.Utils.request_get;
 
 import org.jsoup.Connection;
+import org.jsoup.nodes.Document;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -249,7 +252,8 @@ public class buildMasterActivity2 extends AppCompatActivity {
                 try{
                     //Map<String,String> data=new LinkedHashMap<>();   //这个保证顺序
                     //data.put("RequestID","0");
-                    html=Utils.request_get(url,cookies);  //这里有调用网络操作，可能网络出错
+                    Connection.Response res=request_get(url,cookies);    //这里有调用网络操作，可能网络出错
+                    html= res.parse().html();
                     //html=dealwith_interPlant(doc);
                 }catch(Exception e){
                     //如网络操作出错，显示出错原因，并返回一个url当前跳转

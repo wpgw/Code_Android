@@ -1,55 +1,43 @@
 
-package com.philip.plex_qa;
+package com.philip.comm;
 
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.content.SyncStatusObserver;
-import android.os.Environment;
-
-import androidx.annotation.NonNull;
+import org.jsoup.Connection;
+import org.jsoup.Connection.Method;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.OutputStreamWriter;
-import java.io.BufferedReader;  // readline
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.Connection.Method;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-//以下import 只用于for method trustEveryone，for enable Proxy
-import java.io.UnsupportedEncodingException;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
-import static java.lang.Thread.*;
+//以下import 只用于for method trustEveryone，for enable Proxy
 
-public class Plex_qa{
+public class Plex_qa {
     public static String path="";   // 本次指向/android/data/(package): Plex_qa.path = getApplicationContext().getExternalCacheDir().getPath();
 
     public Map<String,String> headers =new HashMap<>();
