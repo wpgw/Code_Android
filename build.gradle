@@ -6,11 +6,14 @@ buildscript {
         maven{ url'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
         google()
         jcenter()
+        //Add Maven by Philip for HMS
+        maven { url 'https://developer.huawei.com/repo/'}
         
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.1'
-        
+        // Add this line by Philip for HMS
+        classpath 'com.huawei.agconnect:agcp:1.3.1.300'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -22,7 +25,8 @@ allprojects {
         maven{ url'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
         google()
         jcenter()
-        
+        //Add Maven by Philip for HMS
+        maven {url 'https://developer.huawei.com/repo/'}
     }
 }
 

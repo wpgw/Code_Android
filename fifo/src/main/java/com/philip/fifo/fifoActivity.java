@@ -2,11 +2,14 @@ package com.philip.fifo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
+import android.os.Vibrator;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -27,11 +30,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import com.huawei.hms.hmsscankit.ScanUtil;
+import com.huawei.hms.ml.scan.HmsScan;
+import com.huawei.hms.ml.scan.HmsScanAnalyzerOptions;
 
 public class fifoActivity extends AppCompatActivity {
     HashMap<String,String> cookies=new HashMap<>();
     String pre_url,Session_Key,host,user;
     final int MSG=1, showBarcode_info =2, refresh_FIFOlist_on_UI =3,alartColor=4,normalColor=5,MOVED=6,enableRadioGroup=7;
+    int scanRequestCode=1016;
     //init Views
     TextView tv_info,tv_BarcodeInfo,tv_canlist,tv_cannotlist,tv_movedlist;  //记录移动成功的条码
     EditText et_barcode,et_location;
@@ -39,7 +46,7 @@ public class fifoActivity extends AppCompatActivity {
     ImageButton btn_scan;
     RadioButton rd_move,rd_issue;
     RadioGroup radiogroup;
-    int movedCount; //用以记当扫描成功的记数
+    int movedCount; //用以记录扫描成功的记数
     int issueLock;  //用以锁定发货，以防一个未完，就连击另一个 0：开放   1：加锁
 
     String barcode;   //用于存当前处理的条码号，传给thread
@@ -159,6 +166,32 @@ public class fifoActivity extends AppCompatActivity {
                 }
             }
         });
+        btn_scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //ScanUtil.startScan(fifoActivity.this,scanRequestCode,null);
+                Intent intent=new Intent(fifoActivity.this,DefinedActivity.class);
+                startActivityForResult(intent,scanRequestCode);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK || data == null) {
+            System.out.println("失败码："+resultCode);
+            return;
+        }
+        if (requestCode == scanRequestCode) {
+            HmsScan obj = data.getParcelableExtra(DefinedActivity.SCAN_RESULT);
+            if (obj != null) {
+                //展示解码结果
+                System.out.println(obj);
+                vibrate();
+                et_barcode.setText(obj.getOriginalValue());
+            }
+        }
     }
 
     class issueThread extends Thread{
@@ -426,6 +459,12 @@ public class fifoActivity extends AppCompatActivity {
             //String date=Utils.getMonthTime(this.date);
             return String.format("%s 日期:%s 数量:%s %s",this.serial,this.date,this.QTY,location);
         }
+    }
+
+    //震动
+    private void vibrate() {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        vibrator.vibrate(200);
     }
 
     public static void main(String[] args){

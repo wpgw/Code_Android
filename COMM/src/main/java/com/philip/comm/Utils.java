@@ -2,6 +2,7 @@ package com.philip.comm;
 
 
 import android.os.Build;
+import android.os.Vibrator;
 import android.webkit.CookieManager;
 import android.widget.TextView;
 
@@ -22,6 +23,8 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static android.content.Context.VIBRATOR_SERVICE;
 
 public class Utils {
     //把 Cookie硬塞给另一个url
