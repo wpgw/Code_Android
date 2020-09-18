@@ -79,6 +79,11 @@ public class DefinedActivity extends Activity {
         rect.top = mScreenHeight / 2 - scanFrameSize / 2;
         rect.bottom = mScreenHeight / 2 + scanFrameSize / 2;
 
+        try {
+            Thread.sleep(600);  //延时一下，以免扫描太快，误扫
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         //Initialize the RemoteView instance, and set callback for the scanning result.
         remoteView = new RemoteView.Builder().setContext(this).setBoundingBox(rect).setFormat(HmsScan.ALL_SCAN_TYPE).build();

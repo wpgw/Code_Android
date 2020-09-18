@@ -365,6 +365,7 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
     }
 
     protected void onActivityResult(int requestCode,int resultCode,Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
         et_barcode.setText("");
         if (data!=null){
             String result=data.getStringExtra("barcode");

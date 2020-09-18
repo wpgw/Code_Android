@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
 import android.os.Vibrator;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -86,12 +88,32 @@ public class fifoActivity extends AppCompatActivity {
         tv_movedlist.setMovementMethod(ScrollingMovementMethod.getInstance());tv_canlist.setMovementMethod(ScrollingMovementMethod.getInstance());tv_cannotlist.setMovementMethod(ScrollingMovementMethod.getInstance());
         movedCount=0;issueLock=0;enableRadioGroup(radiogroup);
 
+        et_barcode.setSelectAllOnFocus(true);  //et_barcode获得焦点时全选
+        et_location.setSelectAllOnFocus(true);  //et_barcode获得焦点时全选
         //开始时不显示有关控件
         et_barcode.setVisibility(View.GONE);btn_confirm.setVisibility(View.GONE);btn_scan.setVisibility(View.GONE);
         et_location.setVisibility(View.GONE);tv_BarcodeInfo.setVisibility(View.GONE);
         tv_info.setVisibility(View.GONE);
         tv_movedlist.setVisibility(View.GONE);tv_canlist.setVisibility(View.GONE);tv_cannotlist.setVisibility(View.GONE);
 
+        et_barcode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //如果 barcode 有输入, 变白色,button变灰等
+                et_barcode.setBackgroundColor(Color.WHITE);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                //回车, 点击 btn_confirm按钮
+                String str=s.toString();
+                if(str.contains("\r")||str.contains("\n")){
+                    btn_confirm.performClick();
+                }
+            }
+        });
         radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -164,11 +186,13 @@ public class fifoActivity extends AppCompatActivity {
                     }
 
                 }
+                et_barcode.selectAll();
             }
         });
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                vibrate();
                 //ScanUtil.startScan(fifoActivity.this,scanRequestCode,null);
                 Intent intent=new Intent(fifoActivity.this,DefinedActivity.class);
                 startActivityForResult(intent,scanRequestCode);
@@ -179,6 +203,7 @@ public class fifoActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        et_barcode.setText("");
         if (resultCode != RESULT_OK || data == null) {
             System.out.println("失败码："+resultCode);
             return;
@@ -189,7 +214,7 @@ public class fifoActivity extends AppCompatActivity {
                 //展示解码结果
                 System.out.println(obj);
                 vibrate();
-                et_barcode.setText(obj.getOriginalValue());
+                et_barcode.setText(obj.getOriginalValue()+"\n");  //加个换行，用来performclick()
             }
         }
     }
