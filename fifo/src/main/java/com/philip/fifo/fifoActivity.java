@@ -93,7 +93,7 @@ public class fifoActivity extends AppCompatActivity {
         //开始时不显示有关控件
         et_barcode.setVisibility(View.GONE);btn_confirm.setVisibility(View.GONE);btn_scan.setVisibility(View.GONE);
         et_location.setVisibility(View.GONE);tv_BarcodeInfo.setVisibility(View.GONE);
-        tv_info.setVisibility(View.GONE);
+        tv_info.setVisibility(View.INVISIBLE);
         tv_movedlist.setVisibility(View.GONE);tv_canlist.setVisibility(View.GONE);tv_cannotlist.setVisibility(View.GONE);
 
         et_barcode.addTextChangedListener(new TextWatcher() {
@@ -104,6 +104,7 @@ public class fifoActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //如果 barcode 有输入, 变白色,button变灰等
                 et_barcode.setBackgroundColor(Color.WHITE);
+                tv_info.setBackgroundColor(Color.WHITE);
             }
             @Override
             public void afterTextChanged(Editable s) {
@@ -119,15 +120,17 @@ public class fifoActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 et_barcode.setVisibility(View.VISIBLE);btn_confirm.setVisibility(View.VISIBLE);btn_scan.setVisibility(View.VISIBLE);
                 et_location.setVisibility(View.VISIBLE);
-                tv_info.setVisibility(View.VISIBLE);
+                //tv_info.setVisibility(View.VISIBLE);
                 //clear barcode text
                 et_barcode.setText("");et_location.setText("");tv_info.setText("");
                 sendMessage(normalColor,""); //信息栏显成白色
-                movedCount=0;issueLock=0;enableRadioGroup(radiogroup);tv_movedlist.setText("");tv_info.setText("Info:");  //清空记数及info显示
+                movedCount=0;issueLock=0;enableRadioGroup(radiogroup);tv_movedlist.setText("");tv_info.setText("");  //清空记数及info显示
                 clear_list_data_and_UI_display();  //每次变化，都初始化fifo数据与显示
                 //containerActive="否";  // 此时不能作任何操作 onhold/scrap
                 if (checkedId==R.id.rd_move){
                     //移库
+                    tv_info.setVisibility(View.INVISIBLE);
+                    tv_movedlist.setVisibility(View.GONE);
                     tv_canlist.setVisibility(View.GONE);
                     tv_cannotlist.setVisibility(View.GONE);
                     tv_BarcodeInfo.setText("");tv_BarcodeInfo.setVisibility(View.GONE);  //不显示条码信息
@@ -253,7 +256,7 @@ public class fifoActivity extends AppCompatActivity {
                     Map<String, String> barcodeInfo = Utils.show_container_info(cookies, url, barcode);
                     //显示查询结结果
                     String txtPartNo = barcodeInfo.get("txtPartNo");
-                    sendMessage(showBarcode_info, txtPartNo + "     " + barcodeInfo.get("txtLocation") + "\n激活:" + barcodeInfo.get("txtActive") + "  状态:" + barcodeInfo.get("curStatus"));
+                    sendMessage(showBarcode_info, txtPartNo + "\n激活:" + barcodeInfo.get("txtActive") + "  状态:" + barcodeInfo.get("curStatus")+ "  库位:" + barcodeInfo.get("txtLocation"));
 
                     //先清理canList, cannotList
                     clear_list_data_and_UI_display();
@@ -386,6 +389,7 @@ public class fifoActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             if(msg.what==MSG){
                 tv_info.setText(msg.obj.toString());
+                tv_info.setVisibility(View.VISIBLE);
             }else if(msg.what== showBarcode_info){
                 //tv_BarcodeInfo.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
                 tv_BarcodeInfo.setText(barcode+"："+msg.obj.toString()+"\n");
@@ -482,7 +486,7 @@ public class fifoActivity extends AppCompatActivity {
             if(this.serial==null)
                 return "no data";
             //String date=Utils.getMonthTime(this.date);
-            return String.format("%s 日期:%s 数量:%s %s",this.serial,this.date,this.QTY,location);
+            return String.format("%s日期:%s数量:%s %s",this.serial,this.date,this.QTY,location);
         }
     }
 

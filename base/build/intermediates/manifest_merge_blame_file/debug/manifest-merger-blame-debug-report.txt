@@ -1,0 +1,64 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    xmlns:dist="http://schemas.android.com/apk/distribution"
+4    package="com.philip.base"
+5    android:versionCode="1"
+6    android:versionName="1.0" >
+7
+8    <uses-sdk
+9        android:minSdkVersion="19"
+9-->E:\Code_Android\base\src\main\AndroidManifest.xml
+10        android:targetSdkVersion="29" />
+10-->E:\Code_Android\base\src\main\AndroidManifest.xml
+11
+12    <dist:module dist:instant="true" /> <!-- 王平加 -->
+12-->E:\Code_Android\base\src\main\AndroidManifest.xml:6:5-40
+12-->E:\Code_Android\base\src\main\AndroidManifest.xml:6:18-37
+13    <uses-permission android:name="android.permission.INTERNET" /> <!-- 手机存储 -->
+13-->E:\Code_Android\base\src\main\AndroidManifest.xml:7:5-67
+13-->E:\Code_Android\base\src\main\AndroidManifest.xml:7:22-64
+14    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+14-->E:\Code_Android\base\src\main\AndroidManifest.xml:8:5-81
+14-->E:\Code_Android\base\src\main\AndroidManifest.xml:8:22-78
+15    <uses-permission android:name="android.permission.CAMERA" />
+15-->E:\Code_Android\base\src\main\AndroidManifest.xml:9:5-65
+15-->E:\Code_Android\base\src\main\AndroidManifest.xml:9:22-62
+16    <uses-permission android:name="android.permission.VIBRATE" />
+16-->E:\Code_Android\base\src\main\AndroidManifest.xml:10:5-66
+16-->E:\Code_Android\base\src\main\AndroidManifest.xml:10:22-63
+17    <uses-permission android:name="android.permission.FLASHLIGHT" />
+17-->E:\Code_Android\base\src\main\AndroidManifest.xml:11:5-69
+17-->E:\Code_Android\base\src\main\AndroidManifest.xml:11:22-66
+18
+19    <application
+19-->E:\Code_Android\base\src\main\AndroidManifest.xml:13:5-25:19
+20        android:allowBackup="true"
+20-->E:\Code_Android\base\src\main\AndroidManifest.xml:14:9-35
+21        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+21-->[androidx.core:core:1.1.0] C:\Users\gw\.gradle\caches\transforms-2\files-2.1\76f2b6439d16df60df3177021482ee5a\core-1.1.0\AndroidManifest.xml:24:18-86
+22        android:debuggable="true"
+23        android:icon="@mipmap/ic_launcher"
+23-->E:\Code_Android\base\src\main\AndroidManifest.xml:15:9-43
+24        android:label="@string/app_name"
+24-->E:\Code_Android\base\src\main\AndroidManifest.xml:16:9-41
+25        android:supportsRtl="true"
+25-->E:\Code_Android\base\src\main\AndroidManifest.xml:17:9-35
+26        android:theme="@style/AppTheme" >
+26-->E:\Code_Android\base\src\main\AndroidManifest.xml:18:9-40
+27        <activity android:name="com.philip.base.MainActivity" >
+27-->E:\Code_Android\base\src\main\AndroidManifest.xml:19:9-24:20
+27-->E:\Code_Android\base\src\main\AndroidManifest.xml:19:19-47
+28            <intent-filter>
+28-->E:\Code_Android\base\src\main\AndroidManifest.xml:20:13-23:29
+29                <action android:name="android.intent.action.MAIN" />
+29-->E:\Code_Android\base\src\main\AndroidManifest.xml:21:17-69
+29-->E:\Code_Android\base\src\main\AndroidManifest.xml:21:25-66
+30
+31                <category android:name="android.intent.category.LAUNCHER" />
+31-->E:\Code_Android\base\src\main\AndroidManifest.xml:22:17-77
+31-->E:\Code_Android\base\src\main\AndroidManifest.xml:22:27-74
+32            </intent-filter>
+33        </activity>
+34    </application>
+35
+36</manifest>

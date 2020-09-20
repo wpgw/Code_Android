@@ -25,7 +25,7 @@
             android:id="@+id/rd_issue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
+            android:layout_marginLeft="80dp"
             android:layout_marginTop="8dp"
             android:text="FIFO发料 " />
     </RadioGroup>
@@ -88,12 +88,12 @@
         </LinearLayout>
 
     <TextView
-            android:id="@+id/tvInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="40dp"
-            android:text="Info:" />
+        android:id="@+id/tvInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="8dp"
+        android:drawableLeft="@android:drawable/presence_audio_online" />
 
     <LinearLayout
         android:id="@+id/layout_lists"
@@ -101,53 +101,59 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/tv_movedList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/fifo_success"
             android:gravity="top"
-            android:singleLine="false"
-            android:lines="4"
+            android:lines="3"
             android:maxLines="4"
             android:scrollbars="vertical"
+            android:singleLine="false"
             android:text="FIFO完成清单："
-            android:textSize="13sp"
-            android:background="#F6F6E6" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/tv_canList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="2"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/fifo_can"
             android:gravity="top"
-            android:singleLine="false"
             android:lines="12"
-            android:maxLines="12"
+            android:minLines="3"
             android:scrollbars="vertical"
+            android:shadowColor="@color/colorPrimaryDark"
+            android:singleLine="false"
             android:text="FIFO允许清单"
-            android:textSize="13sp"
-            android:background="#F6F6E6" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/tv_cannotList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
+            android:background="@drawable/fifo_can_not"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:backgroundTintMode="screen"
             android:gravity="top"
-            android:singleLine="false"
             android:lines="12"
             android:maxLines="12"
             android:scrollbars="vertical"
+            android:shadowColor="@color/colorPrimaryDark"
+            android:singleLine="false"
             android:text="FIFO不允许清单"
-            android:textSize="13sp"
-            android:background="#F6F6E6" />
+            android:textSize="13sp" />
 
     </LinearLayout>
 

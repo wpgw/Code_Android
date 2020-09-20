@@ -1,0 +1,12 @@
+{
+	"client":{
+		"cp_id":"260086000233444886",
+		"product_id":"736430079244639060",
+		"client_id":"454032601561171136",
+		"client_secret":"32EBF7DECEE6740CBD191AD5E0D801FF26783D9BF083B4E1A4E46634B381737C",
+		"app_id":"102928483",
+		"package_name":"com.wz.android.mapkit",
+		"api_key":"CgB6e3x98+cyGVKCai8OVbmAc91GfT4gOjKFA8VeKzSms+JC54jSknujW1146rx7dqd8hVOf1HNOeKpI6zWfy+wK"
+	},
+	"configuration_version":"1.0"
+}

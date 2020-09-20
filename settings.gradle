@@ -1,3 +1,5 @@
+include ':mapkit'
+include ':hmsmap'
 include ':COMM'
 include ':fifo'
 include ':app', ':wpcameral'
