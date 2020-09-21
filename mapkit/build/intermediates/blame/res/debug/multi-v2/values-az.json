@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\Code_Android\\mapkit\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-az\\values-az.xml",
+            "outputFile": "D:\\Code_Android\\mapkit\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-az\\values-az.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\gw\\.gradle\\caches\\transforms-2\\files-2.1\\d1e4dd2da2918e2ecdf3727ab87685e3\\jetified-ui-5.0.0.300\\res\\values-az\\values-az.xml",
+                    "source": "C:\\Users\\pwang.AP\\.gradle\\caches\\transforms-2\\files-2.1\\d1e4dd2da2918e2ecdf3727ab87685e3\\jetified-ui-5.0.0.300\\res\\values-az\\values-az.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -21,24 +21,24 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\gw\\.gradle\\caches\\transforms-2\\files-2.1\\27f534c51b54f9468dee3c3fd6827b26\\core-1.1.0\\res\\values-az\\values-az.xml",
+                    "source": "C:\\Users\\pwang.AP\\.gradle\\caches\\transforms-2\\files-2.1\\1f62af515a873c240d7445be841f5400\\jetified-update-2.0.6.302\\res\\values-az\\values-az.xml",
                     "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,143,232,304,382,455,552,672,822,900,1057,1166,1320,1391,1466,1543,1629,1710,1782,1904,2014,2111,2215",
+                        "endColumns": "87,88,71,77,72,96,119,149,77,156,108,153,70,74,76,85,80,71,121,109,96,103,76",
+                        "endOffsets": "138,227,299,377,450,547,667,817,895,1052,1161,1315,1386,1461,1538,1624,1705,1777,1899,2009,2106,2210,2287"
                     },
                     "to": {
-                        "startLines": "54",
-                        "startColumns": "4",
-                        "startOffsets": "5437",
-                        "endColumns": "100",
-                        "endOffsets": "5533"
+                        "startLines": "55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "5538,5626,5715,5787,5865,5938,6035,6155,6305,6383,6540,6649,6803,6874,6949,7026,7112,7193,7265,7387,7497,7594,7698",
+                        "endColumns": "87,88,71,77,72,96,119,149,77,156,108,153,70,74,76,85,80,71,121,109,96,103,76",
+                        "endOffsets": "5621,5710,5782,5860,5933,6030,6150,6300,6378,6535,6644,6798,6869,6944,7021,7107,7188,7260,7382,7492,7589,7693,7770"
                     }
                 },
                 {
-                    "source": "C:\\Users\\gw\\.gradle\\caches\\transforms-2\\files-2.1\\b76d4000b3c16248acfc36c3cb2f53b6\\appcompat-1.1.0\\res\\values-az\\values-az.xml",
+                    "source": "C:\\Users\\pwang.AP\\.gradle\\caches\\transforms-2\\files-2.1\\b76d4000b3c16248acfc36c3cb2f53b6\\appcompat-1.1.0\\res\\values-az\\values-az.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -55,20 +55,20 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\gw\\.gradle\\caches\\transforms-2\\files-2.1\\1f62af515a873c240d7445be841f5400\\jetified-update-2.0.6.302\\res\\values-az\\values-az.xml",
+                    "source": "C:\\Users\\pwang.AP\\.gradle\\caches\\transforms-2\\files-2.1\\27f534c51b54f9468dee3c3fd6827b26\\core-1.1.0\\res\\values-az\\values-az.xml",
                     "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,143,232,304,382,455,552,672,822,900,1057,1166,1320,1391,1466,1543,1629,1710,1782,1904,2014,2111,2215",
-                        "endColumns": "87,88,71,77,72,96,119,149,77,156,108,153,70,74,76,85,80,71,121,109,96,103,76",
-                        "endOffsets": "138,227,299,377,450,547,667,817,895,1052,1161,1315,1386,1461,1538,1624,1705,1777,1899,2009,2106,2210,2287"
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
                     },
                     "to": {
-                        "startLines": "55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "5538,5626,5715,5787,5865,5938,6035,6155,6305,6383,6540,6649,6803,6874,6949,7026,7112,7193,7265,7387,7497,7594,7698",
-                        "endColumns": "87,88,71,77,72,96,119,149,77,156,108,153,70,74,76,85,80,71,121,109,96,103,76",
-                        "endOffsets": "5621,5710,5782,5860,5933,6030,6150,6300,6378,6535,6644,6798,6869,6944,7021,7107,7188,7260,7382,7492,7589,7693,7770"
+                        "startLines": "54",
+                        "startColumns": "4",
+                        "startOffsets": "5437",
+                        "endColumns": "100",
+                        "endOffsets": "5533"
                     }
                 }
             ]

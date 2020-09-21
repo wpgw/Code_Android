@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\Code_Android\\mapkit\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-cs\\values-cs.xml",
+            "outputFile": "D:\\Code_Android\\mapkit\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-cs\\values-cs.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\gw\\.gradle\\caches\\transforms-2\\files-2.1\\d1e4dd2da2918e2ecdf3727ab87685e3\\jetified-ui-5.0.0.300\\res\\values-cs\\values-cs.xml",
+                    "source": "C:\\Users\\pwang.AP\\.gradle\\caches\\transforms-2\\files-2.1\\d1e4dd2da2918e2ecdf3727ab87685e3\\jetified-ui-5.0.0.300\\res\\values-cs\\values-cs.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -21,24 +21,24 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\gw\\.gradle\\caches\\transforms-2\\files-2.1\\27f534c51b54f9468dee3c3fd6827b26\\core-1.1.0\\res\\values-cs\\values-cs.xml",
+                    "source": "C:\\Users\\pwang.AP\\.gradle\\caches\\transforms-2\\files-2.1\\1f62af515a873c240d7445be841f5400\\jetified-update-2.0.6.302\\res\\values-cs\\values-cs.xml",
                     "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,161,252,328,404,476,579,713,863,940,1081,1201,1362,1434,1511,1590,1682,1761,1833,1948,2058,2154,2262",
+                        "endColumns": "105,90,75,75,71,102,133,149,76,140,119,160,71,76,78,91,78,71,114,109,95,107,78",
+                        "endOffsets": "156,247,323,399,471,574,708,858,935,1076,1196,1357,1429,1506,1585,1677,1756,1828,1943,2053,2149,2257,2336"
                     },
                     "to": {
-                        "startLines": "54",
-                        "startColumns": "4",
-                        "startOffsets": "5428",
-                        "endColumns": "100",
-                        "endOffsets": "5524"
+                        "startLines": "55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "5529,5635,5726,5802,5878,5950,6053,6187,6337,6414,6555,6675,6836,6908,6985,7064,7156,7235,7307,7422,7532,7628,7736",
+                        "endColumns": "105,90,75,75,71,102,133,149,76,140,119,160,71,76,78,91,78,71,114,109,95,107,78",
+                        "endOffsets": "5630,5721,5797,5873,5945,6048,6182,6332,6409,6550,6670,6831,6903,6980,7059,7151,7230,7302,7417,7527,7623,7731,7810"
                     }
                 },
                 {
-                    "source": "C:\\Users\\gw\\.gradle\\caches\\transforms-2\\files-2.1\\b76d4000b3c16248acfc36c3cb2f53b6\\appcompat-1.1.0\\res\\values-cs\\values-cs.xml",
+                    "source": "C:\\Users\\pwang.AP\\.gradle\\caches\\transforms-2\\files-2.1\\b76d4000b3c16248acfc36c3cb2f53b6\\appcompat-1.1.0\\res\\values-cs\\values-cs.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -55,20 +55,20 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\gw\\.gradle\\caches\\transforms-2\\files-2.1\\1f62af515a873c240d7445be841f5400\\jetified-update-2.0.6.302\\res\\values-cs\\values-cs.xml",
+                    "source": "C:\\Users\\pwang.AP\\.gradle\\caches\\transforms-2\\files-2.1\\27f534c51b54f9468dee3c3fd6827b26\\core-1.1.0\\res\\values-cs\\values-cs.xml",
                     "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,161,252,328,404,476,579,713,863,940,1081,1201,1362,1434,1511,1590,1682,1761,1833,1948,2058,2154,2262",
-                        "endColumns": "105,90,75,75,71,102,133,149,76,140,119,160,71,76,78,91,78,71,114,109,95,107,78",
-                        "endOffsets": "156,247,323,399,471,574,708,858,935,1076,1196,1357,1429,1506,1585,1677,1756,1828,1943,2053,2149,2257,2336"
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
                     },
                     "to": {
-                        "startLines": "55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "5529,5635,5726,5802,5878,5950,6053,6187,6337,6414,6555,6675,6836,6908,6985,7064,7156,7235,7307,7422,7532,7628,7736",
-                        "endColumns": "105,90,75,75,71,102,133,149,76,140,119,160,71,76,78,91,78,71,114,109,95,107,78",
-                        "endOffsets": "5630,5721,5797,5873,5945,6048,6182,6332,6409,6550,6670,6831,6903,6980,7059,7151,7230,7302,7417,7527,7623,7731,7810"
+                        "startLines": "54",
+                        "startColumns": "4",
+                        "startOffsets": "5428",
+                        "endColumns": "100",
+                        "endOffsets": "5524"
                     }
                 }
             ]

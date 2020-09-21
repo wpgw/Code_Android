@@ -1,27 +1,27 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\Code_Android\\mapkit\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-ne\\values-ne.xml",
+            "outputFile": "D:\\Code_Android\\mapkit\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-ne\\values-ne.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\gw\\.gradle\\caches\\transforms-2\\files-2.1\\d1e4dd2da2918e2ecdf3727ab87685e3\\jetified-ui-5.0.0.300\\res\\values-ne\\values-ne.xml",
+                    "source": "C:\\Users\\pwang.AP\\.gradle\\caches\\transforms-2\\files-2.1\\27f534c51b54f9468dee3c3fd6827b26\\core-1.1.0\\res\\values-ne\\values-ne.xml",
                     "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,128,214,501,579,679,778,870,940,1053,1187,1300,1410,1492,1580,1659,1741,1897,1981,2064,2146,2322,2447,2572",
-                        "endColumns": "72,85,286,77,99,98,91,69,112,133,112,109,81,87,78,81,155,83,82,81,175,124,124,77",
-                        "endOffsets": "123,209,496,574,674,773,865,935,1048,1182,1295,1405,1487,1575,1654,1736,1892,1976,2059,2141,2317,2442,2567,2645"
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
                     },
                     "to": {
-                        "startLines": "29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "2888,2961,3047,3334,3412,3512,3611,3703,3773,3886,4020,4133,4243,4325,4413,4492,4574,4730,4814,4897,4979,5155,5280,5405",
-                        "endColumns": "72,85,286,77,99,98,91,69,112,133,112,109,81,87,78,81,155,83,82,81,175,124,124,77",
-                        "endOffsets": "2956,3042,3329,3407,3507,3606,3698,3768,3881,4015,4128,4238,4320,4408,4487,4569,4725,4809,4892,4974,5150,5275,5400,5478"
+                        "startLines": "54",
+                        "startColumns": "4",
+                        "startOffsets": "5562",
+                        "endColumns": "100",
+                        "endOffsets": "5658"
                     }
                 },
                 {
-                    "source": "C:\\Users\\gw\\.gradle\\caches\\transforms-2\\files-2.1\\b76d4000b3c16248acfc36c3cb2f53b6\\appcompat-1.1.0\\res\\values-ne\\values-ne.xml",
+                    "source": "C:\\Users\\pwang.AP\\.gradle\\caches\\transforms-2\\files-2.1\\b76d4000b3c16248acfc36c3cb2f53b6\\appcompat-1.1.0\\res\\values-ne\\values-ne.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -38,7 +38,24 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\gw\\.gradle\\caches\\transforms-2\\files-2.1\\1f62af515a873c240d7445be841f5400\\jetified-update-2.0.6.302\\res\\values-ne\\values-ne.xml",
+                    "source": "C:\\Users\\pwang.AP\\.gradle\\caches\\transforms-2\\files-2.1\\d1e4dd2da2918e2ecdf3727ab87685e3\\jetified-ui-5.0.0.300\\res\\values-ne\\values-ne.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,128,214,501,579,679,778,870,940,1053,1187,1300,1410,1492,1580,1659,1741,1897,1981,2064,2146,2322,2447,2572",
+                        "endColumns": "72,85,286,77,99,98,91,69,112,133,112,109,81,87,78,81,155,83,82,81,175,124,124,77",
+                        "endOffsets": "123,209,496,574,674,773,865,935,1048,1182,1295,1405,1487,1575,1654,1736,1892,1976,2059,2141,2317,2442,2567,2645"
+                    },
+                    "to": {
+                        "startLines": "29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "2888,2961,3047,3334,3412,3512,3611,3703,3773,3886,4020,4133,4243,4325,4413,4492,4574,4730,4814,4897,4979,5155,5280,5405",
+                        "endColumns": "72,85,286,77,99,98,91,69,112,133,112,109,81,87,78,81,155,83,82,81,175,124,124,77",
+                        "endOffsets": "2956,3042,3329,3407,3507,3606,3698,3768,3881,4015,4128,4238,4320,4408,4487,4569,4725,4809,4892,4974,5150,5275,5400,5478"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\pwang.AP\\.gradle\\caches\\transforms-2\\files-2.1\\1f62af515a873c240d7445be841f5400\\jetified-update-2.0.6.302\\res\\values-ne\\values-ne.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -52,23 +69,6 @@
                         "startOffsets": "5663,5757,5855,5927,6005,6085,6183,6317,6469,6543,6697,6824,6976,7042,7115,7204,7303,7384,7456,7573,7677,7772,7883",
                         "endColumns": "93,97,71,77,79,97,133,151,73,153,126,151,65,72,88,98,80,71,116,103,94,110,83",
                         "endOffsets": "5752,5850,5922,6000,6080,6178,6312,6464,6538,6692,6819,6971,7037,7110,7199,7298,7379,7451,7568,7672,7767,7878,7962"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\gw\\.gradle\\caches\\transforms-2\\files-2.1\\27f534c51b54f9468dee3c3fd6827b26\\core-1.1.0\\res\\values-ne\\values-ne.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
-                    },
-                    "to": {
-                        "startLines": "54",
-                        "startColumns": "4",
-                        "startOffsets": "5562",
-                        "endColumns": "100",
-                        "endOffsets": "5658"
                     }
                 }
             ]

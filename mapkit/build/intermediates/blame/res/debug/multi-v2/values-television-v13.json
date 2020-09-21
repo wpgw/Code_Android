@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\Code_Android\\mapkit\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-television-v13\\values-television-v13.xml",
+            "outputFile": "D:\\Code_Android\\mapkit\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-television-v13\\values-television-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\gw\\.gradle\\caches\\transforms-2\\files-2.1\\1f62af515a873c240d7445be841f5400\\jetified-update-2.0.6.302\\res\\values-television-v13\\values-television-v13.xml",
+                    "source": "C:\\Users\\pwang.AP\\.gradle\\caches\\transforms-2\\files-2.1\\1f62af515a873c240d7445be841f5400\\jetified-update-2.0.6.302\\res\\values-television-v13\\values-television-v13.xml",
                     "from": {
                         "startLines": "2,3,4",
                         "startColumns": "4,4,4",

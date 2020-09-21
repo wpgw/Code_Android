@@ -58,7 +58,7 @@ public class MapViewCodeDemoActivity extends AppCompatActivity implements OnMapR
         }
         // please replace "Your API key" with api_key field value in
         // agconnect-services.json if the field is null.
-        MapsInitializer.setApiKey("Your API key");
+        MapsInitializer.setApiKey("CgB6e3x98+cyGVKCai8OVbmAc91GfT4gOjKFA8VeKzSms+JC54jSknujW1146rx7dqd8hVOf1HNOeKpI6zWfy+wK");
         mMapView.onCreate(mapViewBundle);
         mMapView.getMapAsync(this);
         setContentView(mMapView);

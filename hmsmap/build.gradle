@@ -2,8 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.huawei.agconnect'
 android {
     compileSdkVersion 29
-    buildToolsVersion "30.0.2"
-
+    buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.philip.hmsmap"
         minSdkVersion 21
@@ -13,11 +12,26 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            storeFile file("hmsmap.jks")
+            storePassword "123456"
+            keyAlias "hmsmap"
+            keyPassword "123456"
+            v2SigningEnabled true
+        }
+    }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
