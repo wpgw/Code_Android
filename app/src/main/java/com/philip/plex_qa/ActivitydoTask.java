@@ -170,6 +170,7 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
         //clear barcode text
         et_barcode.setVisibility(View.VISIBLE);
         et_barcode.setText("");
+        et_barcode.requestFocus();et_barcode.requestFocusFromTouch();
         containerActive="否";  // 此时不能作任何操作 onhold/scrap
         et_barcode.setBackgroundColor(Color.WHITE);
         btn_confirm.setVisibility(View.VISIBLE);
@@ -218,9 +219,11 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
                 im.hideSoftInputFromWindow(getCurrentFocus().getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
                 tv_info_addText("开始检查条码...");
+                System.out.println("开始检查条码...");
                     //refine barcode
                     String barcode=et_barcode.getText().toString();
                     barcode=plex_qa.refine_label(barcode);
+                    System.out.println("条码结果："+barcode);
                     et_barcode.setText(barcode);    //Textbox display the refined barcode
 
                     // if valid barcode inputted, then query
@@ -240,7 +243,7 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
                 //e.printStackTrace();
              }
         }else if(v.getId()==R.id.btn_scan){
-            tv_info_addText("启动扫描...");
+            tv_info_addText("启动相机扫描...");
             Intent intent=new Intent();
             intent.setClass(this, ActivityScan2.class);
             startActivityForResult(intent,0);

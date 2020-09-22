@@ -107,8 +107,9 @@ public class Plex_qa {
 
             Connection.Response res=con.method(Method.GET).execute();
 
-            //if(res.parse().title().contains("Login"))
-            // 还需处理 周日系统维护 时的报错
+            if (res.url().toString().toLowerCase().contains("is+currently+unavailable")){
+                throw new MyException("Plex不在线！");
+            }
             if (res.url().toString().toLowerCase().contains("systemadministration/login/index.asp"))            {
                 throw new MyException("你空闲时间过长,需重新登陆了!");
             } else if (res.url().toString().toLowerCase().contains("change_password")){
@@ -141,6 +142,9 @@ public class Plex_qa {
             //System.setProperty("javax.net.ssl.trustStore", "D:\\Code\\Java\\plex.jks");
 
             Connection.Response res=con.method(Method.POST).execute();
+            if (res.url().toString().toLowerCase().contains("is+currently+unavailable")){
+                throw new MyException("Plex不在线！");
+            }
             if (res.url().toString().toLowerCase().contains("systemadministration/login/index.asp")){
                 throw new MyException("你空闲时间过长,需重新登陆了!");
             }else if (res.url().toString().toLowerCase().contains("change_password")){

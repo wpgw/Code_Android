@@ -10,9 +10,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
 import android.os.Vibrator;
+import android.speech.tts.TextToSpeech;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.philip.comm.Utils;
 
@@ -28,9 +31,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import com.huawei.hms.hmsscankit.ScanUtil;
 import com.huawei.hms.ml.scan.HmsScan;
@@ -56,6 +61,8 @@ public class fifoActivity extends AppCompatActivity {
     ArrayList<Part_FIFO_Data> canlist=new ArrayList<Part_FIFO_Data>();
     ArrayList<Part_FIFO_Data> cannotlist=new ArrayList<Part_FIFO_Data>();  //fifo允许的物料及不允许的物料
 
+    private TextToSpeech textToSpeech = null;//创建自带语音对象
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +84,7 @@ public class fifoActivity extends AppCompatActivity {
         pre_url="https://"+host+"/"+Session_Key;
 
         init();
+        initTTS();
     }
 
     private void init(){
@@ -88,6 +96,7 @@ public class fifoActivity extends AppCompatActivity {
         tv_movedlist.setMovementMethod(ScrollingMovementMethod.getInstance());tv_canlist.setMovementMethod(ScrollingMovementMethod.getInstance());tv_cannotlist.setMovementMethod(ScrollingMovementMethod.getInstance());
         movedCount=0;issueLock=0;enableRadioGroup(radiogroup);
 
+        et_barcode.requestFocusFromTouch();et_barcode.requestFocus();
         et_barcode.setSelectAllOnFocus(true);  //et_barcode获得焦点时全选
         et_location.setSelectAllOnFocus(true);  //et_barcode获得焦点时全选
         //开始时不显示有关控件
@@ -111,7 +120,17 @@ public class fifoActivity extends AppCompatActivity {
                 //回车, 点击 btn_confirm按钮
                 String str=s.toString();
                 if(str.contains("\r")||str.contains("\n")){
-                    btn_confirm.performClick();
+                    //et_location.setText("加了回车：");
+                    tv_info.setText("准备执行 perform click");
+                    btn_confirm.performClick();      //这些代码不一定执行，要测试
+                    et_barcode.setSelectAllOnFocus(true);   //// need to check the result
+                    et_barcode.clearFocus();
+                    et_barcode.selectAll();
+                    et_barcode.setFocusable(true);
+                    et_barcode.setFocusableInTouchMode(true);
+                    et_barcode.requestFocusFromTouch();
+                    et_barcode.requestFocus();   //获得焦点，这个没有用
+                    et_barcode.findFocus();
                 }
             }
         });
@@ -123,13 +142,14 @@ public class fifoActivity extends AppCompatActivity {
                 //tv_info.setVisibility(View.VISIBLE);
                 //clear barcode text
                 et_barcode.setText("");et_location.setText("");tv_info.setText("");
+                et_barcode.requestFocus();et_barcode.requestFocusFromTouch();
                 sendMessage(normalColor,""); //信息栏显成白色
                 movedCount=0;issueLock=0;enableRadioGroup(radiogroup);tv_movedlist.setText("");tv_info.setText("");  //清空记数及info显示
                 clear_list_data_and_UI_display();  //每次变化，都初始化fifo数据与显示
                 //containerActive="否";  // 此时不能作任何操作 onhold/scrap
                 if (checkedId==R.id.rd_move){
                     //移库
-                    tv_info.setVisibility(View.INVISIBLE);
+                    tv_info.setVisibility(View.INVISIBLE);    //在内容有变时，会自动显出来
                     tv_movedlist.setVisibility(View.GONE);
                     tv_canlist.setVisibility(View.GONE);
                     tv_cannotlist.setVisibility(View.GONE);
@@ -165,6 +185,7 @@ public class fifoActivity extends AppCompatActivity {
                                 issueLock = 1;  //加锁，不能再多开issuethread
                                 disableRadioGroup(radiogroup);
                                 issuethread.start();
+                                say(barcode.substring(barcode.length()-4,barcode.length()));    //开始发料
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -175,21 +196,58 @@ public class fifoActivity extends AppCompatActivity {
                     }
                 }else if((v.getId()==R.id.btn_confirm)&&(rd_move.isChecked())&&issueLock==0){
                     String scan_raw_data=et_barcode.getText().toString().toUpperCase();
-                    String location=Utils.check_if_location(scan_raw_data);
-                    if(location.length()>2){
+                    String location=Utils.check_if_location(scan_raw_data);  //自动判断 barcode栏里是否是location？
+                    if(location.length()>2){    //如此时输入的是location
                         et_location.setText(location);
                         et_barcode.setText("");
                     }else{
                         barcode=Utils.refine_label(scan_raw_data);
                         et_barcode.setText(barcode);
                         location=et_location.getText().toString();  //也可能直接在et_location上输入
+                        String temp_loc=location.toUpperCase();
+                        if(temp_loc.contains("ASSY")||temp_loc.contains("CNC")){
+                            et_location.setText("");
+                            sendMessage(MSG,"移库程序不能用于组件发料！");
+                            //变红色警告
+                            sendMessage(alartColor,"");
+                            return;
+                        }
                         if(barcode.length()>=9&&location.length()>2){
                             System.out.println("现在开始移库！");
+                            try {
+                                if(issueLock==0){
+                                    issueLock=1;      //加锁  现在是单线程，暂无作用
+                                    disableRadioGroup(radiogroup);
+                                    say(barcode.substring(barcode.length()-4,barcode.length()));   //开始移库
+                                    container_move(barcode,location);   //将来可能需改到多线程
+                                    issueLock=0;     //开锁
+                                    enableRadioGroup(radiogroup);
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                issueLock=0;
+                                enableRadioGroup(radiogroup);
+                                sendMessage(MSG,e.getMessage());
+                            }
+
                         }
                     }
-
                 }
+                et_barcode.setSelectAllOnFocus(true);   //// need to check the result
+                et_barcode.clearFocus();
                 et_barcode.selectAll();
+                et_barcode.setFocusable(true);
+                et_barcode.setFocusableInTouchMode(true);
+                et_barcode.requestFocusFromTouch();
+                et_barcode.requestFocus();   //获得焦点，这个没有用
+                et_barcode.findFocus();
+//                Runtime runtime=Runtime.getRuntime();   //试着执行 arrow lift
+//                try {
+//                    Process proc=runtime.exec(String.valueOf(KeyEvent.KEYCODE_SYSTEM_NAVIGATION_LEFT));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
         btn_scan.setOnClickListener(new View.OnClickListener() {
@@ -295,19 +353,20 @@ public class fifoActivity extends AppCompatActivity {
         alllist=get_fifo_report(cookies,url,txtPartNo);
         split_fifo_report(alllist); //canlist和cannotlist会被充值，如Size为0，则canlist与cannotlist会被清空
     }
+
     void FIFO_issue(String barcode) throws Exception{
         System.out.println("--现在FIFO发货 barcode"+barcode);
-        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,"ASSY1_",barcode);  //Assy卌
+        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,"ASSY1_",barcode);  //移到 Assy1_
         if(move_result!=null){  //分析move container 返回的结果
             if(move_result.get("IsValid")=="true"){
                 System.out.println("从canList中移除"+barcode);
                 //每发货成功一下，删去一个canlist记录
                 canlist.remove(new Part_FIFO_Data(barcode,"","","",""));  //修改放在开头，以免引起显示时的 concurrent modify报错
+                //canlist.removeIf(s->s.serial.equals(barcode));   //java 1.8用法
                 System.out.println(barcode+"发料成功。");
                 sendMessage(MOVED,barcode+"发料成功。\n "+move_result.get("Message"));
                 ////变白色
                 sendMessage(normalColor,"");
-                //canlist.removeIf(s->s.serial.equals(barcode));   //java 1.8用法
                 sendMessage(refresh_FIFOlist_on_UI,"");  //刷新fifo list
             }else{
                 sendMessage(MSG,barcode+"发料不成功！\n "+move_result.get("Message"));
@@ -320,6 +379,30 @@ public class fifoActivity extends AppCompatActivity {
             sendMessage(alartColor,"");
         }
     }
+
+    void container_move(String barcode,String location) throws Exception{
+        System.out.println("--现在移库 barcode"+barcode);
+        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,location,barcode);  //移到 Assy1_
+        if(move_result!=null){  //分析move container 返回的结果
+            if(move_result.get("IsValid")=="true"){
+                //每移库成功一下，删去一个move task list记录
+                System.out.println(barcode+"移库成功。");
+                sendMessage(MOVED,barcode+"移库成功。\n "+move_result.get("Message"));
+                ////变白色
+                sendMessage(normalColor,"");
+                //sendMessage(refresh_FIFOlist_on_UI,"");  //刷新move task list
+            }else{
+                sendMessage(MSG,barcode+"发料不成功！\n "+move_result.get("Message"));
+                //变红色
+                sendMessage(alartColor,"");
+            }
+        }else{ //如 move container 返回数据为 null
+            sendMessage(MSG,barcode+"发料不成功！ 请检查原因！");
+            /////变红色
+            sendMessage(alartColor,"");
+        }
+    }
+
     void clear_list_data_and_UI_display(){
         alllist.clear();canlist.clear();cannotlist.clear(); //初始化 数据
         sendMessage(refresh_FIFOlist_on_UI,"");
@@ -416,6 +499,7 @@ public class fifoActivity extends AppCompatActivity {
                 tv_movedlist.setText(movedCount+"--"+barcode+"  "+temp);  //显示已移库的条码
                 tv_movedlist.setVisibility(View.VISIBLE);
                 tv_info.setText(msg.obj.toString());
+                tv_info.setVisibility(View.VISIBLE);
             }else if(msg.what==enableRadioGroup){
                 enableRadioGroup(radiogroup);
             }
@@ -438,6 +522,59 @@ public class fifoActivity extends AppCompatActivity {
         for (int i = 0; i < testRadioGroup.getChildCount(); i++) {
             testRadioGroup.getChildAt(i).setEnabled(true);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 不管是否正在朗读TTS都被打断
+        textToSpeech.stop();
+        // 关闭，释放资源
+        textToSpeech.shutdown();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+            textToSpeech = null;
+        }
+        super.onDestroy();
+    }
+
+    private void initTTS() {
+        //实例化自带语音对象
+        textToSpeech = new TextToSpeech(fifoActivity.this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == textToSpeech.SUCCESS) {
+
+                    textToSpeech.setPitch(1.0f);//方法用来控制音调
+                    textToSpeech.setSpeechRate(1.2f);//用来控制语速
+
+                    //判断是否支持下面两种语言
+                    //int result1 = textToSpeech.setLanguage(Locale.US);
+                    int result1 = textToSpeech.setLanguage(Locale.SIMPLIFIED_CHINESE);
+
+                    if (result1 == TextToSpeech.LANG_MISSING_DATA || result1 == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Toast.makeText(fifoActivity.this, "语音包丢失或语音不支持", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(fifoActivity.this, "数据丢失或不支持", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void say(String data) {
+        // 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
+        textToSpeech.setPitch(1.0f);
+        // 设置语速
+        textToSpeech.setSpeechRate(1.2f);
+        data=data.replace(""," ");   //加分隔符，以便读单数字
+        textToSpeech.speak(data,//输入中文，若不支持的设备则不会读出来
+                TextToSpeech.QUEUE_FLUSH, null,null);
     }
 
     //自定义数据类型，用于保存记录
@@ -512,5 +649,4 @@ public class fifoActivity extends AppCompatActivity {
         System.out.println(array);
 
     }
-
 }

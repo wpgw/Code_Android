@@ -559,7 +559,7 @@ public class Plex_qa{
 
     public String refine_label(String txtSerial_NO) {
         //String pattern="([a-zA-Z]{4}\\d{6,7}|\\d{6,7})";
-        txtSerial_NO.toUpperCase();
+        txtSerial_NO=txtSerial_NO.toUpperCase();
         String pattern="(SMMP\\d{6,7}|WMLT\\d{6,7}|MLT\\d{7}|T\\d{8})";
 
         Pattern re=Pattern.compile(pattern);

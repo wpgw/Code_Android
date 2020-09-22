@@ -11,6 +11,8 @@
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="horizontal">
 
         <RadioButton
@@ -74,6 +76,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginLeft="5dp"
+                android:nextFocusLeft="@+id/et_barcode"
+                android:nextFocusRight="@+id/et_barcode"
+                android:nextFocusUp="@+id/et_barcode"
+                android:nextFocusDown="@+id/et_barcode"
                 android:text="确认" />
 
             <ImageButton
