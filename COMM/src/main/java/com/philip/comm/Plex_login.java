@@ -51,6 +51,9 @@ public class Plex_login {
             //System.setProperty("javax.net.ssl.trustStore", "D:\\Code\\Java\\plex.jks");
 
             Connection.Response res=con.method(method).execute();
+            if (res.url().toString().toLowerCase().contains("Exception.aspx")){
+                throw new Exception("系统出错或Plex不在线！");
+            }
             if (res.url().toString().toLowerCase().contains("is+currently+unavailable")){
                 throw new MyException("Plex不在线！");
             }

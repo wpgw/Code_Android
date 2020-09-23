@@ -111,7 +111,12 @@ public class Utils {
             //System.setProperty("javax.net.ssl.trustStore", "D:\\Code\\Java\\plex.jks");
 
             Connection.Response res = con.method(Connection.Method.GET).execute();
-
+            if (res.url().toString().toLowerCase().contains("Exception.aspx")){
+                throw new Exception("系统出错或Plex不在线！");
+            }
+            if (res.url().toString().toLowerCase().contains("is+currently+unavailable")){
+                throw new Exception("Plex不在线！");
+            }
             if (res.url().toString().toLowerCase().contains("systemadministration/login/index.asp")) {
                 throw new Exception("你空闲时间过长,需重新登陆了!");
             }
@@ -146,6 +151,12 @@ public class Utils {
             //System.setProperty("javax.net.ssl.trustStore", "D:\\Code\\Java\\plex.jks");
 
             Connection.Response res=con.method(Connection.Method.POST).execute();
+            if (res.url().toString().toLowerCase().contains("Exception.aspx")){
+                throw new Exception("系统出错或Plex不在线！");
+            }
+            if (res.url().toString().toLowerCase().contains("is+currently+unavailable")){
+                throw new Exception("Plex不在线！");
+            }
             if (res.url().toString().toLowerCase().contains("systemadministration/login/index.asp")){
                 throw new Exception("你空闲时间过长,需重新登陆了!");
             }

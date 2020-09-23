@@ -109,11 +109,18 @@ public class fifoActivity extends AppCompatActivity {
         et_barcode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId== EditorInfo.IME_ACTION_DONE){
-                        System.out.println("准备执行 perform click");
-                        btn_confirm.performClick();      //这些代码不一定执行，要测试
+                if((actionId== EditorInfo.IME_ACTION_DONE)){
+                        System.out.println("准备执行 软健盘 click");
+                        btn_confirm.performClick();
+
+                    return true;  // 消费 CR
+                }else if((event!=null)&&(event.getKeyCode()==KeyEvent.KEYCODE_ENTER)&&event.getAction()==KeyEvent.ACTION_DOWN){
+                    System.out.println("准备执行 扫描枪 click2");
+                    btn_confirm.performClick();
+
+                    return true;  // 消费 CR
                 }
-                return true;
+                return false;
             }
         });
 
@@ -129,6 +136,10 @@ public class fifoActivity extends AppCompatActivity {
             }
             @Override
             public void afterTextChanged(Editable s) {
+                String str=s.toString();
+                if(str.contains("\n")||str.contains("\r")){
+                    btn_confirm.performClick();   //从相机返回执行
+                }
             }
         });
         radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -202,9 +213,9 @@ public class fifoActivity extends AppCompatActivity {
                         et_barcode.setText(barcode);
                         location=et_location.getText().toString();  //也可能直接在et_location上输入
                         String temp_loc=location.toUpperCase();
-                        if(temp_loc.contains("ASSY")||temp_loc.contains("CNC")){
+                        if(temp_loc.contains("ASSY")||temp_loc.contains("CNC")||temp_loc.contains("VIBE")){
                             et_location.setText("");
-                            sendMessage(MSG,"移库程序不能用于组件发料！");
+                            sendMessage(MSG,"对现场库位 "+temp_loc+"， 需做FIFO发料！");
                             //变红色警告
                             sendMessage(alartColor,"");
                             et_barcode.selectAll();  //选用文字，以便于下次输入
@@ -492,6 +503,7 @@ public class fifoActivity extends AppCompatActivity {
                 tv_movedlist.setVisibility(View.VISIBLE);
                 tv_info.setText(msg.obj.toString());
                 tv_info.setVisibility(View.VISIBLE);
+                et_barcode.setText("");      //move成功后，去掉已成功的条码，等下一个
             }else if(msg.what==enableRadioGroup){
                 enableRadioGroup(radiogroup);
             }
@@ -514,15 +526,6 @@ public class fifoActivity extends AppCompatActivity {
         for (int i = 0; i < testRadioGroup.getChildCount(); i++) {
             testRadioGroup.getChildAt(i).setEnabled(true);
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // 不管是否正在朗读TTS都被打断
-        textToSpeech.stop();
-        // 关闭，释放资源
-        textToSpeech.shutdown();
     }
 
     @Override

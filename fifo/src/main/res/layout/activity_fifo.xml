@@ -19,7 +19,7 @@
             android:id="@+id/rd_move"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="8dp"
             android:text="移 库" />
 
@@ -65,10 +65,10 @@
                 android:hint="请扫码..."
                 android:imeOptions="actionDone"
                 android:inputType="textPersonName"
-                android:nextFocusLeft="@+id/btn_confirm"
-                android:nextFocusRight="@+id/btn_confirm"
-                android:nextFocusUp="@+id/btn_confirm"
-                android:nextFocusDown="@+id/btn_confirm"
+                android:nextFocusLeft="@+id/et_barcode"
+                android:nextFocusRight="@+id/et_barcode"
+                android:nextFocusUp="@+id/et_barcode"
+                android:nextFocusDown="@+id/et_barcode"
                 android:text="" />
 
             <Button
@@ -76,7 +76,6 @@
                 android:layout_width="55dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
                 android:nextFocusLeft="@+id/et_barcode"
                 android:nextFocusRight="@+id/et_barcode"
                 android:nextFocusUp="@+id/et_barcode"
@@ -88,7 +87,6 @@
                 android:layout_width="50dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
                 android:scaleType="centerCrop"
                 android:background="@drawable/scan" />
 
@@ -135,7 +133,7 @@
             android:background="@drawable/fifo_can"
             android:gravity="top"
             android:lines="12"
-            android:minLines="3"
+            android:minLines="12"
             android:scrollbars="vertical"
             android:shadowColor="@color/colorPrimaryDark"
             android:singleLine="false"
@@ -155,7 +153,7 @@
             android:backgroundTintMode="screen"
             android:gravity="top"
             android:lines="12"
-            android:maxLines="12"
+            android:minLines="12"
             android:scrollbars="vertical"
             android:shadowColor="@color/colorPrimaryDark"
             android:singleLine="false"

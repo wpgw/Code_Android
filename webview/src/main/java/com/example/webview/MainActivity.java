@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 不管是否正在朗读TTS都被打断
         mTextToSpeech.stop();
         // 关闭，释放资源
-        mTextToSpeech.shutdown();
+        //mTextToSpeech.shutdown();
     }
 
     @Override
