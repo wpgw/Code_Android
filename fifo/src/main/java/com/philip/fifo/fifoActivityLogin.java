@@ -7,7 +7,9 @@ import android.os.Message;
 import android.os.StrictMode;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -49,6 +51,7 @@ public class fifoActivityLogin extends AppCompatActivity implements View.OnClick
             et_userid.setText("smmp.pwang");   ////////shortcut only for Test DB
             et_password.setText("77665544");
         }
+
         intent = new Intent(this, fifoActivity.class);
 
         count = 0;

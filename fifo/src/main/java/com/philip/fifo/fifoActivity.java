@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -105,6 +106,17 @@ public class fifoActivity extends AppCompatActivity {
         tv_info.setVisibility(View.INVISIBLE);
         tv_movedlist.setVisibility(View.GONE);tv_canlist.setVisibility(View.GONE);tv_cannotlist.setVisibility(View.GONE);
 
+        et_barcode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId== EditorInfo.IME_ACTION_DONE){
+                        System.out.println("准备执行 perform click");
+                        btn_confirm.performClick();      //这些代码不一定执行，要测试
+                }
+                return true;
+            }
+        });
+
         et_barcode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -117,21 +129,6 @@ public class fifoActivity extends AppCompatActivity {
             }
             @Override
             public void afterTextChanged(Editable s) {
-                //回车, 点击 btn_confirm按钮
-                String str=s.toString();
-                if(str.contains("\r")||str.contains("\n")){
-                    //et_location.setText("加了回车：");
-                    tv_info.setText("准备执行 perform click");
-                    btn_confirm.performClick();      //这些代码不一定执行，要测试
-                    et_barcode.setSelectAllOnFocus(true);   //// need to check the result
-                    et_barcode.clearFocus();
-                    et_barcode.selectAll();
-                    et_barcode.setFocusable(true);
-                    et_barcode.setFocusableInTouchMode(true);
-                    et_barcode.requestFocusFromTouch();
-                    et_barcode.requestFocus();   //获得焦点，这个没有用
-                    et_barcode.findFocus();
-                }
             }
         });
         radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -173,7 +170,7 @@ public class fifoActivity extends AppCompatActivity {
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if((v.getId()==R.id.btn_confirm)&&(rd_issue.isChecked())&&issueLock==0) {
+                if(rd_issue.isChecked()&&issueLock==0) {
                     //refine barcode
                     String scan_raw_data = et_barcode.getText().toString().toUpperCase();
                     barcode = Utils.refine_label(scan_raw_data);  //会自动转upper，无效返回 ""
@@ -194,7 +191,7 @@ public class fifoActivity extends AppCompatActivity {
                             sendMessage(MSG, e.getMessage());
                         }
                     }
-                }else if((v.getId()==R.id.btn_confirm)&&(rd_move.isChecked())&&issueLock==0){
+                }else if(rd_move.isChecked()&&issueLock==0){
                     String scan_raw_data=et_barcode.getText().toString().toUpperCase();
                     String location=Utils.check_if_location(scan_raw_data);  //自动判断 barcode栏里是否是location？
                     if(location.length()>2){    //如此时输入的是location
@@ -210,6 +207,7 @@ public class fifoActivity extends AppCompatActivity {
                             sendMessage(MSG,"移库程序不能用于组件发料！");
                             //变红色警告
                             sendMessage(alartColor,"");
+                            et_barcode.selectAll();  //选用文字，以便于下次输入
                             return;
                         }
                         if(barcode.length()>=9&&location.length()>2){
@@ -234,20 +232,14 @@ public class fifoActivity extends AppCompatActivity {
                         }
                     }
                 }
-                et_barcode.setSelectAllOnFocus(true);   //// need to check the result
-                et_barcode.clearFocus();
-                et_barcode.selectAll();
-                et_barcode.setFocusable(true);
-                et_barcode.setFocusableInTouchMode(true);
-                et_barcode.requestFocusFromTouch();
-                et_barcode.requestFocus();   //获得焦点，这个没有用
-                et_barcode.findFocus();
-//                Runtime runtime=Runtime.getRuntime();   //试着执行 arrow lift
-//                try {
-//                    Process proc=runtime.exec(String.valueOf(KeyEvent.KEYCODE_SYSTEM_NAVIGATION_LEFT));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+//                et_barcode.setSelectAllOnFocus(true);   //当重新选中时，文字全选
+//                et_barcode.clearFocus();
+                et_barcode.selectAll();                   //文字全选
+//                et_barcode.setFocusable(true);
+//                et_barcode.setFocusableInTouchMode(true);
+//                et_barcode.requestFocusFromTouch();
+//                et_barcode.requestFocus();
+//                et_barcode.findFocus();
             }
         });
         btn_scan.setOnClickListener(new View.OnClickListener() {

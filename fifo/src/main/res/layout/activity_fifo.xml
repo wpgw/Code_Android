@@ -55,14 +55,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginStart="40dp">
+            <!-- actionDone is to catch CR -->
             <EditText
                 android:id="@+id/et_barcode"
                 android:layout_width="172dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="0dp"
-                android:layout_marginLeft="40dp"
                 android:ems="10"
                 android:hint="请扫码..."
+                android:imeOptions="actionDone"
                 android:inputType="textPersonName"
                 android:nextFocusLeft="@+id/btn_confirm"
                 android:nextFocusRight="@+id/btn_confirm"
