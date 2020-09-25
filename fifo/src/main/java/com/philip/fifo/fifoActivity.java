@@ -152,13 +152,14 @@ public class fifoActivity extends AppCompatActivity {
                 et_barcode.setText("");et_location.setText("");tv_info.setText("");
                 et_barcode.requestFocus();et_barcode.requestFocusFromTouch();
                 sendMessage(normalColor,""); //信息栏显成白色
-                movedCount=0;issueLock=0;enableRadioGroup(radiogroup);tv_movedlist.setText("");tv_info.setText("");  //清空记数及info显示
+                movedCount=0;issueLock=0;enableRadioGroup(radiogroup);
+                tv_movedlist.setText("");tv_info.setText("");  //清空记数及info显示
+                tv_info.setVisibility(View.INVISIBLE);    //在内容有变时，会自动显出来
+                tv_movedlist.setVisibility(View.GONE);
                 clear_list_data_and_UI_display();  //每次变化，都初始化fifo数据与显示
                 //containerActive="否";  // 此时不能作任何操作 onhold/scrap
                 if (checkedId==R.id.rd_move){
                     //移库
-                    tv_info.setVisibility(View.INVISIBLE);    //在内容有变时，会自动显出来
-                    tv_movedlist.setVisibility(View.GONE);
                     tv_canlist.setVisibility(View.GONE);
                     tv_cannotlist.setVisibility(View.GONE);
                     tv_BarcodeInfo.setText("");tv_BarcodeInfo.setVisibility(View.GONE);  //不显示条码信息
@@ -181,10 +182,12 @@ public class fifoActivity extends AppCompatActivity {
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(rd_issue.isChecked()&&issueLock==0) {
+                barcode = et_barcode.getText().toString().trim().toUpperCase();  //扫描结果变大写
+                barcode=barcode.replace("\n","");
+                et_barcode.setText(barcode);  //多余，保险
+                if(rd_issue.isChecked()&&issueLock==0) {  //如果在发货界面
                     //refine barcode
-                    String scan_raw_data = et_barcode.getText().toString().toUpperCase();
-                    barcode = Utils.refine_label(scan_raw_data);  //会自动转upper，无效返回 ""
+                    //barcode = Utils.refine_label(barcode);  //会自动转upper，无效返回 ""
                     et_barcode.setText(barcode);    //Textbox display the refined barcode
                     if (barcode.length() >= 9){     //粗看一下合法性
                         try {
@@ -201,15 +204,19 @@ public class fifoActivity extends AppCompatActivity {
                             enableRadioGroup(radiogroup);
                             sendMessage(MSG, e.getMessage());
                         }
-                    }
-                }else if(rd_move.isChecked()&&issueLock==0){
-                    String scan_raw_data=et_barcode.getText().toString().toUpperCase();
-                    String location=Utils.check_if_location(scan_raw_data);  //自动判断 barcode栏里是否是location？
-                    if(location.length()>2){    //如此时输入的是location
-                        et_location.setText(location);
-                        et_barcode.setText("");
                     }else{
-                        barcode=Utils.refine_label(scan_raw_data);
+                        tv_info.setText("检查发现你的输入不正确！");
+                        sendMessage(alartColor,"");
+                    }
+                }else if(rd_move.isChecked()&&issueLock==0){  //如果在移库界面
+                    String location=Utils.check_if_location(barcode);  //自动判断 barcode栏里是否是location？
+                    if(location.length()>2){    //如barcode输入的是location
+                        et_location.setText(location);
+                        et_barcode.setText("");barcode="";
+                        say("库位！");
+                    }else{        //如果输入的不是location,是箱号
+                        //refine barcode  但以下注释掉了
+                        //barcode=Utils.refine_label(barcode);
                         et_barcode.setText(barcode);
                         location=et_location.getText().toString();  //也可能直接在et_location上输入
                         String temp_loc=location.toUpperCase();
@@ -221,7 +228,7 @@ public class fifoActivity extends AppCompatActivity {
                             et_barcode.selectAll();  //选用文字，以便于下次输入
                             return;
                         }
-                        if(barcode.length()>=9&&location.length()>2){
+                        if(barcode.length()>=9&&location.length()>2){  //库位与箱号有效
                             System.out.println("现在开始移库！");
                             try {
                                 if(issueLock==0){
@@ -240,6 +247,9 @@ public class fifoActivity extends AppCompatActivity {
                                 sendMessage(MSG,e.getMessage());
                             }
 
+                        }else{
+                            tv_info.setText("检查发现你的输入不正确！");
+                            sendMessage(alartColor,"");
                         }
                     }
                 }
@@ -277,7 +287,7 @@ public class fifoActivity extends AppCompatActivity {
             if (obj != null) {
                 //展示解码结果
                 System.out.println(obj);
-                vibrate();
+                //vibrate();
                 et_barcode.setText(obj.getOriginalValue()+"\n");  //加个换行，用来performclick()
             }
         }
@@ -338,7 +348,14 @@ public class fifoActivity extends AppCompatActivity {
                 }
                 issueLock=0;
                 sendMessage(enableRadioGroup,"");
-            } catch (Exception e) {
+            }catch(java.lang.NullPointerException e){
+                //显示出错信息
+                sendMessage(MSG,"查询结果为空，请检查输入数据！");
+                sendMessage(alartColor,"");
+                issueLock=0;   //开锁
+                sendMessage(enableRadioGroup,"");
+            }
+            catch (Exception e) {
                 //显示出错信息
                 sendMessage(MSG,e.getMessage());
                 sendMessage(alartColor,"");
@@ -367,12 +384,12 @@ public class fifoActivity extends AppCompatActivity {
                 canlist.remove(new Part_FIFO_Data(barcode,"","","",""));  //修改放在开头，以免引起显示时的 concurrent modify报错
                 //canlist.removeIf(s->s.serial.equals(barcode));   //java 1.8用法
                 System.out.println(barcode+"发料成功。");
-                sendMessage(MOVED,barcode+"发料成功。\n "+move_result.get("Message"));
+                sendMessage(MOVED,barcode+"发料成功。\n "+move_result.get("Message").trim());
                 ////变白色
                 sendMessage(normalColor,"");
                 sendMessage(refresh_FIFOlist_on_UI,"");  //刷新fifo list
             }else{
-                sendMessage(MSG,barcode+"发料不成功！\n "+move_result.get("Message"));
+                sendMessage(MSG,barcode+"发料不成功！\n "+move_result.get("Message").trim());
                 //变红色
                 sendMessage(alartColor,"");
             }
@@ -493,6 +510,7 @@ public class fifoActivity extends AppCompatActivity {
             }else if(msg.what==alartColor){
                 tv_info.setBackgroundColor(Color.RED);
                 et_barcode.setBackgroundColor(Color.RED);
+                vibrate();
             }else if(msg.what==normalColor){
                 tv_info.setBackgroundColor(Color.WHITE);
                 et_barcode.setBackgroundColor(Color.WHITE);
