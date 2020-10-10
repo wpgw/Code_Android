@@ -74,7 +74,7 @@ public class fifoActivityLogin extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.button && count < 2) {
+        if (v.getId() == R.id.button && count < 1) {   //count起锁定的作用
             vibrate();
 
             // 给 userid 自动加上smmp

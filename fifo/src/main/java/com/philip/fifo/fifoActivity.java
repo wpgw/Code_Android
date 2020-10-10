@@ -48,13 +48,13 @@ public class fifoActivity extends AppCompatActivity {
     final int MSG=1, showBarcode_info =2, refresh_FIFOlist_on_UI =3,alartColor=4,normalColor=5,MOVED=6,enableRadioGroup=7;
     int scanRequestCode=1016;
     //init Views
-    TextView tv_info,tv_BarcodeInfo,tv_canlist,tv_cannotlist,tv_movedlist;  //记录移动成功的条码
+    TextView tv_info,tv_BarcodeInfo,tv_canlist,tv_cannotlist,tv_movedlist;  //tv_movedlist记录移动成功的条码
     EditText et_barcode,et_location;
     Button btn_confirm;
     ImageButton btn_scan;
     RadioButton rd_move,rd_issue;
     RadioGroup radiogroup;
-    int movedCount; //用以记录扫描成功的记数
+    int movedCount; //用以记录业务操作成功的记数
     int issueLock;  //用以锁定发货，以防一个未完，就连击另一个 0：开放   1：加锁
 
     String barcode;   //用于存当前处理的条码号，传给thread
@@ -69,6 +69,8 @@ public class fifoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fifo);
 
+        //还需加上权限代码
+        
         //disable the strict polity that do not allows main thread network access
 //        if (android.os.Build.VERSION.SDK_INT > 9) {
 //            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -274,7 +276,7 @@ public class fifoActivity extends AppCompatActivity {
         });
     }
 
-    @Override
+    @Override   //扫描回调
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         et_barcode.setText("");
@@ -306,10 +308,9 @@ public class fifoActivity extends AppCompatActivity {
                 //如果Barcode在canlist中，直接发货
                 if(canlist.contains(scandata)){
                     FIFO_issue(barcode);
-                    issueLock=0;
-                    sendMessage(enableRadioGroup,"");
                     return;    //终止运行
                 }else if(cannotlist.contains(scandata)){
+                    //此时查询 fifo报表
                     String txtPartNo=cannotlist.get(0).part_no;
                     //先清理canList, cannotList
                     clear_list_data_and_UI_display();
@@ -318,10 +319,8 @@ public class fifoActivity extends AppCompatActivity {
                 }else if(alllist.contains(scandata)){     //即不在canlist,也不在cannotlist，但在alllist中的
                     sendMessage(MSG,"你已发货过"+barcode);
                     sendMessage(alartColor,"");
-                    issueLock=0;
-                    sendMessage(enableRadioGroup,"");
                     return;   //终止运行
-                }else {  //如果Barcode不在canlist和cannotlist中，则需全面检查
+                }else {  //如果Barcode不在以上所有的list中，则需全面检查
                     sendMessage(MSG, "1,正在查条码......" + barcode);
                     String url = pre_url + "/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=";
                     Map<String, String> barcodeInfo = Utils.show_container_info(cookies, url, barcode);
@@ -346,22 +345,22 @@ public class fifoActivity extends AppCompatActivity {
                         sendMessage(alartColor,"");
                     }
                 }
-                issueLock=0;
-                sendMessage(enableRadioGroup,"");
             }catch(java.lang.NullPointerException e){
                 //显示出错信息
                 sendMessage(MSG,"查询结果为空，请检查输入数据！");
                 sendMessage(alartColor,"");
-                issueLock=0;   //开锁
-                sendMessage(enableRadioGroup,"");
             }
             catch (Exception e) {
                 //显示出错信息
                 sendMessage(MSG,e.getMessage());
                 sendMessage(alartColor,"");
                 e.printStackTrace();
+            }finally{
                 issueLock=0;   //开锁
                 sendMessage(enableRadioGroup,"");
+//                1、finally中的代码总会被执行。
+//                2、当try、catch中有return时，也会执行finally。return的时候，要注意返回值的类型，是否受到finally中代码的影响。
+//                3、finally中有return时，会直接在finally中退出，导致try、catch中的return失效
             }
         }
     }
@@ -376,6 +375,7 @@ public class fifoActivity extends AppCompatActivity {
 
     void FIFO_issue(String barcode) throws Exception{
         System.out.println("--现在FIFO发货 barcode"+barcode);
+        sendMessage(MSG,"--现在FIFO发货中..."+barcode);
         HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,"ASSY1_",barcode);  //移到 Assy1_
         if(move_result!=null){  //分析move container 返回的结果
             if(move_result.get("IsValid")=="true"){
@@ -402,7 +402,8 @@ public class fifoActivity extends AppCompatActivity {
 
     void container_move(String barcode,String location) throws Exception{
         System.out.println("--现在移库 barcode"+barcode);
-        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,location,barcode);  //移到 Assy1_
+        sendMessage(MSG,"--现在移库中..."+barcode);
+        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,location,barcode);
         if(move_result!=null){  //分析move container 返回的结果
             if(move_result.get("IsValid")=="true"){
                 //每移库成功一下，删去一个move task list记录
@@ -412,12 +413,12 @@ public class fifoActivity extends AppCompatActivity {
                 sendMessage(normalColor,"");
                 //sendMessage(refresh_FIFOlist_on_UI,"");  //刷新move task list
             }else{
-                sendMessage(MSG,barcode+"发料不成功！\n "+move_result.get("Message"));
+                sendMessage(MSG,barcode+"移库不成功！\n "+move_result.get("Message"));
                 //变红色
                 sendMessage(alartColor,"");
             }
         }else{ //如 move container 返回数据为 null
-            sendMessage(MSG,barcode+"发料不成功！ 请检查原因！");
+            sendMessage(MSG,barcode+"移库不成功！ 请检查原因！");
             /////变红色
             sendMessage(alartColor,"");
         }
@@ -484,7 +485,7 @@ public class fifoActivity extends AppCompatActivity {
                 }
             }
         }
-        sendMessage(MSG,"已读到fifo Report");
+        sendMessage(MSG,"2,已获取FIFO Report，请等待......");
         sendMessage(refresh_FIFOlist_on_UI,"");
     }
     //主线程处理消息
@@ -660,6 +661,5 @@ public class fifoActivity extends AppCompatActivity {
         System.out.println(array);
         System.out.println(array.remove(new Part_FIFO_Data("smmP123456","2","","","")));
         System.out.println(array);
-
     }
 }
