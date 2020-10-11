@@ -25,6 +25,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.huawei.hms.mlsdk.asr.MLAsrConstants;
+import com.huawei.hms.mlsdk.asr.MLAsrListener;
+import com.huawei.hms.mlsdk.asr.MLAsrRecognizer;
+import com.huawei.hms.mlsdk.common.MLApplication;
 import com.philip.comm.Utils;
 
 import org.jsoup.Connection;
@@ -50,7 +54,7 @@ public class fifoActivity extends AppCompatActivity {
     //init Views
     TextView tv_info,tv_BarcodeInfo,tv_canlist,tv_cannotlist,tv_movedlist;  //tv_movedlist记录移动成功的条码
     EditText et_barcode,et_location;
-    Button btn_confirm;
+    Button btn_confirm,btn_speechRec;
     ImageButton btn_scan;
     RadioButton rd_move,rd_issue;
     RadioGroup radiogroup;
@@ -63,11 +67,20 @@ public class fifoActivity extends AppCompatActivity {
     ArrayList<Part_FIFO_Data> cannotlist=new ArrayList<Part_FIFO_Data>();  //fifo允许的物料及不允许的物料
 
     private TextToSpeech textToSpeech = null;//创建自带语音对象
+    // 华为语音识别器
+    MLAsrRecognizer mSpeechRecognizer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fifo);
+
+        //HMS 云端鉴权信息: 用于实时语音识别
+        MLApplication.getInstance().setApiKey("CgB6e3x98+cyGVKCai8OVbmAc91GfT4gOjKFA8VeKzSms+JC54jSknujW1146rx7dqd8hVOf1HNOeKpI6zWfy+wK");
+        // 华为语音识别器
+        mSpeechRecognizer = MLAsrRecognizer.createAsrRecognizer(this);
+        //将新建的结果监听器回调与语音识别器绑定
+        mSpeechRecognizer.setAsrListener(new SpeechRecognitionListener());
 
         //还需加上权限代码
         
@@ -92,7 +105,7 @@ public class fifoActivity extends AppCompatActivity {
 
     private void init(){
         radiogroup=findViewById(R.id.radioGroup);rd_move=findViewById(R.id.rd_move);rd_issue=findViewById(R.id.rd_issue);
-        et_barcode=findViewById(R.id.et_barcode);btn_confirm=findViewById(R.id.btn_confirm);btn_scan=findViewById(R.id.btn_scan);
+        et_barcode=findViewById(R.id.et_barcode);btn_confirm=findViewById(R.id.btn_confirm);btn_speechRec=findViewById(R.id.btn_speechRec);btn_scan=findViewById(R.id.btn_scan);
         et_location=findViewById(R.id.et_location);tv_BarcodeInfo=findViewById(R.id.tvBarcodeInfo);
         tv_info=findViewById(R.id.tvInfo);
         tv_movedlist=findViewById(R.id.tv_movedList);tv_canlist=findViewById(R.id.tv_canList);tv_cannotlist=findViewById(R.id.tv_cannotList);
@@ -103,7 +116,7 @@ public class fifoActivity extends AppCompatActivity {
         et_barcode.setSelectAllOnFocus(true);  //et_barcode获得焦点时全选
         et_location.setSelectAllOnFocus(true);  //et_barcode获得焦点时全选
         //开始时不显示有关控件
-        et_barcode.setVisibility(View.GONE);btn_confirm.setVisibility(View.GONE);btn_scan.setVisibility(View.GONE);
+        et_barcode.setVisibility(View.GONE);btn_confirm.setVisibility(View.GONE);btn_speechRec.setVisibility(View.GONE);btn_scan.setVisibility(View.GONE);
         et_location.setVisibility(View.GONE);tv_BarcodeInfo.setVisibility(View.GONE);
         tv_info.setVisibility(View.INVISIBLE);
         tv_movedlist.setVisibility(View.GONE);tv_canlist.setVisibility(View.GONE);tv_cannotlist.setVisibility(View.GONE);
@@ -147,7 +160,7 @@ public class fifoActivity extends AppCompatActivity {
         radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                et_barcode.setVisibility(View.VISIBLE);btn_confirm.setVisibility(View.VISIBLE);btn_scan.setVisibility(View.VISIBLE);
+                et_barcode.setVisibility(View.VISIBLE);btn_confirm.setVisibility(View.VISIBLE);btn_speechRec.setVisibility(View.VISIBLE);btn_scan.setVisibility(View.VISIBLE);
                 et_location.setVisibility(View.VISIBLE);
                 //tv_info.setVisibility(View.VISIBLE);
                 //clear barcode text
@@ -274,6 +287,25 @@ public class fifoActivity extends AppCompatActivity {
                 startActivityForResult(intent,scanRequestCode);
             }
         });
+        btn_speechRec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 新建Intent，用于配置语音识别参数。
+                Intent mSpeechRecognizerIntent = new Intent(MLAsrConstants.ACTION_HMS_ASR_SPEECH);
+                // 通过Intent进行语音识别参数设置。
+                mSpeechRecognizerIntent
+                        // 设置识别语言为英语，若不设置，则默认识别英语。支持设置："zh-CN":中文；"en-US":英语；"fr-FR":法语；"es-ES":西班牙语；"de-DE":德语；"it-IT":意大利语。
+                        .putExtra(MLAsrConstants.LANGUAGE, "en-US")
+                        // 设置识别文本返回模式为边识别边出字，若不设置，默认为边识别边出字。支持设置：
+                        // MLAsrConstants.FEATURE_WORDFLUX：通过onRecognizingResults接口，识别同时返回文字；
+                        // MLAsrConstants.FEATURE_ALLINONE：识别完成后通过onResults接口返回文字。
+                        .putExtra(MLAsrConstants.FEATURE, MLAsrConstants.FEATURE_WORDFLUX);
+                // 启动语音识别。
+                mSpeechRecognizer.startRecognizing(mSpeechRecognizerIntent);
+
+
+            }
+        });
     }
 
     @Override   //扫描回调
@@ -362,6 +394,45 @@ public class fifoActivity extends AppCompatActivity {
 //                2、当try、catch中有return时，也会执行finally。return的时候，要注意返回值的类型，是否受到finally中代码的影响。
 //                3、finally中有return时，会直接在finally中退出，导致try、catch中的return失效
             }
+        }
+    }
+
+    // 回调实现MLAsrListener接口，实现接口中的方法。
+    protected class SpeechRecognitionListener implements MLAsrListener {
+        @Override
+        public void onStartListening() {
+            // 录音器开始接收声音。
+        }
+
+        @Override
+        public void onStartingOfSpeech() {
+            // 用户开始讲话，即语音识别器检测到用户开始讲话。
+        }
+
+        @Override
+        public void onVoiceDataReceived(byte[] data, float energy, Bundle bundle) {
+            // 返回给用户原始的PCM音频流和音频能量。
+        }
+
+        @Override
+        public void onState(int i, Bundle bundle) {
+            // 通知应用状态发生改变。
+        }
+
+        @Override
+        public void onRecognizingResults(Bundle partialResults) {
+            // 从MLAsrRecognizer接收到持续语音识别的文本。
+        }
+
+        @Override
+        public void onResults(Bundle results) {
+            // 语音识别的文本数据。
+        }
+
+        @Override
+        public void onError(int error, String errorMessage) {
+            // 识别发生错误后调用该接口。
+            et_barcode.setText(error+":"+errorMessage);
         }
     }
 
@@ -553,6 +624,9 @@ public class fifoActivity extends AppCompatActivity {
             textToSpeech.stop();
             textToSpeech.shutdown();
             textToSpeech = null;
+        }
+        if (mSpeechRecognizer!= null) {
+            mSpeechRecognizer.destroy();
         }
         super.onDestroy();
     }

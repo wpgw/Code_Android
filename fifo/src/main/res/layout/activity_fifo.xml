@@ -58,7 +58,7 @@
             <!-- actionDone is to catch CR -->
             <EditText
                 android:id="@+id/et_barcode"
-                android:layout_width="172dp"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="0dp"
                 android:ems="10"
@@ -82,11 +82,18 @@
                 android:nextFocusDown="@+id/et_barcode"
                 android:text="确认" />
 
+            <Button
+                android:id="@+id/btn_speechRec"
+                android:layout_width="55dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="语音" />
+
             <ImageButton
                 android:id="@+id/btn_scan"
-                android:layout_width="50dp"
+                android:layout_width="55dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:scaleType="centerCrop"
                 android:background="@drawable/scan" />
 
