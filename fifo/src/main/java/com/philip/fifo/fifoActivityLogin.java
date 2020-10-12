@@ -35,6 +35,9 @@ public class fifoActivityLogin extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        //找手机型号 华为可能：Huawei  HUAWEI  HONOR
+        String brand = android.os.Build.BRAND;
+        System.out.println(brand);
 
         //plex point to Test DB or Production DB
         host = "test.plexus-online.com";

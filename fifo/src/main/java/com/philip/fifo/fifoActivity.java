@@ -25,6 +25,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.huawei.hms.mlplugin.asr.MLAsrCaptureActivity;
+import com.huawei.hms.mlplugin.asr.MLAsrCaptureConstants;
 import com.huawei.hms.mlsdk.asr.MLAsrConstants;
 import com.huawei.hms.mlsdk.asr.MLAsrListener;
 import com.huawei.hms.mlsdk.asr.MLAsrRecognizer;
@@ -50,7 +52,7 @@ public class fifoActivity extends AppCompatActivity {
     HashMap<String,String> cookies=new HashMap<>();
     String pre_url,Session_Key,host,user;
     final int MSG=1, showBarcode_info =2, refresh_FIFOlist_on_UI =3,alartColor=4,normalColor=5,MOVED=6,enableRadioGroup=7;
-    int scanRequestCode=1016;
+    int scanRequestCode=1016,mSpeechRecognizeCode=1010;
     //init Views
     TextView tv_info,tv_BarcodeInfo,tv_canlist,tv_cannotlist,tv_movedlist;  //tv_movedlist记录移动成功的条码
     EditText et_barcode,et_location;
@@ -67,8 +69,6 @@ public class fifoActivity extends AppCompatActivity {
     ArrayList<Part_FIFO_Data> cannotlist=new ArrayList<Part_FIFO_Data>();  //fifo允许的物料及不允许的物料
 
     private TextToSpeech textToSpeech = null;//创建自带语音对象
-    // 华为语音识别器
-    MLAsrRecognizer mSpeechRecognizer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +77,6 @@ public class fifoActivity extends AppCompatActivity {
 
         //HMS 云端鉴权信息: 用于实时语音识别
         MLApplication.getInstance().setApiKey("CgB6e3x98+cyGVKCai8OVbmAc91GfT4gOjKFA8VeKzSms+JC54jSknujW1146rx7dqd8hVOf1HNOeKpI6zWfy+wK");
-        // 华为语音识别器
-        mSpeechRecognizer = MLAsrRecognizer.createAsrRecognizer(this);
-        //将新建的结果监听器回调与语音识别器绑定
-        mSpeechRecognizer.setAsrListener(new SpeechRecognitionListener());
 
         //还需加上权限代码
         
@@ -290,20 +286,14 @@ public class fifoActivity extends AppCompatActivity {
         btn_speechRec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 新建Intent，用于配置语音识别参数。
-                Intent mSpeechRecognizerIntent = new Intent(MLAsrConstants.ACTION_HMS_ASR_SPEECH);
-                // 通过Intent进行语音识别参数设置。
-                mSpeechRecognizerIntent
+                vibrate();
+                // 通过intent进行识别设置。
+                Intent intent = new Intent(fifoActivity.this, MLAsrCaptureActivity.class)
                         // 设置识别语言为英语，若不设置，则默认识别英语。支持设置："zh-CN":中文；"en-US":英语；"fr-FR":法语；"es-ES":西班牙语；"de-DE":德语；"it-IT":意大利语。
-                        .putExtra(MLAsrConstants.LANGUAGE, "en-US")
-                        // 设置识别文本返回模式为边识别边出字，若不设置，默认为边识别边出字。支持设置：
-                        // MLAsrConstants.FEATURE_WORDFLUX：通过onRecognizingResults接口，识别同时返回文字；
-                        // MLAsrConstants.FEATURE_ALLINONE：识别完成后通过onResults接口返回文字。
-                        .putExtra(MLAsrConstants.FEATURE, MLAsrConstants.FEATURE_WORDFLUX);
-                // 启动语音识别。
-                mSpeechRecognizer.startRecognizing(mSpeechRecognizerIntent);
-
-
+                        .putExtra(MLAsrCaptureConstants.LANGUAGE, "zh-CN")
+                        // 设置拾音界面是否显示文字，MLAsrCaptureConstants.FEATURE_ALLINONE为不显示，MLAsrCaptureConstants.FEATURE_WORDFLUX为显示。
+                        .putExtra(MLAsrCaptureConstants.FEATURE, MLAsrCaptureConstants.FEATURE_WORDFLUX);
+                startActivityForResult(intent,mSpeechRecognizeCode);
             }
         });
     }
@@ -311,18 +301,68 @@ public class fifoActivity extends AppCompatActivity {
     @Override   //扫描回调
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        et_barcode.setText("");
-        if (resultCode != RESULT_OK || data == null) {
-            System.out.println("失败码："+resultCode);
-            return;
-        }
+        et_barcode.setText("");String text="";
         if (requestCode == scanRequestCode) {
+            if (resultCode != RESULT_OK || data == null) {
+                System.out.println("失败码："+resultCode);
+                return;
+            }
             HmsScan obj = data.getParcelableExtra(DefinedActivity.SCAN_RESULT);
             if (obj != null) {
                 //展示解码结果
                 System.out.println(obj);
                 //vibrate();
                 et_barcode.setText(obj.getOriginalValue()+"\n");  //加个换行，用来performclick()
+            }
+            return;
+        }
+        if(requestCode==mSpeechRecognizeCode){
+            switch (resultCode) {
+                // 返回值为MLAsrCaptureConstants.ASR_SUCCESS表示识别成功。
+                case MLAsrCaptureConstants.ASR_SUCCESS:
+                    if (data != null) {
+                        Bundle bundle = data.getExtras();
+                        // 获取语音识别得到的文本信息。
+                        if (bundle != null && bundle.containsKey(MLAsrCaptureConstants.ASR_RESULT)) {
+                            text=bundle.getString(MLAsrCaptureConstants.ASR_RESULT);
+                            // 识别得到的文本信息处理。
+                        }
+                        if (text != null && !"".equals(text)) {
+                            et_barcode.setText("SMMP"+text);
+                        }
+                    }
+                    break;
+                // 返回值为MLAsrCaptureConstants.ASR_FAILURE表示识别失败。
+                case MLAsrCaptureConstants.ASR_FAILURE:
+                    // 识别失败处理。
+                    if(data != null) {
+                        Bundle bundle = data.getExtras();
+                        // 判断是否包含错误码。
+                        if(bundle != null && bundle.containsKey(MLAsrCaptureConstants.ASR_ERROR_CODE)) {
+                            int errorCode = bundle.getInt(MLAsrCaptureConstants.ASR_ERROR_CODE);
+                            // 对错误码进行处理。
+                            sendMessage(MSG,errorCode);
+                            if(errorCode==11203){
+                                Toast.makeText(fifoActivity.this,"本语音功能只能用于华为手机！",Toast.LENGTH_LONG).show();
+                                btn_speechRec.setVisibility(View.GONE);
+                            }
+                        }
+                        // 判断是否包含错误信息。
+                        if(bundle != null && bundle.containsKey(MLAsrCaptureConstants.ASR_ERROR_MESSAGE)){
+                            String errorMsg = bundle.getString(MLAsrCaptureConstants.ASR_ERROR_MESSAGE);
+                            // 对错误信息进行处理。
+                            String temp=et_barcode.getText().toString();
+                            sendMessage(MSG,temp+" 错误: "+errorMsg+" ! ");
+                        }
+                        //判断是否包含子错误码。
+                        if(bundle != null && bundle.containsKey(MLAsrCaptureConstants.ASR_SUB_ERROR_CODE)) {
+                            int subErrorCode = bundle.getInt(MLAsrCaptureConstants.ASR_SUB_ERROR_CODE);
+                            // 对子错误码进行处理。
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -394,45 +434,6 @@ public class fifoActivity extends AppCompatActivity {
 //                2、当try、catch中有return时，也会执行finally。return的时候，要注意返回值的类型，是否受到finally中代码的影响。
 //                3、finally中有return时，会直接在finally中退出，导致try、catch中的return失效
             }
-        }
-    }
-
-    // 回调实现MLAsrListener接口，实现接口中的方法。
-    protected class SpeechRecognitionListener implements MLAsrListener {
-        @Override
-        public void onStartListening() {
-            // 录音器开始接收声音。
-        }
-
-        @Override
-        public void onStartingOfSpeech() {
-            // 用户开始讲话，即语音识别器检测到用户开始讲话。
-        }
-
-        @Override
-        public void onVoiceDataReceived(byte[] data, float energy, Bundle bundle) {
-            // 返回给用户原始的PCM音频流和音频能量。
-        }
-
-        @Override
-        public void onState(int i, Bundle bundle) {
-            // 通知应用状态发生改变。
-        }
-
-        @Override
-        public void onRecognizingResults(Bundle partialResults) {
-            // 从MLAsrRecognizer接收到持续语音识别的文本。
-        }
-
-        @Override
-        public void onResults(Bundle results) {
-            // 语音识别的文本数据。
-        }
-
-        @Override
-        public void onError(int error, String errorMessage) {
-            // 识别发生错误后调用该接口。
-            et_barcode.setText(error+":"+errorMessage);
         }
     }
 
@@ -624,9 +625,6 @@ public class fifoActivity extends AppCompatActivity {
             textToSpeech.stop();
             textToSpeech.shutdown();
             textToSpeech = null;
-        }
-        if (mSpeechRecognizer!= null) {
-            mSpeechRecognizer.destroy();
         }
         super.onDestroy();
     }
