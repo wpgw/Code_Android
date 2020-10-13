@@ -12,6 +12,7 @@ import android.os.StrictMode;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
@@ -58,7 +59,7 @@ public class fifoActivity extends AppCompatActivity {
     EditText et_barcode,et_location;
     Button btn_confirm,btn_speechRec;
     ImageButton btn_scan;
-    RadioButton rd_move,rd_issue;
+    RadioButton rd_move,rd_issue,rd_report;
     RadioGroup radiogroup;
     int movedCount; //用以记录业务操作成功的记数
     int issueLock;  //用以锁定发货，以防一个未完，就连击另一个 0：开放   1：加锁
@@ -100,7 +101,7 @@ public class fifoActivity extends AppCompatActivity {
     }
 
     private void init(){
-        radiogroup=findViewById(R.id.radioGroup);rd_move=findViewById(R.id.rd_move);rd_issue=findViewById(R.id.rd_issue);
+        radiogroup=findViewById(R.id.radioGroup);rd_move=findViewById(R.id.rd_move);rd_issue=findViewById(R.id.rd_issue);rd_report=findViewById(R.id.rd_report);
         et_barcode=findViewById(R.id.et_barcode);btn_confirm=findViewById(R.id.btn_confirm);btn_speechRec=findViewById(R.id.btn_speechRec);btn_scan=findViewById(R.id.btn_scan);
         et_location=findViewById(R.id.et_location);tv_BarcodeInfo=findViewById(R.id.tvBarcodeInfo);
         tv_info=findViewById(R.id.tvInfo);
@@ -128,7 +129,6 @@ public class fifoActivity extends AppCompatActivity {
                 }else if((event!=null)&&(event.getKeyCode()==KeyEvent.KEYCODE_ENTER)&&event.getAction()==KeyEvent.ACTION_DOWN){
                     System.out.println("准备执行 扫描枪 click2");
                     btn_confirm.performClick();
-
                     return true;  // 消费 CR
                 }
                 return false;
@@ -169,6 +169,7 @@ public class fifoActivity extends AppCompatActivity {
                 tv_movedlist.setVisibility(View.GONE);
                 clear_list_data_and_UI_display();  //每次变化，都初始化fifo数据与显示
                 //containerActive="否";  // 此时不能作任何操作 onhold/scrap
+                SpannableString s=new SpannableString("请扫码......");
                 if (checkedId==R.id.rd_move){
                     //移库
                     tv_canlist.setVisibility(View.GONE);
@@ -178,7 +179,8 @@ public class fifoActivity extends AppCompatActivity {
                     //et_location.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
                     //et_location.setEnabled(true);
                     //tv_info.setPadding(dip2px(5),0,0,0);
-                }else if(checkedId==R.id.rd_issue){  //如 FIFO发货
+                    s = new SpannableString("扫库位或箱号......");     //这里输入自己想要的提示文字
+                }else if(checkedId==R.id.rd_issue||checkedId==R.id.rd_report){  //如 FIFO发货 或查 FIFO报表
                     //发货
                     tv_canlist.setVisibility(View.VISIBLE);
                     tv_cannotlist.setVisibility(View.VISIBLE);
@@ -186,7 +188,14 @@ public class fifoActivity extends AppCompatActivity {
                     et_location.setText("");et_location.setVisibility(View.GONE);        //不显 location
                     //et_location.setEnabled(false);
                     //tv_info.setPadding(dip2px(5),dip2px(20),0,0);
+                    if(checkedId==R.id.rd_report){
+                        s = new SpannableString("输料号 如5%742 ");  //这里输入自己想要的提示文字
+                        et_barcode.setHint(s);
+                    }else{
+                        s = new SpannableString("请扫码......");      //这里输入自己想要的提示文字
+                    }
                 }
+                et_barcode.setHint(s);
             }
         });
 
@@ -250,18 +259,46 @@ public class fifoActivity extends AppCompatActivity {
                                     issueLock=0;     //开锁
                                     enableRadioGroup(radiogroup);
                                 }
-
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 issueLock=0;
                                 enableRadioGroup(radiogroup);
                                 sendMessage(MSG,e.getMessage());
                             }
-
                         }else{
                             tv_info.setText("检查发现你的输入不正确！");
                             sendMessage(alartColor,"");
                         }
+                    }
+                }else if(rd_report.isChecked()&&issueLock==0){  //如果在查报表界面
+                    tv_info.setText("");
+                    if(barcode.length()>=5){   //如：光输入5%是不行的，不够长
+                        try{
+                            issueLock=1;
+                            disableRadioGroup(radiogroup);
+                            say("查库位");
+                            //先清理canList, cannotList
+                            clear_list_data_and_UI_display();
+                            sendMessage(MSG,"2,读取FIFO数据中......");
+                            get_fifo_list(barcode);   //此时 barcode中放的是物料号
+                            if(canlist.size()>0){
+                                //此时查询 fifo报表
+                                String txtPartNo=canlist.get(0).part_no;
+                                String location=canlist.get(0).location;
+                                tv_BarcodeInfo.setText(txtPartNo+" 在库位 "+location);
+                            }
+                        }
+                        catch (Exception e) {
+                            //显示出错信息
+                            sendMessage(MSG,e.getMessage());
+                            sendMessage(alartColor,"");
+                            e.printStackTrace();
+                        }finally {
+                            issueLock=0;     //开锁
+                            enableRadioGroup(radiogroup);
+                        }
+                    }else{
+                        tv_info.setText("输入不够长！");
                     }
                 }
 //                et_barcode.setSelectAllOnFocus(true);   //当重新选中时，文字全选
@@ -437,7 +474,7 @@ public class fifoActivity extends AppCompatActivity {
         }
     }
 
-    void get_fifo_list(String txtPartNo) throws Exception{
+    protected void get_fifo_list(String txtPartNo) throws Exception{
         //读取FIFO数据中......
         String url=pre_url+"/Rendering_Engine/default.aspx?Request=Show&RequestData=SourceType(Screen)SourceKey(10617)";
         clear_list_data_and_UI_display(); //清空数据及显示，因后边的查询可能会出错
@@ -524,9 +561,12 @@ public class fifoActivity extends AppCompatActivity {
             Elements table_rows=element_table.getElementsByTag("tbody").first().getElementsByTag("tr");
             //System.out.println("222222__________\n"+element_table.outerHtml());
 
+            //刷新一下part_no
+            //part_no=table_rows.first().getElementsByTag("td").get(3).getElementsByTag("span").first().html();
             ArrayList<Part_FIFO_Data> allList=new ArrayList<Part_FIFO_Data>();
             for (Element row : table_rows) {
                 Elements columns = row.getElementsByTag("td");
+                part_no=columns.get(0).getElementsByTag("span").first().html();
                 String serial=columns.get(2).getElementsByTag("span").first().html();
                 String QTY=columns.get(4).getElementsByTag("span").first().html();
                 String location=columns.get(5).getElementsByTag("span").first().html();

@@ -22,12 +22,18 @@
             android:layout_marginStart="40dp"
             android:layout_marginTop="8dp"
             android:text="移 库" />
-
+        <RadioButton
+            android:id="@+id/rd_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="8dp"
+            android:text="查 表 " />
         <RadioButton
             android:id="@+id/rd_issue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="80dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="8dp"
             android:text="FIFO发料 " />
     </RadioGroup>
@@ -58,7 +64,7 @@
             <!-- actionDone is to catch CR -->
             <EditText
                 android:id="@+id/et_barcode"
-                android:layout_width="140dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="0dp"
                 android:ems="10"
