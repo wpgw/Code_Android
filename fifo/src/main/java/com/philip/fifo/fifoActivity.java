@@ -365,7 +365,7 @@ public class fifoActivity extends AppCompatActivity {
                             text=bundle.getString(MLAsrCaptureConstants.ASR_RESULT);
                             // 识别得到的文本信息处理。
                         }
-                        if (text != null && !"".equals(text)) {
+                        if (text != null && !"".equals(text)&&!rd_report.isChecked()) {  //在查报表界面不加前缀smmp
                             et_barcode.setText("SMMP"+text);
                         }
                     }
