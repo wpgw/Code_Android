@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_marginTop="8dp"
-            android:text="查 表 " />
+            android:text="找物料 " />
         <RadioButton
             android:id="@+id/rd_issue"
             android:layout_width="wrap_content"

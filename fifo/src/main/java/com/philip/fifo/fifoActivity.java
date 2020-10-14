@@ -169,7 +169,7 @@ public class fifoActivity extends AppCompatActivity {
                 tv_movedlist.setVisibility(View.GONE);
                 clear_list_data_and_UI_display();  //每次变化，都初始化fifo数据与显示
                 //containerActive="否";  // 此时不能作任何操作 onhold/scrap
-                SpannableString s=new SpannableString("请扫码......");
+                SpannableString s=new SpannableString("请扫码...发料");
                 if (checkedId==R.id.rd_move){
                     //移库
                     tv_canlist.setVisibility(View.GONE);
@@ -191,8 +191,9 @@ public class fifoActivity extends AppCompatActivity {
                     if(checkedId==R.id.rd_report){
                         s = new SpannableString("输料号 如5%742 ");  //这里输入自己想要的提示文字
                         et_barcode.setHint(s);
-                    }else{
-                        s = new SpannableString("请扫码......");      //这里输入自己想要的提示文字
+                        et_barcode.setText("5%");
+                        et_barcode.setSelection(1);
+                        btn_scan.setVisibility(View.GONE);
                     }
                 }
                 et_barcode.setHint(s);
@@ -276,7 +277,7 @@ public class fifoActivity extends AppCompatActivity {
                         try{
                             issueLock=1;
                             disableRadioGroup(radiogroup);
-                            say("查库位");
+                            say("查库位！");
                             //先清理canList, cannotList
                             clear_list_data_and_UI_display();
                             sendMessage(MSG,"2,读取FIFO数据中......");
@@ -485,7 +486,12 @@ public class fifoActivity extends AppCompatActivity {
     void FIFO_issue(String barcode) throws Exception{
         System.out.println("--现在FIFO发货 barcode"+barcode);
         sendMessage(MSG,"--现在FIFO发货中..."+barcode);
-        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,"ASSY1_",barcode);  //移到 Assy1_
+        //以下变化组件发货库存, 以此标记是否此程序的操作
+        String locationTemp="ASsy1_";
+        if(movedCount%2==0){
+            locationTemp="AsSy1";
+        }
+        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,locationTemp,barcode);  //移到 Assy1_
         if(move_result!=null){  //分析move container 返回的结果
             if(move_result.get("IsValid")=="true"){
                 System.out.println("从canList中移除"+barcode);
