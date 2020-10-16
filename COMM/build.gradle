@@ -33,4 +33,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.12.1'
     implementation 'com.alibaba:fastjson:1.2.70'
 
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+
+
 }

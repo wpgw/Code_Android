@@ -19,6 +19,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -30,7 +31,9 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import com.philip.comm.myQQmail;
 
 public class PlexInterActivity2 extends AppCompatActivity {
     WebView mWebview;
@@ -41,6 +44,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
 
     String session_ID = "";
     HashMap cookies;
+    ArrayList<String> noScanList;  //保存所发现的未扫描的条码，用以判断是否新条码号，以免重复发出告状邮件
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,6 +218,21 @@ public class PlexInterActivity2 extends AppCompatActivity {
                     input_table.removeAttr("style");  //先去掉style，再变红
                     input_table.attr("style","background-color:red");
                     ele_containers.attr("style","background-color:red");
+                    String barcode=columns.get(1).text();
+                    //如果新发现未扫描的，发邮件告状
+                    if(!noScanList.contains(barcode)){
+                        try{
+                            noScanList.add(barcode);
+                            //这里有问题，这时会发出好多重复的邮件，需改
+                            //String receiptions="gsun@meridian-mag.com,yjiang@meridian-mag.com,yzhang2@meridian-mag.com,pwang@meridian-mag.com";
+                            String receiptions="pwang@meridian-mag.com";
+                            myQQmail myQQmail=new myQQmail(receiptions,"发现未扫码:"+barcode,"\n  条码号："+barcode);   //发现条码号
+                            myQQmail.send();
+                            Toast.makeText(PlexInterActivity2.this,"已发出告警邮件！"+barcode,Toast.LENGTH_LONG);
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    }
                 }else if(columns.get(1).text().contains("Totals")){  //在底行第二列加上总箱数
                     columns.get(1).text("Totals: "+count);
                 }
