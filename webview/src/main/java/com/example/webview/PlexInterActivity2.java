@@ -31,9 +31,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import com.philip.comm.myQQmail;
+
+import javax.mail.MessagingException;
 
 public class PlexInterActivity2 extends AppCompatActivity {
     WebView mWebview;

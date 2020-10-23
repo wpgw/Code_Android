@@ -50,5 +50,6 @@ dependencies {
     //implementation 'androidx.recyclerview:recyclerview:1.1.0'
     //HMS: 实时语音识别
     implementation 'com.huawei.hms:ml-computer-voice-asr-plugin:2.0.3.300'
+
 }
 
