@@ -698,7 +698,7 @@ public class Plex_qa {
     public static void main(String[] args) {
         Plex_qa app=new Plex_qa("www.plexus-online.com");
         try {
-            Map<String,String> cookies= app.get_cookies("smmp.pwang", "99887766");
+            Map<String,String> cookies= app.get_cookies("smmp.pwang", "77665544");
 
             String Session_Key=cookies.get("Session_Key");
             Session_Key=Session_Key.substring(1,Session_Key.length()-1);  //去掉头尾的字符{}
@@ -710,7 +710,7 @@ public class Plex_qa {
 
             //System.out.println(app.get_container_history(Session_Key, label));
             //System.out.println(app.show_container_info(Session_Key,label));
-            System.out.println(app.get_loaded_multiThread(Session_Key));
+            //System.out.println(app.get_loaded_multiThread(Session_Key));
             //System.out.println(app.get_container_history(Session_Key,label));
             //System.out.println(app.get_inventory_adjustment(Session_Key));
             //System.out.println(app.get_workcenter_list(Session_Key));
