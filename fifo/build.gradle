@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-// Add to the bottom of the file by Philip for HMS
+// Add by Philip for HMS
 apply plugin: 'com.huawei.agconnect'
 
 android {

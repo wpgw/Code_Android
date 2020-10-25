@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'com.android.library'
+// Add by Philip for HMS
+apply plugin: 'com.huawei.agconnect'
 
 android {
     compileSdkVersion 29
@@ -49,6 +51,11 @@ dependencies {
     compileOnly files("C:/Java/jdk1.8.0_191/jre/lib/rt.jar")
     //for easypermission
     implementation 'pub.devrel:easypermissions:1.0.1'
+
+    // HMS:Add this line
+    implementation 'com.huawei.agconnect:agconnect-core:1.3.1.300'
+    //HMS: scankitSDK
+    implementation 'com.huawei.hms:scan:1.2.2.300'
 
     //add for giberish, but no usage
     tasks.withType(JavaCompile) {
