@@ -122,11 +122,10 @@ public class fifoActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if((actionId== EditorInfo.IME_ACTION_DONE)){
-                        System.out.println("准备执行 软健盘 click");
-                        btn_confirm.performClick();
-
+                    System.out.println("准备执行 软健盘 click");
+                    btn_confirm.performClick();
                     return true;  // 消费 CR
-                }else if((event!=null)&&(event.getKeyCode()==KeyEvent.KEYCODE_ENTER)&&event.getAction()==KeyEvent.ACTION_DOWN){
+                }else if((event!=null)&&event.getAction()==KeyEvent.ACTION_DOWN&&(event.getKeyCode()==KeyEvent.KEYCODE_ENTER)){
                     System.out.println("准备执行 扫描枪 click2");
                     btn_confirm.performClick();
                     return true;  // 消费 CR
@@ -149,7 +148,7 @@ public class fifoActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String str=s.toString();
                 if(str.contains("\n")||str.contains("\r")){
-                    btn_confirm.performClick();   //从相机返回执行
+                    btn_confirm.performClick();   //从相机返回的含\n, 会执行
                 }
             }
         });
