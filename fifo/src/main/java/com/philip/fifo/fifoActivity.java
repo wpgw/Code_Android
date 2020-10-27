@@ -110,7 +110,7 @@ public class fifoActivity extends AppCompatActivity {
         movedCount=0;issueLock=0;enableRadioGroup(radiogroup);
 
         et_barcode.requestFocusFromTouch();et_barcode.requestFocus();
-        et_barcode.setSelectAllOnFocus(true);  //et_barcode获得焦点时全选
+        et_barcode.setSelectAllOnFocus(true);   //et_barcode获得焦点时全选
         et_location.setSelectAllOnFocus(true);  //et_barcode获得焦点时全选
         //开始时不显示有关控件
         et_barcode.setVisibility(View.GONE);btn_confirm.setVisibility(View.GONE);btn_speechRec.setVisibility(View.GONE);btn_scan.setVisibility(View.GONE);
@@ -501,7 +501,7 @@ public class fifoActivity extends AppCompatActivity {
                 System.out.println(barcode+"发料成功。");
                 sendMessage(MOVED,barcode+"发料成功。\n "+move_result.get("Message").trim());
                 ////变白色
-                sendMessage(normalColor,"");
+                sendMessage(normalColor,"");vibrate();
                 sendMessage(refresh_FIFOlist_on_UI,"");  //刷新fifo list
             }else{
                 sendMessage(MSG,barcode+"发料不成功！\n "+move_result.get("Message").trim());
@@ -523,7 +523,7 @@ public class fifoActivity extends AppCompatActivity {
             if(move_result.get("IsValid")=="true"){
                 //每移库成功一下，删去一个move task list记录
                 System.out.println(barcode+"移库成功。");
-                sendMessage(MOVED,barcode+"移库成功。\n "+move_result.get("Message"));
+                sendMessage(MOVED,barcode+"移库成功。\n "+move_result.get("Message").trim());
                 ////变白色
                 sendMessage(normalColor,"");
                 //sendMessage(refresh_FIFOlist_on_UI,"");  //刷新move task list
@@ -629,16 +629,21 @@ public class fifoActivity extends AppCompatActivity {
             }else if(msg.what==alartColor){
                 tv_info.setBackgroundColor(Color.RED);
                 et_barcode.setBackgroundColor(Color.RED);
-                vibrate();
+                vibrate(500);
             }else if(msg.what==normalColor){
                 tv_info.setBackgroundColor(Color.WHITE);
                 et_barcode.setBackgroundColor(Color.WHITE);
             }else if(msg.what==MOVED){
                 movedCount++;
                 String temp=tv_movedlist.getText().toString();
-                tv_movedlist.setText(movedCount+"--"+barcode+"  "+temp);  //显示已移库的条码
+                String message=msg.obj.toString();
+                if(message.contains("发料")){
+                    tv_movedlist.setText(movedCount+"-"+barcode+"发  "+temp);  //显示已移库的条码
+                }else if(message.contains("移库")){
+                    tv_movedlist.setText(movedCount+"-"+barcode+"移  "+temp);  //显示已移库的条码
+                }
                 tv_movedlist.setVisibility(View.VISIBLE);
-                tv_info.setText(msg.obj.toString());
+                tv_info.setText(message);
                 tv_info.setVisibility(View.VISIBLE);
                 et_barcode.setText("");      //move成功后，去掉已成功的条码，等下一个
             }else if(msg.what==enableRadioGroup){
@@ -658,11 +663,13 @@ public class fifoActivity extends AppCompatActivity {
         for (int i = 0; i < testRadioGroup.getChildCount(); i++) {
             testRadioGroup.getChildAt(i).setEnabled(false);
         }
+        et_barcode.setEnabled(false);    //工作时，锁定输入
     }
     public void enableRadioGroup(RadioGroup testRadioGroup) {
         for (int i = 0; i < testRadioGroup.getChildCount(); i++) {
             testRadioGroup.getChildAt(i).setEnabled(true);
         }
+        et_barcode.setEnabled(true);    //工作完，放开输入
     }
 
     @Override
@@ -763,6 +770,12 @@ public class fifoActivity extends AppCompatActivity {
     private void vibrate() {
         Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         vibrator.vibrate(200);
+    }
+
+    //震动
+    private void vibrate(int time) {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        vibrator.vibrate(time);
     }
 
     public static void main(String[] args){

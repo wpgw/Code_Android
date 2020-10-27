@@ -114,7 +114,7 @@ public class Plex_add_Note {
 
     private Connection.Response request_post(String url,Map<String,String> data) throws Exception{
         try {
-            //trustEveryone();
+            trustEveryone();
             Connection con=Jsoup.connect(url);
             con.data(data);
             con.headers(this.headers);
@@ -182,10 +182,8 @@ public class Plex_add_Note {
     }
 
     public String add_note(String Session_Key) throws Exception{
-        String aa="2338/\\Serial_No[]3196/\\Operation_Key[]3200/\\Operation_Type[]3204/\\Active[]3205/\\Part_Key[]3214/\\Container_Status[]6100/\\[]6101/\\Job_No[]6102/\\Location[]6103/\\Material_Code[]6104/\\Supplier[]6105/\\Tracking_No[]23761/\\Part_Type[]23762/\\Heat_Code[]23764/\\Customer_No[]23765/\\Exclude_Raw_Material[]23766/\\Shippable[]23768/\\Lot_Key[]23769/\\Job_Template_Key[]23771/\\Inventory_Type_Only[]23772/\\Accounting_Job_Key[]23773/\\Order_No[]24071/\\Building[]81016/\\Group By[]213974/\\Master_Unit_Key[]285725/\\Part_No_Begins[]309088/\\Operation_Types_Picker[]337533/\\Heat_No_new[]385621/\\From Date[]385622/\\End Date[]392678/\\Building_New[]926731/\\Container_Types_Multi";
-
+        String temp_str="2338/\\Serial_No[]3196/\\Operation_Key[]3200/\\Operation_Type[]3204/\\Active[]3205/\\Part_Key[]3214/\\Container_Status[]6100/\\[]6101/\\Job_No[]6102/\\Location[]6103/\\Material_Code[]6104/\\Supplier[]6105/\\Tracking_No[]23761/\\Part_Type[]23762/\\Heat_Code[]23764/\\Customer_No[]23765/\\Exclude_Raw_Material[]23766/\\Shippable[]23768/\\Lot_Key[]23769/\\Job_Template_Key[]23771/\\Inventory_Type_Only[]23772/\\Accounting_Job_Key[]23773/\\Order_No[]24071/\\Building[]81016/\\Group By[]213974/\\Master_Unit_Key[]285725/\\Part_No_Begins[]309088/\\Operation_Types_Picker[]337533/\\Heat_No_new[]385621/\\From Date[]385622/\\End Date[]392678/\\Building_New[]926731/\\Container_Types_Multi";
         String url= url_pre + Session_Key+"/Rendering_Engine/Default.aspx?Request=Show&RequestData=SourceType(Screen)SourceKey(245)";
-
         Map<String,String> data=new LinkedHashMap<>();
         data.put("__EVENTTARGET","Screen");
         data.put("__EVENTARGUMENT","Search");
@@ -193,7 +191,7 @@ public class Plex_add_Note {
         data.put("__VIEWSTATE","/wEPDwUJOTg5NDMxNjIwZBgBBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WAgUPTGF5b3V0MSRlbF8zMjA0BRBMYXlvdXQxJGVsXzIzNzY222RkO28Ho/O49sKnDCSvE2T0QpM=");
         data.put("__VIEWSTATEGENERATOR","2811E9B3");
         data.put("hdnScreenTitle","Inventory");
-        data.put("hdnFilterElementsKeyHandle","2338/\\Serial_No[]3196/\\Operation_Key[]3200/\\Operation_Type[]3204/\\Active[]3205/\\Part_Key[]3214/\\Container_Status[]6100/\\[]6101/\\Job_No[]6102/\\Location[]6103/\\Material_Code[]6104/\\Supplier[]6105/\\Tracking_No[]23761/\\Part_Type[]23762/\\Heat_Code[]23764/\\Customer_No[]23765/\\Exclude_Raw_Material[]23766/\\Shippable[]23768/\\Lot_Key[]23769/\\Job_Template_Key[]23771/\\Inventory_Type_Only[]23772/\\Accounting_Job_Key[]23773/\\Order_No[]24071/\\Building[]81016/\\Group By[]213974/\\Master_Unit_Key[]285725/\\Part_No_Begins[]309088/\\Operation_Types_Picker[]337533/\\Heat_No_new[]385621/\\From Date[]385622/\\End Date[]392678/\\Building_New[]926731/\\Container_Types_Multi");
+        data.put("hdnFilterElementsKeyHandle",temp_str);
         data.put("ScreenParameters","Accounting_Job_Key=|Accounting_Job_No=|Active=|AutoSearch=|Building_Code=|Building_Key=|Class=|Container_Note=|Container_Status=|Container_Type=|Customer Part No=|Description=|Exact_Match=|ExcludeRawMaterial=|Group_By=|Heat_Code=|Heat_Key=|Job_Key=|Job_No=|Job_Template_Key=|Job_Template_Name=|Location=|Lot_Key=|Lot_No=|Master_Unit_Key=|Master_Unit_No=|Material_Code=|Material_Key=|Operation_Code=|Operation_Key=|Operation_Type=|Part Name=|Part_Key=|Part_No=|Part_Status=|Part_Type=|Quantity=|Serial_No=|Shippable=|Supplier_Code=|Supplier_No=|Tracking_No=|");
         data.put("RequestKey","1");
         data.put("Layout1$el_285725","");
@@ -256,7 +254,7 @@ public class Plex_add_Note {
     }
 
     public static void main(String[] args) {
-        Plex_add_Note app=new Plex_add_Note("www.plexus-online.com");
+        Plex_add_Note app=new Plex_add_Note("www.plexonline.com");
         try {
             Map<String,String> cookies= app.get_cookies("smmp.pwang", "77665544");
 
