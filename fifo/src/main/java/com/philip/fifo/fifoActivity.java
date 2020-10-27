@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,6 +42,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -50,6 +52,7 @@ import com.huawei.hms.ml.scan.HmsScan;
 import com.huawei.hms.ml.scan.HmsScanAnalyzerOptions;
 
 public class fifoActivity extends AppCompatActivity {
+    SharedPreferences shared;
     HashMap<String,String> cookies=new HashMap<>();
     String pre_url,Session_Key,host,user;
     final int MSG=1, showBarcode_info =2, refresh_FIFOlist_on_UI =3,alartColor=4,normalColor=5,MOVED=6,enableRadioGroup=7;
@@ -101,13 +104,16 @@ public class fifoActivity extends AppCompatActivity {
     }
 
     private void init(){
+        shared=getSharedPreferences("share",MODE_PRIVATE);
         radiogroup=findViewById(R.id.radioGroup);rd_move=findViewById(R.id.rd_move);rd_issue=findViewById(R.id.rd_issue);rd_report=findViewById(R.id.rd_report);
         et_barcode=findViewById(R.id.et_barcode);btn_confirm=findViewById(R.id.btn_confirm);btn_speechRec=findViewById(R.id.btn_speechRec);btn_scan=findViewById(R.id.btn_scan);
         et_location=findViewById(R.id.et_location);tv_BarcodeInfo=findViewById(R.id.tvBarcodeInfo);
         tv_info=findViewById(R.id.tvInfo);
         tv_movedlist=findViewById(R.id.tv_movedList);tv_canlist=findViewById(R.id.tv_canList);tv_cannotlist=findViewById(R.id.tv_cannotList);
         tv_movedlist.setMovementMethod(ScrollingMovementMethod.getInstance());tv_canlist.setMovementMethod(ScrollingMovementMethod.getInstance());tv_cannotlist.setMovementMethod(ScrollingMovementMethod.getInstance());
-        movedCount=0;issueLock=0;enableRadioGroup(radiogroup);
+        //movedCount=0;
+        log_read();  //读取movedCount
+        issueLock=0;enableRadioGroup(radiogroup);
 
         et_barcode.requestFocusFromTouch();et_barcode.requestFocus();
         et_barcode.setSelectAllOnFocus(true);   //et_barcode获得焦点时全选
@@ -116,7 +122,8 @@ public class fifoActivity extends AppCompatActivity {
         et_barcode.setVisibility(View.GONE);btn_confirm.setVisibility(View.GONE);btn_speechRec.setVisibility(View.GONE);btn_scan.setVisibility(View.GONE);
         et_location.setVisibility(View.GONE);tv_BarcodeInfo.setVisibility(View.GONE);
         tv_info.setVisibility(View.INVISIBLE);
-        tv_movedlist.setVisibility(View.GONE);tv_canlist.setVisibility(View.GONE);tv_cannotlist.setVisibility(View.GONE);
+        //tv_movedlist.setVisibility(View.GONE);  //因闪退而改
+        // tv_canlist.setVisibility(View.GONE);tv_cannotlist.setVisibility(View.GONE);
 
         et_barcode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -162,10 +169,13 @@ public class fifoActivity extends AppCompatActivity {
                 et_barcode.setText("");et_location.setText("");tv_info.setText("");
                 et_barcode.requestFocus();et_barcode.requestFocusFromTouch();
                 sendMessage(normalColor,""); //信息栏显成白色
-                movedCount=0;issueLock=0;enableRadioGroup(radiogroup);
-                tv_movedlist.setText("");tv_info.setText("");  //清空记数及info显示
+                //movedCount=0;
+                log_read();  //从文件中读取 movedCount和tv_movedlist
+                issueLock=0;enableRadioGroup(radiogroup);
+                //tv_movedlist.setText("");
+                tv_info.setText("");  //清空记数及info显示
                 tv_info.setVisibility(View.INVISIBLE);    //在内容有变时，会自动显出来
-                tv_movedlist.setVisibility(View.GONE);
+                //tv_movedlist.setVisibility(View.GONE);  //因闪退而改
                 clear_list_data_and_UI_display();  //每次变化，都初始化fifo数据与显示
                 //containerActive="否";  // 此时不能作任何操作 onhold/scrap
                 SpannableString s=new SpannableString("请扫码...发料");
@@ -198,7 +208,17 @@ public class fifoActivity extends AppCompatActivity {
                 et_barcode.setHint(s);
             }
         });
-
+        tv_movedlist.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //清零文件中的记数，并同步
+                log_clear();
+                tv_info.setText("长按会清除记数，最后记数值是 "+movedCount);
+                tv_info.setVisibility(View.VISIBLE);
+                movedCount=0;tv_movedlist.setText("");
+                return true;
+            }
+        });
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -636,10 +656,13 @@ public class fifoActivity extends AppCompatActivity {
                 movedCount++;
                 String temp=tv_movedlist.getText().toString();
                 String message=msg.obj.toString();
+                String time=Utils.getMonthTime(new Date());
                 if(message.contains("发料")){
-                    tv_movedlist.setText(movedCount+"-"+barcode+"发  "+temp);  //显示已移库的条码
+                    tv_movedlist.setText(movedCount+"--"+barcode+"发料 时间:"+time+"\n"+temp);  //显示已移库的条码
+                    log_moved(movedCount,movedCount+"--"+barcode+"发料 时间:"+time+"\n"+temp);
                 }else if(message.contains("移库")){
-                    tv_movedlist.setText(movedCount+"-"+barcode+"移  "+temp);  //显示已移库的条码
+                    tv_movedlist.setText(movedCount+"--"+barcode+"移库 时间:"+time+"\n"+temp);  //显示已移库的条码
+                    log_moved(movedCount,movedCount+"--"+barcode+"移库 时间:"+time+"\n"+temp);
                 }
                 tv_movedlist.setVisibility(View.VISIBLE);
                 tv_info.setText(message);
@@ -763,6 +786,35 @@ public class fifoActivity extends AppCompatActivity {
             //String date=Utils.getMonthTime(this.date);
             return String.format("%s日期:%s数量:%s %s",this.serial,this.date,this.QTY,location);
         }
+    }
+
+    //记录 发货操作 到文件  /data/data/包名/shared_prefs/shared.xml
+    private void log_moved(int count,String movedbarcode){
+        SharedPreferences.Editor editor=shared.edit();
+        editor.putInt("count",count);
+        editor.putString("movedbarcode",movedbarcode);
+        editor.commit();
+    }
+
+    //清空 log文件
+    private void log_clear(){
+        SharedPreferences.Editor editor=shared.edit();
+        editor.putInt("count",0);
+        editor.putString("movedbarcode","");
+        editor.commit();
+    }
+
+    //记录 程序执行地址
+    private void log_debug(String last_place){
+        SharedPreferences.Editor editor=shared.edit();
+        editor.putString("last_place",last_place);
+        editor.commit();
+    }
+
+    //读 发货操作记录
+    private void log_read(){
+        movedCount=shared.getInt("count",0);
+        tv_movedlist.setText(shared.getString("movedbarcode",""));
     }
 
     //震动
