@@ -40,7 +40,7 @@ public class fifoActivityLogin extends AppCompatActivity implements View.OnClick
         System.out.println(brand);
 
         //plex point to Test DB or Production DB
-        host = "www.plexus-online.com";
+        host = "test.plexus-online.com";
         TextView tv_message = (TextView) findViewById(R.id.tv_message);
         tv_message.setText("for "+ host +"\n * Powered by Philip *");
         //tv_message.setText(Environment.getExternalStorageDirectory().getAbsolutePath());

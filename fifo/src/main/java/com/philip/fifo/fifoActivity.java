@@ -133,7 +133,7 @@ public class fifoActivity extends AppCompatActivity {
                     btn_confirm.performClick();
                     return true;  // 消费 CR
                 }else if((event!=null)&&event.getAction()==KeyEvent.ACTION_DOWN&&(event.getKeyCode()==KeyEvent.KEYCODE_ENTER)){
-                    System.out.println("准备执行 扫描枪 click2");
+                    System.out.println("准备执行 扫描枪 click2");   //手机上honywell扫描枪走这里
                     btn_confirm.performClick();
                     return true;  // 消费 CR
                 }
@@ -642,7 +642,7 @@ public class fifoActivity extends AppCompatActivity {
                     tv_cannotlist.setText(temp+"\n"+data.toString());
                 }
             }else if(msg.what==alartColor){
-                tv_info.setBackgroundColor(Color.RED);
+                tv_info.setBackgroundColor(Color.YELLOW);
                 et_barcode.setBackgroundColor(Color.RED);
                 vibrate(500);
             }else if(msg.what==normalColor){

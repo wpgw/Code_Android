@@ -202,7 +202,7 @@ public class Utils {
             return map;
 
         }catch(Exception e) {
-            System.out.println("catch Exception at show_container_info.");
+            System.out.println("抓到报错：catch Exception at show_container_info.");
             e.printStackTrace();
             throw e;
         }
