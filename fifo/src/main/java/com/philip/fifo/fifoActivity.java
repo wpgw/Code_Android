@@ -208,17 +208,6 @@ public class fifoActivity extends AppCompatActivity {
                 et_barcode.setHint(s);
             }
         });
-        tv_movedlist.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                //清零文件中的记数，并同步
-                log_clear();
-                tv_info.setText("长按会清除记数，最后记数值是 "+movedCount);
-                tv_info.setVisibility(View.VISIBLE);
-                movedCount=0;tv_movedlist.setText("");
-                return true;
-            }
-        });
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -343,14 +332,21 @@ public class fifoActivity extends AppCompatActivity {
         btn_speechRec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                vibrate();
-                // 通过intent进行识别设置。
-                Intent intent = new Intent(fifoActivity.this, MLAsrCaptureActivity.class)
-                        // 设置识别语言为英语，若不设置，则默认识别英语。支持设置："zh-CN":中文；"en-US":英语；"fr-FR":法语；"es-ES":西班牙语；"de-DE":德语；"it-IT":意大利语。
-                        .putExtra(MLAsrCaptureConstants.LANGUAGE, "zh-CN")
-                        // 设置拾音界面是否显示文字，MLAsrCaptureConstants.FEATURE_ALLINONE为不显示，MLAsrCaptureConstants.FEATURE_WORDFLUX为显示。
-                        .putExtra(MLAsrCaptureConstants.FEATURE, MLAsrCaptureConstants.FEATURE_WORDFLUX);
-                startActivityForResult(intent,mSpeechRecognizeCode);
+//                vibrate();
+//                // 通过intent进行识别设置。
+//                Intent intent = new Intent(fifoActivity.this, MLAsrCaptureActivity.class)
+//                        // 设置识别语言为英语，若不设置，则默认识别英语。支持设置："zh-CN":中文；"en-US":英语；"fr-FR":法语；"es-ES":西班牙语；"de-DE":德语；"it-IT":意大利语。
+//                        .putExtra(MLAsrCaptureConstants.LANGUAGE, "zh-CN")
+//                        // 设置拾音界面是否显示文字，MLAsrCaptureConstants.FEATURE_ALLINONE为不显示，MLAsrCaptureConstants.FEATURE_WORDFLUX为显示。
+//                        .putExtra(MLAsrCaptureConstants.FEATURE, MLAsrCaptureConstants.FEATURE_WORDFLUX);
+//                startActivityForResult(intent,mSpeechRecognizeCode);
+
+                //清零文件中的记数，并同步
+                log_clear();
+                tv_info.setText("已清零记数，最后记数值是 "+movedCount);
+                tv_info.setVisibility(View.VISIBLE);
+                movedCount=0;tv_movedlist.setText("");
+                //return true;
             }
         });
     }
@@ -692,6 +688,9 @@ public class fifoActivity extends AppCompatActivity {
             testRadioGroup.getChildAt(i).setEnabled(true);
         }
         et_barcode.setEnabled(true);    //工作完，放开输入
+        et_barcode.requestFocus();
+        et_barcode.requestFocusFromTouch();
+        et_barcode.selectAll();
     }
 
     @Override
