@@ -2,6 +2,7 @@ package com.philip.fifo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -446,6 +447,7 @@ public class fifoActivity extends AppCompatActivity {
                     sendMessage(alartColor,"");
                     return;   //终止运行
                 }else {  //如果Barcode不在以上所有的list中，则需全面检查
+                    System.out.println("1,正在查条码......" + barcode);
                     sendMessage(MSG, "1,正在查条码......" + barcode);
                     String url = pre_url + "/Modules/Inventory/InventoryTracking/ContainerForm.aspx?Do=Update&Serial_No=";
                     Map<String, String> barcodeInfo = Utils.show_container_info(cookies, url, barcode);
@@ -455,8 +457,8 @@ public class fifoActivity extends AppCompatActivity {
 
                     //先清理canList, cannotList
                     clear_list_data_and_UI_display();
-                    sendMessage(MSG, "2,读取FIFO数据中......");
                     if(txtPartNo.length()>1){
+                        sendMessage(MSG, "2,读取FIFO数据中......");
                         get_fifo_list(txtPartNo);
                     }
                 }
@@ -494,6 +496,7 @@ public class fifoActivity extends AppCompatActivity {
         //读取FIFO数据中......
         String url=pre_url+"/Rendering_Engine/default.aspx?Request=Show&RequestData=SourceType(Screen)SourceKey(10617)";
         clear_list_data_and_UI_display(); //清空数据及显示，因后边的查询可能会出错
+        System.out.println("读取FIFO数据...."+txtPartNo);
         alllist=get_fifo_report(cookies,url,txtPartNo);
         split_fifo_report(alllist); //canlist和cannotlist会被充值，如Size为0，则canlist与cannotlist会被清空
     }
@@ -528,6 +531,7 @@ public class fifoActivity extends AppCompatActivity {
             /////变红色
             sendMessage(alartColor,"");
         }
+        show_memory();
     }
 
     void container_move(String barcode,String location) throws Exception{
@@ -826,6 +830,18 @@ public class fifoActivity extends AppCompatActivity {
     private void vibrate(int time) {
         Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         vibrator.vibrate(time);
+    }
+
+    private void show_memory(){
+        ActivityManager activityManager=(ActivityManager)getSystemService(ACTIVITY_SERVICE);
+        int memory=activityManager.getMemoryClass();  //最大内存 方法1
+        float maxMemory=(float)(Runtime.getRuntime().maxMemory()*1.0/(1024*1024));  //最大内存 方法2
+        float totalMemory=(float)(Runtime.getRuntime().totalMemory()*1.0/(1024*1024));
+        float freeMemory=(float)(Runtime.getRuntime().freeMemory()*1.0/(1024*1024));
+        System.out.println("最大内存"+memory);
+        System.out.println("最大分配内存："+maxMemory);
+        System.out.println("当前分配内存："+totalMemory);
+        System.out.println("剩余内存："+freeMemory);
     }
 
     public static void main(String[] args){
