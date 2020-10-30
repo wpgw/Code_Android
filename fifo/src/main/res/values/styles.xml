@@ -6,5 +6,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="MyTheme1" parent="AppTheme">
+        <!-- 导航栏颜色 -->
+        <item name="android:windowBackground">@color/color_orange</item>
 
+    </style>
+    <style name="MyTheme2" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 状态栏 -->
+        <item name="android:colorPrimaryDark">#757575</item>
+        <!-- ActionBar颜色 -->
+        <item name="android:colorPrimary">#03A9F4</item>
+        <!-- 界面背景色 -->
+        <item name="android:windowBackground">@color/color_red_card</item>
+        <!-- 导航栏颜色 -->
+        <item name="android:navigationBarColor">#1976D2</item>
+    </style>
 </resources>

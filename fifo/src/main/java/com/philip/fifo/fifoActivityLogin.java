@@ -33,14 +33,18 @@ public class fifoActivityLogin extends AppCompatActivity implements View.OnClick
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //plex point to Test DB or Production DB
+        host = "test.plexus-online.com";
+        if(host.contains("test.")){
+            setTheme(R.style.MyTheme1);  //必需在setContentView前面
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         //找手机型号 华为可能：Huawei  HUAWEI  HONOR
         String brand = android.os.Build.BRAND;
         System.out.println(brand);
 
-        //plex point to Test DB or Production DB
-        host = "test.plexus-online.com";
+
         TextView tv_message = (TextView) findViewById(R.id.tv_message);
         tv_message.setText("for "+ host +"\n * Powered by Philip *");
         //tv_message.setText(Environment.getExternalStorageDirectory().getAbsolutePath());
@@ -50,7 +54,7 @@ public class fifoActivityLogin extends AppCompatActivity implements View.OnClick
         et_userid = findViewById(R.id.et_userid);
         et_password = findViewById(R.id.et_password);
         et_userid.setText(plex.get_userInfo().get(0));  //从文件中读取userid
-        if (host.equals("test.plexus-online.com")) {
+        if (host.contains("test.")) {           //如果是在测试库中
             et_userid.setText("smmp.pwang");   ////////shortcut only for Test DB
             et_password.setText("77665544");
         }

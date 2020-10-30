@@ -77,14 +77,10 @@ public class fifoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fifo);
-
         //HMS 云端鉴权信息: 用于实时语音识别
         MLApplication.getInstance().setApiKey("CgB6e3x98+cyGVKCai8OVbmAc91GfT4gOjKFA8VeKzSms+JC54jSknujW1146rx7dqd8hVOf1HNOeKpI6zWfy+wK");
 
         //还需加上权限代码
-        
         //disable the strict polity that do not allows main thread network access
 //        if (android.os.Build.VERSION.SDK_INT > 9) {
 //            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -94,11 +90,17 @@ public class fifoActivity extends AppCompatActivity {
         //get cookies and session_id from Intent
         Bundle bundle = getIntent().getExtras();
         this.host=bundle.getString("host");
-        this.user=bundle.getString("user");
+        this.user=bundle.getString("user").replace("smmp.","");
         this.cookies=(HashMap<String,String>)bundle.getSerializable("cookies");
         this.Session_Key=this.cookies.get("Session_Key");
         this.Session_Key=Session_Key.substring(1,Session_Key.length()-1);  //去掉头尾的字符{}
         pre_url="https://"+host+"/"+Session_Key;
+
+        if(host.contains("test.")){
+            setTheme(R.style.MyTheme1);  //必需在setContentView前面
+        }
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_fifo);
 
         init();
         initTTS();
@@ -113,7 +115,7 @@ public class fifoActivity extends AppCompatActivity {
         tv_movedlist=findViewById(R.id.tv_movedList);tv_canlist=findViewById(R.id.tv_canList);tv_cannotlist=findViewById(R.id.tv_cannotList);
         tv_movedlist.setMovementMethod(ScrollingMovementMethod.getInstance());tv_canlist.setMovementMethod(ScrollingMovementMethod.getInstance());tv_cannotlist.setMovementMethod(ScrollingMovementMethod.getInstance());
         //movedCount=0;
-        log_read();  //读取movedCount
+        log_read();  //从文件中读取movedCount
         issueLock=0;enableRadioGroup(radiogroup);
 
         et_barcode.requestFocusFromTouch();et_barcode.requestFocus();
@@ -171,7 +173,7 @@ public class fifoActivity extends AppCompatActivity {
                 et_barcode.requestFocus();et_barcode.requestFocusFromTouch();
                 sendMessage(normalColor,""); //信息栏显成白色
                 //movedCount=0;
-                log_read();  //从文件中读取 movedCount和tv_movedlist
+                //log_read();  //从文件中读取 movedCount和tv_movedlist  /////是否应该去掉这句？！！！！
                 issueLock=0;enableRadioGroup(radiogroup);
                 //tv_movedlist.setText("");
                 tv_info.setText("");  //清空记数及info显示
@@ -179,7 +181,7 @@ public class fifoActivity extends AppCompatActivity {
                 //tv_movedlist.setVisibility(View.GONE);  //因闪退而改
                 clear_list_data_and_UI_display();  //每次变化，都初始化fifo数据与显示
                 //containerActive="否";  // 此时不能作任何操作 onhold/scrap
-                SpannableString s=new SpannableString("请扫码...发料");
+                SpannableString s=new SpannableString("请扫码...");
                 if (checkedId==R.id.rd_move){
                     //移库
                     tv_canlist.setVisibility(View.GONE);
@@ -189,7 +191,7 @@ public class fifoActivity extends AppCompatActivity {
                     //et_location.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
                     //et_location.setEnabled(true);
                     //tv_info.setPadding(dip2px(5),0,0,0);
-                    s = new SpannableString("扫库位或箱号......");     //这里输入自己想要的提示文字
+                    //s = new SpannableString("扫库位或箱号......");     //这里输入自己想要的提示文字
                 }else if(checkedId==R.id.rd_issue||checkedId==R.id.rd_report){  //如 FIFO发货 或查 FIFO报表
                     //发货
                     tv_canlist.setVisibility(View.VISIBLE);
@@ -206,7 +208,7 @@ public class fifoActivity extends AppCompatActivity {
                         btn_scan.setVisibility(View.GONE);
                     }
                 }
-                et_barcode.setHint(s);
+                et_barcode.setHint(user+s);
             }
         });
         btn_confirm.setOnClickListener(new View.OnClickListener() {
@@ -659,10 +661,10 @@ public class fifoActivity extends AppCompatActivity {
                 String time=Utils.getMonthTime(new Date());
                 if(message.contains("发料")){
                     tv_movedlist.setText(movedCount+"--"+barcode+"发料 时间:"+time+"\n"+temp);  //显示已移库的条码
-                    log_moved(movedCount,movedCount+"--"+barcode+"发料 时间:"+time+"\n"+temp);
+                    //log_moved(movedCount,movedCount+"--"+barcode+"发料 时间:"+time+"\n"+temp);
                 }else if(message.contains("移库")){
                     tv_movedlist.setText(movedCount+"--"+barcode+"移库 时间:"+time+"\n"+temp);  //显示已移库的条码
-                    log_moved(movedCount,movedCount+"--"+barcode+"移库 时间:"+time+"\n"+temp);
+                    //log_moved(movedCount,movedCount+"--"+barcode+"移库 时间:"+time+"\n"+temp);
                 }
                 tv_movedlist.setVisibility(View.VISIBLE);
                 tv_info.setText(message);
@@ -791,7 +793,7 @@ public class fifoActivity extends AppCompatActivity {
         }
     }
 
-    //记录 发货操作 到文件  /data/data/包名/shared_prefs/shared.xml
+    //记录 操作 到文件  /data/data/包名/shared_prefs/shared.xml
     private void log_moved(int count,String movedbarcode){
         SharedPreferences.Editor editor=shared.edit();
         editor.putInt("count",count);
