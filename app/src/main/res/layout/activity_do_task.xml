@@ -78,7 +78,8 @@
         android:layout_height="50dp"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
-        android:scaleType="centerCrop"
+        android:layout_marginTop="4dp"
+        android:scaleType="fitXY"
         app:srcCompat="@drawable/scan"
         app:layout_constraintStart_toEndOf="@+id/btn_confirm"
         app:layout_constraintTop_toTopOf="@+id/btn_confirm" />
