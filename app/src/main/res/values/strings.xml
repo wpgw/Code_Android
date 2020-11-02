@@ -4,4 +4,6 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="scan_tip">将码放入取景框，即可自动扫描</string>
+    <string name="title">Scan</string>
 </resources>

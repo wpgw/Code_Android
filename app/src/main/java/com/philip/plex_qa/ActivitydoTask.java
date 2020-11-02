@@ -40,13 +40,17 @@ import java.util.TreeMap;
 
 import android.util.Log;
 
+import com.huawei.hms.ml.scan.HmsScan;
+
+import static com.philip.plex_qa.ActivityHMSscan.SCAN_RESULT;
+
 public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener,View.OnClickListener{
     //sessions data
     Map<String,String> cookies=new HashMap<>();  //should get cookies if it is null
     Plex_qa plex_qa;
     String Session_Key,host,user;  //host may be test DB or production DB
     //data for scrap
-    String containerQTY,workcenter_key="";               // store QTY and workcenter_key of container for scrap method
+    String containerQTY,workcenter_key="";  // store QTY and workcenter_key of container for scrap method
     String containerActive="否";
     String containerStatus,containerNote;
     //dropdown data collections
@@ -243,10 +247,17 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
                 //e.printStackTrace();
              }
         }else if(v.getId()==R.id.btn_scan){
-            tv_info_addText("启动相机扫描...");
-            Intent intent=new Intent();
-            intent.setClass(this, ActivityScan2.class);
+            //用Xing Scan
+//          tv_info_addText("启动相机扫描...");
+//          Intent intent=new Intent();
+//          intent.setClass(this, ActivityScan2.class);
+//          startActivityForResult(intent,0);
+            //用 HMS scan
+            vibrate();
+            //ScanUtil.startScan(fifoActivity.this,scanRequestCode,null);
+            Intent intent=new Intent(ActivitydoTask.this, ActivityHMSscan.class);
             startActivityForResult(intent,0);
+
         }else { //if scrap, on-hold or 放行
             String barcode = et_barcode.getText().toString();  //get inputted barcode
             //define valid barcode status
@@ -321,6 +332,27 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
         }
     }
 
+    @Override //扫描回调
+    protected void onActivityResult(int requestCode,int resultCode,Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        et_barcode.setText("");
+        // old code for Xing scan
+//        if (data!=null){
+//            String result=data.getStringExtra("barcode");
+//            if (!TextUtils.isEmpty(result)) {
+//                et_barcode.setText(data.getStringExtra("barcode"));
+//            }
+//        }
+        if(resultCode==RESULT_OK&&data!=null){
+            HmsScan obj = data.getParcelableExtra(SCAN_RESULT);
+            if (obj != null) {
+                //展示解码结果
+                System.out.println(obj);
+                et_barcode.setText(obj.getOriginalValue());
+            }
+        }
+    }
+
     @Override   //显示 选项菜单
     public boolean onCreateOptionsMenu(Menu menu){
         if(user.equals("smmp.pwang")) {  //pwang有特殊功能
@@ -367,16 +399,7 @@ public class ActivitydoTask extends AppCompatActivity implements RadioGroup.OnCh
         return super.onOptionsItemSelected(item);
     }
 
-    protected void onActivityResult(int requestCode,int resultCode,Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-        et_barcode.setText("");
-        if (data!=null){
-            String result=data.getStringExtra("barcode");
-            if (!TextUtils.isEmpty(result)) {
-                et_barcode.setText(data.getStringExtra("barcode"));
-            }
-        }
-    }
+
 
     private class thread_check_container_info extends Thread {
         String barcode;

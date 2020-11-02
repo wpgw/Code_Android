@@ -34,7 +34,7 @@ public class fifoActivityLogin extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //plex point to Test DB or Production DB
-        host = "test.plexus-online.com";
+        host = "www.plexus-online.com";
         if(host.contains("test.")){
             setTheme(R.style.MyTheme1);  //必需在setContentView前面
         }
