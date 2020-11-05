@@ -172,8 +172,7 @@ public class fifoActivity extends AppCompatActivity {
                 et_barcode.setText("");et_location.setText("");tv_info.setText("");
                 et_barcode.requestFocus();et_barcode.requestFocusFromTouch();
                 sendMessage(normalColor,""); //信息栏显成白色
-                //movedCount=0;
-                //log_read();  //从文件中读取 movedCount和tv_movedlist  /////是否应该去掉这句？！！！！
+
                 issueLock=0;enableRadioGroup(radiogroup);
                 //tv_movedlist.setText("");
                 tv_info.setText("");  //清空记数及info显示
@@ -344,12 +343,10 @@ public class fifoActivity extends AppCompatActivity {
 //                        .putExtra(MLAsrCaptureConstants.FEATURE, MLAsrCaptureConstants.FEATURE_WORDFLUX);
 //                startActivityForResult(intent,mSpeechRecognizeCode);
 
-                //清零文件中的记数，并同步
-                log_clear();
-                tv_info.setText("已清零记数，最后记数值是 "+movedCount);
+                tv_info.setText("准备清零记数，最后记数值是 "+movedCount);
                 tv_info.setVisibility(View.VISIBLE);
-                movedCount=0;tv_movedlist.setText("");
-                //return true;
+                //清零文件中的记数，并同步
+                log_clear();movedCount=0;tv_movedlist.setText("");
             }
         });
     }
@@ -469,7 +466,7 @@ public class fifoActivity extends AppCompatActivity {
                     if(canlist.contains(scandata)){
                         FIFO_issue(barcode);  // 函数中会刷新显示及颜色
                     }else{
-                        sendMessage(refresh_FIFOlist_on_UI,"");
+                        sendMessage(refresh_FIFOlist_on_UI,"");  //刷新canlist和cannotlist
                         sendMessage(MSG,barcode+" 不符合 FIFO 发货标准！");
                         sendMessage(alartColor,"");
                     }
@@ -511,12 +508,17 @@ public class fifoActivity extends AppCompatActivity {
         if(movedCount%2==0){
             locationTemp="AsSy1";
         }
-        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,locationTemp,barcode);  //移到 Assy1_
+        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,locationTemp,barcode);  //发料到 Assy1_
         if(move_result!=null){  //分析move container 返回的结果
             if(move_result.get("IsValid")=="true"){
                 System.out.println("从canList中移除"+barcode);
                 //每发货成功一下，删去一个canlist记录
                 canlist.remove(new Part_FIFO_Data(barcode,"","","",""));  //修改放在开头，以免引起显示时的 concurrent modify报错
+
+                movedCount++;    //每成功一个，把记录加1（注：原本在Handle message中加1的，现改到这里）
+                String time=Utils.getMonthTime(new Date());
+                log_moved(movedCount,movedCount+"--"+barcode+"发料 时间:"+time+"\n");  //永久保存当前记录，在handle中会再次保存完整记录（本处是测试，多余的，发现handle可能会造成退出）
+
                 //canlist.removeIf(s->s.serial.equals(barcode));   //java 1.8用法
                 System.out.println(barcode+"发料成功。");
                 sendMessage(MOVED,barcode+"发料成功。\n "+move_result.get("Message").trim());
@@ -539,10 +541,13 @@ public class fifoActivity extends AppCompatActivity {
     void container_move(String barcode,String location) throws Exception{
         System.out.println("--现在移库 barcode"+barcode);
         sendMessage(MSG,"--现在移库中..."+barcode);
-        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,location,barcode);
+        HashMap<String,String> move_result=Utils.move_container(cookies,pre_url,location,barcode);  //移库
         if(move_result!=null){  //分析move container 返回的结果
             if(move_result.get("IsValid")=="true"){
-                //每移库成功一下，删去一个move task list记录
+                movedCount++;    //每成功一个，把记录加1（注：原本在Handle message中加1的，现改到这里）
+                String time=Utils.getMonthTime(new Date());
+                log_moved(movedCount,movedCount+"--"+barcode+"移库 时间:"+time+"\n");  //永久保存当前记录，在handle中会再次保存完整记录（本处是测试，多余的，发现handle可能会造成退出）
+
                 System.out.println(barcode+"移库成功。");
                 sendMessage(MOVED,barcode+"移库成功。\n "+move_result.get("Message").trim());
                 ////变白色
@@ -655,16 +660,16 @@ public class fifoActivity extends AppCompatActivity {
                 tv_info.setBackgroundColor(Color.WHITE);
                 et_barcode.setBackgroundColor(Color.WHITE);
             }else if(msg.what==MOVED){
-                movedCount++;
+                //movedCount++;     //已分别在发料与移库子程序中加了，这里去掉
                 String temp=tv_movedlist.getText().toString();
                 String message=msg.obj.toString();
                 String time=Utils.getMonthTime(new Date());
                 if(message.contains("发料")){
                     tv_movedlist.setText(movedCount+"--"+barcode+"发料 时间:"+time+"\n"+temp);  //显示已移库的条码
-                    //log_moved(movedCount,movedCount+"--"+barcode+"发料 时间:"+time+"\n"+temp);
+                    log_moved(movedCount,movedCount+"--"+barcode+"发料 时间:"+time+"\n"+temp);  //永久保存记录
                 }else if(message.contains("移库")){
                     tv_movedlist.setText(movedCount+"--"+barcode+"移库 时间:"+time+"\n"+temp);  //显示已移库的条码
-                    //log_moved(movedCount,movedCount+"--"+barcode+"移库 时间:"+time+"\n"+temp);
+                    log_moved(movedCount,movedCount+"--"+barcode+"移库 时间:"+time+"\n"+temp);  //永久保存记录
                 }
                 tv_movedlist.setVisibility(View.VISIBLE);
                 tv_info.setText(message);
