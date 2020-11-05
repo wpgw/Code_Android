@@ -521,6 +521,7 @@ public class fifoActivity extends AppCompatActivity {
 
                 //canlist.removeIf(s->s.serial.equals(barcode));   //java 1.8用法
                 System.out.println(barcode+"发料成功。");
+                //永久记录
                 sendMessage(MOVED,barcode+"发料成功。\n "+move_result.get("Message").trim());
                 ////变白色
                 sendMessage(normalColor,"");vibrate();
@@ -535,6 +536,7 @@ public class fifoActivity extends AppCompatActivity {
             /////变红色
             sendMessage(alartColor,"");
         }
+        //显示内存数据
         show_memory();
     }
 
