@@ -439,7 +439,7 @@ public class fifoActivity extends AppCompatActivity {
                     String txtPartNo=cannotlist.get(0).part_no;
                     //先清理canList, cannotList
                     clear_list_data_and_UI_display();
-                    sendMessage(MSG,"2,读取FIFO数据中......");
+                    sendMessage(MSG,"1,读取FIFO数据中......");
                     get_fifo_list(txtPartNo);   //此时scannotlist中就保有现存的Part No
                 }else if(alllist.contains(scandata)){     //即不在canlist,也不在cannotlist，但在alllist中的
                     sendMessage(MSG,"你已发货过"+barcode);
@@ -482,7 +482,7 @@ public class fifoActivity extends AppCompatActivity {
                 sendMessage(alartColor,"");
                 e.printStackTrace();
             }finally{
-                issueLock=0;   //开锁
+                issueLock=0;   //开锁  一次只能一个子线程出来
                 sendMessage(enableRadioGroup,"");
 //                1、finally中的代码总会被执行。
 //                2、当try、catch中有return时，也会执行finally。return的时候，要注意返回值的类型，是否受到finally中代码的影响。
