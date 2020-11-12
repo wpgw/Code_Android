@@ -540,7 +540,7 @@ public class fifoActivity extends AppCompatActivity {
             sendMessage(alartColor,"");
         }
         //显示内存数据
-        show_memory();
+        //show_memory();
     }
 
     void container_move(String barcode,String location) throws Exception{
@@ -652,13 +652,13 @@ public class fifoActivity extends AppCompatActivity {
                 tv_canlist.setText("");tv_cannotlist.setText("");
                 String temp="";
                 for(Part_FIFO_Data data:canlist){
-                    temp=temp+"\n"+data.toString();
+                    temp+="\n"+data.toString();
                 }
                 tv_canlist.setText(temp);
                 //显示 cannotlist
                 temp="";
                 for(Part_FIFO_Data data:cannotlist){
-                    temp=temp+"\n"+data.toString();
+                    temp+="\n"+data.toString();
                 }
                 tv_cannotlist.setText(temp);
             }else if(msg.what==alartColor){
@@ -670,16 +670,16 @@ public class fifoActivity extends AppCompatActivity {
                 et_barcode.setBackgroundColor(Color.WHITE);
             }else if(msg.what==MOVED){
                 //movedCount++;     //已分别在发料与移库子程序中加了，这里去掉
-                String temp=tv_movedlist.getText().toString();
                 String message=msg.obj.toString();
                 String time=Utils.getMonthTime(new Date());
+                String temp=tv_movedlist.getText().toString();
                 if(message.contains("发料")){
-                    tv_movedlist.setText(movedCount+"--"+barcode+"发料 时间:"+time+"\n"+temp);  //显示已移库的条码
-                    log_moved(movedCount,movedCount+"--"+barcode+"发料 时间:"+time+"\n"+temp);  //永久保存记录
+                    temp=movedCount+"--"+barcode+"发料 时间:"+time+"\n"+temp;
                 }else if(message.contains("移库")){
-                    tv_movedlist.setText(movedCount+"--"+barcode+"移库 时间:"+time+"\n"+temp);  //显示已移库的条码
-                    log_moved(movedCount,movedCount+"--"+barcode+"移库 时间:"+time+"\n"+temp);  //永久保存记录
+                    temp=movedCount+"--"+barcode+"移库 时间:"+time+"\n"+temp;
                 }
+                tv_movedlist.setText(temp);  //显示已移库的条码
+                log_moved(movedCount,temp);  //永久保存记录
                 tv_movedlist.setVisibility(View.VISIBLE);
                 tv_info.setText(message);
                 tv_info.setVisibility(View.VISIBLE);
@@ -848,7 +848,7 @@ public class fifoActivity extends AppCompatActivity {
         vibrator.vibrate(time);
     }
 
-    private void show_memory(){
+    private void show_memory(){   //显示内存数据
         ActivityManager activityManager=(ActivityManager)getSystemService(ACTIVITY_SERVICE);
         int memory=activityManager.getMemoryClass();  //最大内存 方法1
         float maxMemory=(float)(Runtime.getRuntime().maxMemory()*1.0/(1024*1024));  //最大内存 方法2
