@@ -468,7 +468,7 @@ public class fifoActivity extends AppCompatActivity {
                     if(canlist.contains(scandata)){
                         FIFO_issue(barcode);  // 函数中会刷新显示及颜色
                     }else{
-                        sendMessage(refresh_FIFOlist_on_UI,"");  //刷新canlist和cannotlist
+                        //sendMessage(refresh_FIFOlist_on_UI,"");  //刷新canlist和cannotlist
                         sendMessage(MSG,barcode+" 不符合 FIFO 发货标准！");
                         sendMessage(alartColor,"");
                     }
@@ -553,12 +553,10 @@ public class fifoActivity extends AppCompatActivity {
                 String time=Utils.getMonthTime(new Date());
                 //担心会有并发错误，禁用
                 //log_moved(movedCount,movedCount+"--"+barcode+"移库 时间:"+time+"\n");  //永久保存当前记录，在handle中会再次保存完整记录（本处是测试，多余的，发现handle可能会造成退出）
-
                 System.out.println(barcode+"移库成功。");
                 sendMessage(MOVED,barcode+"移库成功。\n "+move_result.get("Message").trim());
                 ////变白色
                 sendMessage(normalColor,"");
-                //sendMessage(refresh_FIFOlist_on_UI,"");  //刷新move task list
             }else{
                 sendMessage(MSG,barcode+"移库不成功！\n "+move_result.get("Message"));
                 //变红色
@@ -651,8 +649,10 @@ public class fifoActivity extends AppCompatActivity {
                 //刷新canlist,cannotlist  注：一旦 canlist和cannotlist有变化，需运行这个
                 tv_canlist.setText("");tv_cannotlist.setText("");
                 String temp="";
-                for(Part_FIFO_Data data:canlist){
-                    temp+="\n"+data.toString();
+                synchronized (canlist){    //fifo发货可能会改 canlist，加锁
+                    for(Part_FIFO_Data data:canlist){
+                        temp+="\n"+data.toString();
+                    }
                 }
                 tv_canlist.setText(temp);
                 //显示 cannotlist
