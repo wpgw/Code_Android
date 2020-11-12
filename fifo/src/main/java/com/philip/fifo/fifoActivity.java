@@ -43,9 +43,11 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import com.huawei.hms.hmsscankit.ScanUtil;
@@ -68,10 +70,10 @@ public class fifoActivity extends AppCompatActivity {
     int movedCount; //用以记录业务操作成功的记数
     int issueLock;  //用以锁定发货，以防一个未完，就连击另一个 0：开放   1：加锁
 
-    String barcode;   //用于存当前处理的条码号，传给thread
-    ArrayList<Part_FIFO_Data> alllist=new ArrayList<Part_FIFO_Data>();
-    ArrayList<Part_FIFO_Data> canlist=new ArrayList<Part_FIFO_Data>();
-    ArrayList<Part_FIFO_Data> cannotlist=new ArrayList<Part_FIFO_Data>();  //fifo允许的物料及不允许的物料
+    String barcode;   //用于存当前处理的条码号，传给thread    //注：第一版程序发现有concurrent错误，所以加synchronizedlist
+    List<Part_FIFO_Data> alllist= Collections.synchronizedList(new ArrayList<Part_FIFO_Data>());
+    List<Part_FIFO_Data> canlist=Collections.synchronizedList(new ArrayList<Part_FIFO_Data>());
+    List<Part_FIFO_Data> cannotlist=Collections.synchronizedList(new ArrayList<Part_FIFO_Data>());  //fifo允许的物料及不允许的物料
 
     private TextToSpeech textToSpeech = null;//创建自带语音对象
 
@@ -512,12 +514,13 @@ public class fifoActivity extends AppCompatActivity {
         if(move_result!=null){  //分析move container 返回的结果
             if(move_result.get("IsValid")=="true"){
                 System.out.println("从canList中移除"+barcode);
-                //每发货成功一下，删去一个canlist记录
+                //每发货成功一下，删去一个canlist记录      ////!!!!!!!!这里可能会发生并发错误
                 canlist.remove(new Part_FIFO_Data(barcode,"","","",""));  //修改放在开头，以免引起显示时的 concurrent modify报错
 
                 movedCount++;    //每成功一个，把记录加1（注：原本在Handle message中加1的，现改到这里）
                 String time=Utils.getMonthTime(new Date());
-                log_moved(movedCount,movedCount+"--"+barcode+"发料 时间:"+time+"\n");  //永久保存当前记录，在handle中会再次保存完整记录（本处是测试，多余的，发现handle可能会造成退出）
+                //担心会有并发错误，禁用
+                //log_moved(movedCount,movedCount+"--"+barcode+"发料 时间:"+time+"\n");  //永久保存当前记录，在handle中会再次保存完整记录（本处是测试，多余的，发现handle可能会造成退出）
 
                 //canlist.removeIf(s->s.serial.equals(barcode));   //java 1.8用法
                 System.out.println(barcode+"发料成功。");
@@ -548,7 +551,8 @@ public class fifoActivity extends AppCompatActivity {
             if(move_result.get("IsValid")=="true"){
                 movedCount++;    //每成功一个，把记录加1（注：原本在Handle message中加1的，现改到这里）
                 String time=Utils.getMonthTime(new Date());
-                log_moved(movedCount,movedCount+"--"+barcode+"移库 时间:"+time+"\n");  //永久保存当前记录，在handle中会再次保存完整记录（本处是测试，多余的，发现handle可能会造成退出）
+                //担心会有并发错误，禁用
+                //log_moved(movedCount,movedCount+"--"+barcode+"移库 时间:"+time+"\n");  //永久保存当前记录，在handle中会再次保存完整记录（本处是测试，多余的，发现handle可能会造成退出）
 
                 System.out.println(barcode+"移库成功。");
                 sendMessage(MOVED,barcode+"移库成功。\n "+move_result.get("Message").trim());
@@ -616,7 +620,7 @@ public class fifoActivity extends AppCompatActivity {
             throw e;
         }
     }
-    void split_fifo_report(ArrayList<Part_FIFO_Data> alllist){
+    void split_fifo_report(List<Part_FIFO_Data> alllist){
         canlist.clear(); cannotlist.clear(); //清空
         if(alllist.size()>0){ //alllist不能为空
             //获取第一条记录
@@ -644,16 +648,19 @@ public class fifoActivity extends AppCompatActivity {
                 //tv_BarcodeInfo.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
                 tv_BarcodeInfo.setText(barcode+"："+msg.obj.toString()+"\n");
             }else if(msg.what== refresh_FIFOlist_on_UI){
-                //刷新显示 canlist,cannotlist  注：一旦 canlist和cannotlist有变化，需运行这个
+                //刷新canlist,cannotlist  注：一旦 canlist和cannotlist有变化，需运行这个
                 tv_canlist.setText("");tv_cannotlist.setText("");
+                String temp="";
                 for(Part_FIFO_Data data:canlist){
-                    String temp=tv_canlist.getText().toString();
-                    tv_canlist.setText(temp+"\n"+data.toString());
-                } //显示 cannotlist
-                for(Part_FIFO_Data data:cannotlist){
-                    String temp=tv_cannotlist.getText().toString();
-                    tv_cannotlist.setText(temp+"\n"+data.toString());
+                    temp=temp+"\n"+data.toString();
                 }
+                tv_canlist.setText(temp);
+                //显示 cannotlist
+                temp="";
+                for(Part_FIFO_Data data:cannotlist){
+                    temp=temp+"\n"+data.toString();
+                }
+                tv_cannotlist.setText(temp);
             }else if(msg.what==alartColor){
                 tv_info.setBackgroundColor(Color.YELLOW);
                 et_barcode.setBackgroundColor(Color.RED);
