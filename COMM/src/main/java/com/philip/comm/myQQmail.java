@@ -15,6 +15,8 @@ public class myQQmail {
     }
 
     public void send() throws MessagingException, GeneralSecurityException{
+        //javamail官网：https://javaee.github.io/javamail/
+        //          注：这里应用android版的jar包，而不应是标准的java版的包
         //参考 https://blog.csdn.net/baolingye/article/details/96598222
         // Android发送邮件 https://blog.csdn.net/fukaimei/article/details/87717995
 
