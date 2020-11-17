@@ -7,16 +7,16 @@ import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 public class myQQmail {
-    String receiptions,subject,content;
+    String receptions,subject,content;
     public myQQmail(String receiptions,String subject,String content){
-        this.receiptions=receiptions;
+        this.receptions =receiptions;
         this.subject=subject;
         this.content=content;
     }
 
     public void send() throws MessagingException, GeneralSecurityException{
         //参考 https://blog.csdn.net/baolingye/article/details/96598222
-        // tcewijpuxnqmdihh
+        // Android发送邮件 https://blog.csdn.net/fukaimei/article/details/87717995
 
         //创建一个配置文件并保存
         Properties properties = new Properties();
@@ -50,7 +50,7 @@ public class myQQmail {
         mimeMessage.setFrom(new InternetAddress("13986065186@qq.com"));
         //邮件接收人
         //mimeMessage.setRecipient(Message.RecipientType.TO,new InternetAddress(receiption));
-        mimeMessage.setRecipients(Message.RecipientType.TO,receiptions);
+        mimeMessage.setRecipients(Message.RecipientType.TO, receptions);
         //邮件标题
         mimeMessage.setSubject(subject);
         //邮件内容

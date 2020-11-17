@@ -21,6 +21,8 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sun.mail.util.MailSSLSocketFactory;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,14 +36,13 @@ import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Properties;
 import com.philip.comm.myQQmail;
-
-import javax.mail.MessagingException;
 
 public class PlexInterActivity2 extends AppCompatActivity {
     WebView mWebview;
     TextView textview;
-    String url_plex = "https://www.plexonline.com";
+    String url_plex = "https://test.plexonline.com";
     //String url_mobile = "https://www.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
     String first_page="/Interplant_Shipper/Interplant_Shipper.asp"; //_Form?Do=Update&Interplant_Shipper_Key=513993"; //460129
 
@@ -54,6 +55,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plex_inter2);
 
+        noScanList=new ArrayList<String>();
         mWebview = findViewById(R.id.webview);
         textview = findViewById(R.id.textView);
 
@@ -228,8 +230,8 @@ public class PlexInterActivity2 extends AppCompatActivity {
                             noScanList.add(barcode);
                             //这里有问题，这时会发出好多重复的邮件，需改
                             //String receiptions="gsun@meridian-mag.com,yjiang@meridian-mag.com,yzhang2@meridian-mag.com,pwang@meridian-mag.com";
-                            String receiptions="pwang@meridian-mag.com";
-                            myQQmail myQQmail=new myQQmail(receiptions,"发现未扫码:"+barcode,"\n  条码号："+barcode);   //发现条码号
+                            String receptions="pwang@meridian-mag.com";
+                            myQQmail myQQmail=new myQQmail(receptions,"发现未扫码:"+barcode,"\n  条码号："+barcode);   //发现条码号
                             myQQmail.send();
                             Toast.makeText(PlexInterActivity2.this,"已发出告警邮件！"+barcode,Toast.LENGTH_LONG);
                         }catch(Exception e){
