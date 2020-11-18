@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.os.Vibrator;
 import android.view.KeyEvent;
@@ -38,6 +40,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 import com.philip.comm.myQQmail;
+
+import javax.mail.MessagingException;
 
 public class PlexInterActivity2 extends AppCompatActivity {
     WebView mWebview;
@@ -223,20 +227,32 @@ public class PlexInterActivity2 extends AppCompatActivity {
                     input_table.removeAttr("style");  //先去掉style，再变红
                     input_table.attr("style","background-color:red");
                     ele_containers.attr("style","background-color:red");
-                    String barcode=columns.get(1).text();
+                    final String barcode=columns.get(1).text();
                     //如果新发现未扫描的，发邮件告状
                     if(!noScanList.contains(barcode)){
-                        try{
-                            noScanList.add(barcode);
-                            //这里有问题，这时会发出好多重复的邮件，需改
-                            //String receiptions="gsun@meridian-mag.com,yjiang@meridian-mag.com,yzhang2@meridian-mag.com,pwang@meridian-mag.com";
-                            String receptions="pwang@meridian-mag.com";
-                            myQQmail myQQmail=new myQQmail(receptions,"发现未扫码:"+barcode,"\n  条码号："+barcode);   //发现条码号
-                            myQQmail.send();
-                            Toast.makeText(PlexInterActivity2.this,"已发出告警邮件！"+barcode,Toast.LENGTH_LONG);
-                        }catch(Exception e){
-                            e.printStackTrace();
-                        }
+                        noScanList.add(barcode);
+                        new Thread(){
+                            @Override
+                            public void run(){
+                                try {
+                                    //这里有问题，这时会发出好多重复的邮件，需改
+                                    //String receiptions="gsun@meridian-mag.com,yjiang@meridian-mag.com,yzhang2@meridian-mag.com,pwang@meridian-mag.com";
+                                    String receptions="pwang@meridian-mag.com";
+                                    myQQmail myQQmail=new myQQmail(receptions,"发现未扫码:"+barcode,"\n  条码号："+barcode);   //发现条码号
+                                    myQQmail.send();
+                                    //在界面上产生提示
+                                    Handler handler=new Handler((Looper.getMainLooper()));
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(PlexInterActivity2.this,"已发出告警邮件！"+barcode,Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }.start();
                     }
                 }else if(columns.get(1).text().contains("Totals")){  //在底行第二列加上总箱数
                     columns.get(1).text("Totals: "+count);
