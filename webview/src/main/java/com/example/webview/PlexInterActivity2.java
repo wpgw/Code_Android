@@ -1,4 +1,6 @@
 package com.example.webview;
+//本程序会拦截interplant shipping的加载界面，如果发现EPC库位的箱号，会报警，并发邮件
+//另，如果在点ship的报表界面，点“返回”，会连退两步（不这样，发现会被锁死在报表界面）
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -44,6 +46,7 @@ import com.philip.comm.myQQmail;
 import javax.mail.MessagingException;
 
 public class PlexInterActivity2 extends AppCompatActivity {
+    volatile boolean isAtShipReport=false;   //标记是否是在Interplantr 的ship报表界面，用于执行专门返回逻辑
     WebView mWebview;
     TextView textview;
     String url_plex = "https://test.plexonline.com";
@@ -95,7 +98,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
             //设置不用系统浏览器打开,直接显示在当前Webview
             @Override   //老机器用
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                System.out.println("转向旧: " + url);
+                System.out.println("UrlLoading转向旧: " + url);
                 //登录成功后，保存cookie,跳转首页
                 runOverrideUrlLoading(view, url);
                 return true;
@@ -138,9 +141,9 @@ public class PlexInterActivity2 extends AppCompatActivity {
             */
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String url=request.getUrl().toString();
-                System.out.println("拦截 新: "+url);
-                //如果是 interplant发货扫描界面，就拦截它，自己处理
-                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")) {
+                System.out.println("InterceptRequest拦截 新: "+url);
+                //如果是 interplant发货扫描的加载界面，就拦截它，自己处理                   //有ShippedFromForm=1时，是ship的报表界面，忽略它
+                if(url.contains("/Interplant_Shipper/Interplant_Shipper_Form.asp?Mode=Containers&Do=Update&Interplant_Shipper_Key")&&!url.contains("ShippedFromForm=1")) {
                     return myInterPlant(url);
                 }
                 return super.shouldInterceptRequest(view, request);
@@ -155,6 +158,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
                     //如网络操作出错，显示出错原因，并返回一个url当前跳转
                     System.out.println("网络操作出错，显示出错原因，并返回一个url当前跳转");
                     html=e.getMessage()+ "<br><a href=\"" +url+"\">"+url+"</a>";
+                    e.printStackTrace();
                 }
                 InputStream targetContent=new ByteArrayInputStream(html.getBytes());
                 return new WebResourceResponse("text/html","utf-8",targetContent);
@@ -163,13 +167,13 @@ public class PlexInterActivity2 extends AppCompatActivity {
             //设置加载前的函数
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                System.out.println("开始加载:" + url);
+                //System.out.println("onPageStarted开始加载:" + url);
             }
 
             //设置结束加载函数
             @Override
             public void onPageFinished(WebView view, String url) {
-                System.out.println("结束加载:" + url);
+                System.out.println("onPageFinished结束加载:" + url);
             }
         });
         //设置WebChromeClient类  作用：辅助 WebView 处理 Javascript 的对话框,网站图标,网站标题等等
@@ -178,6 +182,12 @@ public class PlexInterActivity2 extends AppCompatActivity {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 System.out.println("标题在这里:" + title);
+                if(title.contains("Plex Online Report Viewer")){
+                    isAtShipReport=true;  //为true时，点返回键，会跳到指定的界面
+                }else{
+                    isAtShipReport=false;
+                }
+                System.out.println("看看report标记："+isAtShipReport);
             }
 
             //获取加载进度
@@ -192,13 +202,19 @@ public class PlexInterActivity2 extends AppCompatActivity {
         });
     }
 
-    private String dealwith_interPlant(Element element) {
+    private String dealwith_interPlant(Element element) throws Exception{
         //主表格上的两个框框
         Element ele_containers=element.getElementById("hdnContainerView").parent();  //标题框：改颜色，显箱数
-        Element input_table=element.getElementById("ContainerLoadingFilterTable")
-                                   .getElementsByTag("tbody").first();     //包含输入栏的框：改颜色
-        //获得主表格
+        Element input_table=null;
+        try{   //界面上，可能没有输入框
+            input_table=element.getElementById("ContainerLoadingFilterTable")
+                    .getElementsByTag("tbody").first();     //包含输入栏的框：改颜色
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
+            //获得主表格
         Element element_table = element.getElementById("MainContainerLoadingGridTable");
+
         if (element_table != null) {          //如果有 加载表格，处理表格
             //表头的 最后两列去掉
             Elements header=element_table.getElementsByTag("thead").first().getElementsByTag("th");
@@ -223,9 +239,12 @@ public class PlexInterActivity2 extends AppCompatActivity {
                     element.getElementById("txtItem").remove();
                     //问题行变红
                     row.attr("style","background-color:red");
+                    //表头输入框等变红
+                    if(input_table!=null){
+                        input_table.removeAttr("style");  //先去掉style，再变红
+                        input_table.attr("style","background-color:red");
+                    }
                     //其它有关表头框框等变红
-                    input_table.removeAttr("style");  //先去掉style，再变红
-                    input_table.attr("style","background-color:red");
                     ele_containers.attr("style","background-color:red");
                     final String barcode=columns.get(1).text();
                     //如果新发现未扫描的，发邮件告状
@@ -266,6 +285,9 @@ public class PlexInterActivity2 extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && mWebview.canGoBack()) {
+            if(isAtShipReport){
+                mWebview.goBack();    //如在ship的报表界面，一次退两下
+            }
             mWebview.goBack();
             return true;
         }
