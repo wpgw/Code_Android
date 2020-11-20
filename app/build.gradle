@@ -55,7 +55,7 @@ dependencies {
     // HMS:Add this line
     implementation 'com.huawei.agconnect:agconnect-core:1.3.1.300'
     //HMS: scankitSDK
-    implementation 'com.huawei.hms:scan:1.2.2.300'
+    implementation 'com.huawei.hms:scanplus:1.2.4.300'
 
     //add for giberish, but no usage
     tasks.withType(JavaCompile) {

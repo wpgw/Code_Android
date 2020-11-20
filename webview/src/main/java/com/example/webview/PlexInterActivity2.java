@@ -49,7 +49,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
     volatile boolean isAtShipReport=false;   //标记是否是在Interplantr 的ship报表界面，用于执行专门返回逻辑
     WebView mWebview;
     TextView textview;
-    String url_plex = "https://test.plexonline.com";
+    String url_plex = "https://www.plexonline.com";
     //String url_mobile = "https://www.plexus-online.com"; //d056f1af-eade-4483-a749-c8d3e1280a0e/Modules/SystemAdministration/MenuSystem/MenuCustomer.aspx?Mobile=1";
     String first_page="/Interplant_Shipper/Interplant_Shipper.asp"; //_Form?Do=Update&Interplant_Shipper_Key=513993"; //460129
 
@@ -112,18 +112,27 @@ public class PlexInterActivity2 extends AppCompatActivity {
                 return true;
             }
             private void runOverrideUrlLoading(WebView view, String url){
-                //如mobile界面登录成功,保存cookie,跳转首页
                 if (url.contains("/Modules/SystemAdministration/MenuSystem/menu.aspx")) {
+                    //如登录成功,进入菜单，保存cookie,跳转interPlant首页
                     System.out.println("登录成功,准备跳转：\n");
                     Uri uri = Uri.parse(url);
                     session_ID = uri.getPathSegments().get(0);
                     String cookieString = CookieManager.getInstance().getCookie(url_plex);
-                    //登录成功后，把 mobile 的cookie转给 www
                     //set_cookie(url_plex, cookieString);
                     cookies = stringTomap(cookieString);  //获得cookie, 以备后用
                     //go to inter-plant
                     view.loadUrl(url_plex + "/" + session_ID + first_page);
-                }else {
+                }else if(url.toLowerCase().contains("/modules/systemadministration/menusystem/menufavorites.aspx")){
+                    //用户登录也可能会直接进入Favorite界面
+                    System.out.println("在Favorite界面：\n");
+                    Uri uri = Uri.parse(url);
+                    session_ID = uri.getPathSegments().get(0);
+                    String cookieString = CookieManager.getInstance().getCookie(url_plex);
+                    //set_cookie(url_plex, cookieString);
+                    cookies = stringTomap(cookieString);  //获得cookie, 以备后用
+                    view.loadUrl(url);
+                }
+                else {
                     view.loadUrl(url);
                 }
             }
@@ -187,7 +196,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
                 }else{
                     isAtShipReport=false;
                 }
-                System.out.println("看看report标记："+isAtShipReport);
+                //System.out.println("看看report标记："+isAtShipReport);
             }
 
             //获取加载进度
@@ -255,8 +264,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
                             public void run(){
                                 try {
                                     //这里有问题，这时会发出好多重复的邮件，需改
-                                    //String receiptions="gsun@meridian-mag.com,yjiang@meridian-mag.com,yzhang2@meridian-mag.com,pwang@meridian-mag.com";
-                                    String receptions="pwang@meridian-mag.com";
+                                    String receptions="gsun@meridian-mag.com,yjiang@meridian-mag.com,yzhang2@meridian-mag.com,pwang@meridian-mag.com";
                                     myQQmail myQQmail=new myQQmail(receptions,"发现未扫码:"+barcode,"\n  条码号："+barcode);   //发现条码号
                                     myQQmail.send();
                                     //在界面上产生提示
