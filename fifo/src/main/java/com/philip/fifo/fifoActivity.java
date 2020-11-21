@@ -648,19 +648,21 @@ public class fifoActivity extends AppCompatActivity {
             }else if(msg.what== refresh_FIFOlist_on_UI){
                 //刷新canlist,cannotlist  注：一旦 canlist和cannotlist有变化，需运行这个
                 tv_canlist.setText("");tv_cannotlist.setText("");
-                String temp="";
+                StringBuilder stringBuilder=new StringBuilder();  //StringBuilder处理字符更快
                 synchronized (canlist){    //fifo发货可能会改 canlist，加锁
                     for(Part_FIFO_Data data:canlist){
-                        temp+="\n"+data.toString();
+                        stringBuilder.append("\n");
+                        stringBuilder.append(data.toString());
                     }
                 }
-                tv_canlist.setText(temp);
+                tv_canlist.setText(stringBuilder.toString());
                 //显示 cannotlist
-                temp="";
+                stringBuilder.delete(0,stringBuilder.length()); //清空
                 for(Part_FIFO_Data data:cannotlist){
-                    temp+="\n"+data.toString();
+                    stringBuilder.append("\n");
+                    stringBuilder.append(data.toString());
                 }
-                tv_cannotlist.setText(temp);
+                tv_cannotlist.setText(stringBuilder.toString());
             }else if(msg.what==alartColor){
                 tv_info.setBackgroundColor(Color.YELLOW);
                 et_barcode.setBackgroundColor(Color.RED);

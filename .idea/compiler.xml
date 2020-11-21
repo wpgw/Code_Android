@@ -3,6 +3,13 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
       <module name="mylib" target="1.7" />
+      <module name="Plex_QA.app" target="1.8" />
+      <module name="Plex_QA.COMM" target="1.8" />
+      <module name="Plex_QA.fifo" target="1.8" />
+      <module name="Plex_QA.hmsmap" target="1.8" />
+      <module name="Plex_QA.mapkit" target="1.8" />
+      <module name="Plex_QA.webview" target="1.8" />
+      <module name="Plex_QA.wpcameral" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
