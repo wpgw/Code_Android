@@ -4,39 +4,39 @@ ADDED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:2:1-35:12
 INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:2:1-35:12
 INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:2:1-35:12
 INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:2:1-35:12
-MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b76d4000b3c16248acfc36c3cb2f53b6\appcompat-1.1.0\AndroidManifest.xml:17:1-24:12
-MERGED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:2:1-26:12
-MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3cddce1169667c9fc2b56283ce0967d7\jetified-base-5.0.0.300\AndroidManifest.xml:2:1-28:12
-MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:2:1-35:12
-MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7e3dc0bd0896b7a7e07b428bc64d4983\jetified-device-5.0.0.300\AndroidManifest.xml:2:1-14:12
-MERGED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e57ed78f3c523d34859373118cb5b2b4\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:2:1-21:12
-MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a81a1508d0fbba2ed3fa43897c351bf1\fragment-1.1.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.appcompat:appcompat-resources:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7ec1e34811155e394afce4b31e94d219\jetified-appcompat-resources-1.1.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d4b28d1ec0bad7f86a47b4e932d90eb6\drawerlayout-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a767c5c04532ad86ce4a7d7f62aa9fa7\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.loader:loader:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\2ef2e1ad8af440f288ded38b0aad23ed\loader-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.activity:activity:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d37779cdb7f2f67e36f68e6784fe4d3d\jetified-activity-1.0.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\ff183090ec390eeef7aa1eda386b838d\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\891ad98ebcb626bbc14832522a96779d\vectordrawable-1.1.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.customview:customview:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\989dfec222abe998fec2d25dcb2f0b70\customview-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.core:core:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\27f534c51b54f9468dee3c3fd6827b26\core-1.1.0\AndroidManifest.xml:17:1-26:12
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\dc1e81c46cf801609f111f90055a80d6\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\630e3c865a44a5dc30235375ea522706\versionedparcelable-1.1.0\AndroidManifest.xml:17:1-27:12
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\693fcc572a401be4d810a53074a02ead\lifecycle-runtime-2.1.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\91fc62566c8c9385e247d47c0630a9ae\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7eb48f9c54aa3ab5d69d426cbe1907cf\jetified-savedstate-1.0.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f05c65fb3f692fb26999bb2b6c831402\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\5b8c6563bd3995560e8634d23f07d46b\lifecycle-livedata-2.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f212f5417e3abb917cee0944769bf8d9\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\34f8d4967ffc97d0d825f0917fcaea98\core-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\bbb23b257b5904a8068a2903acb1f8b8\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:2:1-20:12
-MERGED from [com.huawei.hmf:tasks:1.4.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d2ad24ba68dfb99d892836ddbfa9ea85\jetified-tasks-1.4.1.300\AndroidManifest.xml:2:1-10:12
-MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\8c63fdccc6271ca786a2d6f2ec4d18af\jetified-stats-5.0.0.300\AndroidManifest.xml:2:1-16:12
-MERGED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:2:1-29:12
-MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f095cd7f07b7f9f8e2379914232d9e0c\jetified-log-5.0.0.300\AndroidManifest.xml:2:1-14:12
-MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:2:1-48:12
-MERGED from [com.huawei.hms:network-grs:4.0.2.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\ef4dd103aa07e611709fa8de1263f5dc\jetified-network-grs-4.0.2.300\AndroidManifest.xml:2:1-11:12
-MERGED from [com.huawei.hms:network-common:4.0.2.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\ece73dd22aeb6cd04b2e80b5b2d3e8f9\jetified-network-common-4.0.2.300\AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a71694b4ab761de2f4d9cf8aeed674f1\appcompat-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:2:1-26:12
+MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\41b13209277184acda609cbbbd466c90\jetified-base-5.0.0.300\AndroidManifest.xml:2:1-28:12
+MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:2:1-35:12
+MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\266f63ee6a5e50b9d1cd1233ae9a13ce\jetified-device-5.0.0.300\AndroidManifest.xml:2:1-14:12
+MERGED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0e55f5480eef2f6c44d9fb292c11caaa\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:2:1-21:12
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\572c4919ca9df47f8cef7311ca5c9955\fragment-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat-resources:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\703ce283474daa8c50a8c7b5d4c58e06\jetified-appcompat-resources-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\fd58e6483484d31b9b86f94790339655\drawerlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\70882da8fbe3b5fa9e667fe61e1c5ecc\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a508f9a2debdcfbe25836fc3868c966a\loader-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\cc29552e094ab4cb1dc5a3cb75f07055\jetified-activity-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0f4f1862c160724b59c2ecb4e957a0da\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\78642fbb4e265e5e64862ee3d3b5133d\vectordrawable-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1d75602a1f1e6a8f1b6307e80d0d5086\customview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\56d0ad9d99e5ef82017046761d68b655\core-1.1.0\AndroidManifest.xml:17:1-26:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9c279b8141e3a563415a6f0b96c9f343\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a319d5e37231d49758e2caffebb6580e\versionedparcelable-1.1.0\AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b4790cb5f9b59637e384e0b1572ed4a3\lifecycle-runtime-2.1.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e7238ba8dab1ec2dfdfb872d3592647b\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\80c95f8bfb41a3dfacf0caf1a6b2146e\jetified-savedstate-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d15222ce94e4f2c0f46bb88a2128468e\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f069da76b1c3d52a81b4c55810ef4efc\lifecycle-livedata-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e6ca819c9b0357dde504ed61319d1b1c\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\11afc56bd6b605e77e224a613d3b0f3b\core-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\269f0d360912510de69eeca945678a5b\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:2:1-20:12
+MERGED from [com.huawei.hmf:tasks:1.4.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7149134c1babf87a25b54c4f42824c8e\jetified-tasks-1.4.1.300\AndroidManifest.xml:2:1-10:12
+MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b0dc060f792a7a25ffdd2db465fe07be\jetified-stats-5.0.0.300\AndroidManifest.xml:2:1-16:12
+MERGED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:2:1-29:12
+MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\4a5c57774bbc7b315338fb27feb3f53a\jetified-log-5.0.0.300\AndroidManifest.xml:2:1-14:12
+MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:2:1-48:12
+MERGED from [com.huawei.hms:network-grs:4.0.2.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\aec41ef113bed61fcbe77c26df8bbee0\jetified-network-grs-4.0.2.300\AndroidManifest.xml:2:1-11:12
+MERGED from [com.huawei.hms:network-common:4.0.2.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\68c0a393ae6dc7c9a003911dc5c52c81\jetified-network-common-4.0.2.300\AndroidManifest.xml:2:1-11:12
 INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:2:1-35:12
 INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:2:1-35:12
 INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:2:1-35:12
@@ -56,10 +56,10 @@ INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:2:1-35:12
 		ADDED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:2:11-69
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
 ADDED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:5:5-7:38
-MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:12:5-81
-MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:12:5-81
-MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f095cd7f07b7f9f8e2379914232d9e0c\jetified-log-5.0.0.300\AndroidManifest.xml:10:5-81
-MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f095cd7f07b7f9f8e2379914232d9e0c\jetified-log-5.0.0.300\AndroidManifest.xml:10:5-81
+MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:12:5-81
+MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:12:5-81
+MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\4a5c57774bbc7b315338fb27feb3f53a\jetified-log-5.0.0.300\AndroidManifest.xml:10:5-81
+MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\4a5c57774bbc7b315338fb27feb3f53a\jetified-log-5.0.0.300\AndroidManifest.xml:10:5-81
 	android:maxSdkVersion
 		ADDED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:7:9-35
 	android:name
@@ -80,56 +80,56 @@ ADDED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:12:5-79
 		ADDED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:12:22-76
 uses-permission#android.permission.INTERNET
 ADDED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:13:5-67
-MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3cddce1169667c9fc2b56283ce0967d7\jetified-base-5.0.0.300\AndroidManifest.xml:10:5-67
-MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3cddce1169667c9fc2b56283ce0967d7\jetified-base-5.0.0.300\AndroidManifest.xml:10:5-67
-MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:10:5-67
-MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:10:5-67
-MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\8c63fdccc6271ca786a2d6f2ec4d18af\jetified-stats-5.0.0.300\AndroidManifest.xml:10:5-67
-MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\8c63fdccc6271ca786a2d6f2ec4d18af\jetified-stats-5.0.0.300\AndroidManifest.xml:10:5-67
-MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:11:5-67
-MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:11:5-67
+MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\41b13209277184acda609cbbbd466c90\jetified-base-5.0.0.300\AndroidManifest.xml:10:5-67
+MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\41b13209277184acda609cbbbd466c90\jetified-base-5.0.0.300\AndroidManifest.xml:10:5-67
+MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:10:5-67
+MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:10:5-67
+MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b0dc060f792a7a25ffdd2db465fe07be\jetified-stats-5.0.0.300\AndroidManifest.xml:10:5-67
+MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b0dc060f792a7a25ffdd2db465fe07be\jetified-stats-5.0.0.300\AndroidManifest.xml:10:5-67
+MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:11:5-67
+MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:11:5-67
 	android:name
 		ADDED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:13:22-64
 uses-permission#android.permission.ACCESS_NETWORK_STATE
 ADDED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:14:5-79
-MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:14:5-79
-MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:14:5-79
-MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7e3dc0bd0896b7a7e07b428bc64d4983\jetified-device-5.0.0.300\AndroidManifest.xml:10:5-79
-MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7e3dc0bd0896b7a7e07b428bc64d4983\jetified-device-5.0.0.300\AndroidManifest.xml:10:5-79
-MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\8c63fdccc6271ca786a2d6f2ec4d18af\jetified-stats-5.0.0.300\AndroidManifest.xml:12:5-79
-MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\8c63fdccc6271ca786a2d6f2ec4d18af\jetified-stats-5.0.0.300\AndroidManifest.xml:12:5-79
-MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:12:5-79
-MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:12:5-79
+MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:14:5-79
+MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:14:5-79
+MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\266f63ee6a5e50b9d1cd1233ae9a13ce\jetified-device-5.0.0.300\AndroidManifest.xml:10:5-79
+MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\266f63ee6a5e50b9d1cd1233ae9a13ce\jetified-device-5.0.0.300\AndroidManifest.xml:10:5-79
+MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b0dc060f792a7a25ffdd2db465fe07be\jetified-stats-5.0.0.300\AndroidManifest.xml:12:5-79
+MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b0dc060f792a7a25ffdd2db465fe07be\jetified-stats-5.0.0.300\AndroidManifest.xml:12:5-79
+MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:12:5-79
+MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:12:5-79
 	android:name
 		ADDED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:14:22-76
 application
 ADDED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:16:5-33:19
-MERGED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:11:5-24:19
-MERGED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:11:5-24:19
-MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3cddce1169667c9fc2b56283ce0967d7\jetified-base-5.0.0.300\AndroidManifest.xml:12:5-26:19
-MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3cddce1169667c9fc2b56283ce0967d7\jetified-base-5.0.0.300\AndroidManifest.xml:12:5-26:19
-MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:20:5-33:19
-MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:20:5-33:19
-MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7e3dc0bd0896b7a7e07b428bc64d4983\jetified-device-5.0.0.300\AndroidManifest.xml:12:5-20
-MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7e3dc0bd0896b7a7e07b428bc64d4983\jetified-device-5.0.0.300\AndroidManifest.xml:12:5-20
-MERGED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e57ed78f3c523d34859373118cb5b2b4\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:10:5-19:19
-MERGED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e57ed78f3c523d34859373118cb5b2b4\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:10:5-19:19
-MERGED from [androidx.core:core:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\27f534c51b54f9468dee3c3fd6827b26\core-1.1.0\AndroidManifest.xml:24:5-89
-MERGED from [androidx.core:core:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\27f534c51b54f9468dee3c3fd6827b26\core-1.1.0\AndroidManifest.xml:24:5-89
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\630e3c865a44a5dc30235375ea522706\versionedparcelable-1.1.0\AndroidManifest.xml:24:5-25:19
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\630e3c865a44a5dc30235375ea522706\versionedparcelable-1.1.0\AndroidManifest.xml:24:5-25:19
-MERGED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\bbb23b257b5904a8068a2903acb1f8b8\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:11:5-18:19
-MERGED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\bbb23b257b5904a8068a2903acb1f8b8\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:11:5-18:19
-MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\8c63fdccc6271ca786a2d6f2ec4d18af\jetified-stats-5.0.0.300\AndroidManifest.xml:14:5-20
-MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\8c63fdccc6271ca786a2d6f2ec4d18af\jetified-stats-5.0.0.300\AndroidManifest.xml:14:5-20
-MERGED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:9:5-27:19
-MERGED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:9:5-27:19
-MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f095cd7f07b7f9f8e2379914232d9e0c\jetified-log-5.0.0.300\AndroidManifest.xml:12:5-20
-MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f095cd7f07b7f9f8e2379914232d9e0c\jetified-log-5.0.0.300\AndroidManifest.xml:12:5-20
-MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:20:5-46:19
-MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:20:5-46:19
+MERGED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:11:5-24:19
+MERGED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:11:5-24:19
+MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\41b13209277184acda609cbbbd466c90\jetified-base-5.0.0.300\AndroidManifest.xml:12:5-26:19
+MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\41b13209277184acda609cbbbd466c90\jetified-base-5.0.0.300\AndroidManifest.xml:12:5-26:19
+MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:20:5-33:19
+MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:20:5-33:19
+MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\266f63ee6a5e50b9d1cd1233ae9a13ce\jetified-device-5.0.0.300\AndroidManifest.xml:12:5-20
+MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\266f63ee6a5e50b9d1cd1233ae9a13ce\jetified-device-5.0.0.300\AndroidManifest.xml:12:5-20
+MERGED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0e55f5480eef2f6c44d9fb292c11caaa\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:10:5-19:19
+MERGED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0e55f5480eef2f6c44d9fb292c11caaa\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:10:5-19:19
+MERGED from [androidx.core:core:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\56d0ad9d99e5ef82017046761d68b655\core-1.1.0\AndroidManifest.xml:24:5-89
+MERGED from [androidx.core:core:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\56d0ad9d99e5ef82017046761d68b655\core-1.1.0\AndroidManifest.xml:24:5-89
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a319d5e37231d49758e2caffebb6580e\versionedparcelable-1.1.0\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a319d5e37231d49758e2caffebb6580e\versionedparcelable-1.1.0\AndroidManifest.xml:24:5-25:19
+MERGED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\269f0d360912510de69eeca945678a5b\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:11:5-18:19
+MERGED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\269f0d360912510de69eeca945678a5b\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:11:5-18:19
+MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b0dc060f792a7a25ffdd2db465fe07be\jetified-stats-5.0.0.300\AndroidManifest.xml:14:5-20
+MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b0dc060f792a7a25ffdd2db465fe07be\jetified-stats-5.0.0.300\AndroidManifest.xml:14:5-20
+MERGED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:9:5-27:19
+MERGED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:9:5-27:19
+MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\4a5c57774bbc7b315338fb27feb3f53a\jetified-log-5.0.0.300\AndroidManifest.xml:12:5-20
+MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\4a5c57774bbc7b315338fb27feb3f53a\jetified-log-5.0.0.300\AndroidManifest.xml:12:5-20
+MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:20:5-46:19
+MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:20:5-46:19
 	android:appComponentFactory
-		ADDED from [androidx.core:core:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\27f534c51b54f9468dee3c3fd6827b26\core-1.1.0\AndroidManifest.xml:24:18-86
+		ADDED from [androidx.core:core:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\56d0ad9d99e5ef82017046761d68b655\core-1.1.0\AndroidManifest.xml:24:18-86
 	android:supportsRtl
 		ADDED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml:21:9-35
 	android:label
@@ -166,72 +166,72 @@ uses-sdk
 INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml
 INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml
-MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b76d4000b3c16248acfc36c3cb2f53b6\appcompat-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b76d4000b3c16248acfc36c3cb2f53b6\appcompat-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:7:5-9:41
-MERGED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:7:5-9:41
-MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3cddce1169667c9fc2b56283ce0967d7\jetified-base-5.0.0.300\AndroidManifest.xml:5:5-7:41
-MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3cddce1169667c9fc2b56283ce0967d7\jetified-base-5.0.0.300\AndroidManifest.xml:5:5-7:41
-MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:5:5-7:41
-MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:5:5-7:41
-MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7e3dc0bd0896b7a7e07b428bc64d4983\jetified-device-5.0.0.300\AndroidManifest.xml:5:5-7:41
-MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7e3dc0bd0896b7a7e07b428bc64d4983\jetified-device-5.0.0.300\AndroidManifest.xml:5:5-7:41
-MERGED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e57ed78f3c523d34859373118cb5b2b4\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:6:5-8:41
-MERGED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e57ed78f3c523d34859373118cb5b2b4\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:6:5-8:41
-MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a81a1508d0fbba2ed3fa43897c351bf1\fragment-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a81a1508d0fbba2ed3fa43897c351bf1\fragment-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.appcompat:appcompat-resources:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7ec1e34811155e394afce4b31e94d219\jetified-appcompat-resources-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.appcompat:appcompat-resources:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7ec1e34811155e394afce4b31e94d219\jetified-appcompat-resources-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d4b28d1ec0bad7f86a47b4e932d90eb6\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d4b28d1ec0bad7f86a47b4e932d90eb6\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a767c5c04532ad86ce4a7d7f62aa9fa7\viewpager-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a767c5c04532ad86ce4a7d7f62aa9fa7\viewpager-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.loader:loader:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\2ef2e1ad8af440f288ded38b0aad23ed\loader-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.loader:loader:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\2ef2e1ad8af440f288ded38b0aad23ed\loader-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.activity:activity:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d37779cdb7f2f67e36f68e6784fe4d3d\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.activity:activity:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d37779cdb7f2f67e36f68e6784fe4d3d\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\ff183090ec390eeef7aa1eda386b838d\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\ff183090ec390eeef7aa1eda386b838d\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\891ad98ebcb626bbc14832522a96779d\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\891ad98ebcb626bbc14832522a96779d\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.customview:customview:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\989dfec222abe998fec2d25dcb2f0b70\customview-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.customview:customview:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\989dfec222abe998fec2d25dcb2f0b70\customview-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.core:core:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\27f534c51b54f9468dee3c3fd6827b26\core-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.core:core:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\27f534c51b54f9468dee3c3fd6827b26\core-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\dc1e81c46cf801609f111f90055a80d6\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\dc1e81c46cf801609f111f90055a80d6\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\630e3c865a44a5dc30235375ea522706\versionedparcelable-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\630e3c865a44a5dc30235375ea522706\versionedparcelable-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\693fcc572a401be4d810a53074a02ead\lifecycle-runtime-2.1.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\693fcc572a401be4d810a53074a02ead\lifecycle-runtime-2.1.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\91fc62566c8c9385e247d47c0630a9ae\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\91fc62566c8c9385e247d47c0630a9ae\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7eb48f9c54aa3ab5d69d426cbe1907cf\jetified-savedstate-1.0.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7eb48f9c54aa3ab5d69d426cbe1907cf\jetified-savedstate-1.0.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f05c65fb3f692fb26999bb2b6c831402\interpolator-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f05c65fb3f692fb26999bb2b6c831402\interpolator-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\5b8c6563bd3995560e8634d23f07d46b\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\5b8c6563bd3995560e8634d23f07d46b\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f212f5417e3abb917cee0944769bf8d9\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f212f5417e3abb917cee0944769bf8d9\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\34f8d4967ffc97d0d825f0917fcaea98\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\34f8d4967ffc97d0d825f0917fcaea98\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\bbb23b257b5904a8068a2903acb1f8b8\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:7:5-9:41
-MERGED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\bbb23b257b5904a8068a2903acb1f8b8\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:7:5-9:41
-MERGED from [com.huawei.hmf:tasks:1.4.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d2ad24ba68dfb99d892836ddbfa9ea85\jetified-tasks-1.4.1.300\AndroidManifest.xml:6:5-8:41
-MERGED from [com.huawei.hmf:tasks:1.4.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d2ad24ba68dfb99d892836ddbfa9ea85\jetified-tasks-1.4.1.300\AndroidManifest.xml:6:5-8:41
-MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\8c63fdccc6271ca786a2d6f2ec4d18af\jetified-stats-5.0.0.300\AndroidManifest.xml:5:5-7:41
-MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\8c63fdccc6271ca786a2d6f2ec4d18af\jetified-stats-5.0.0.300\AndroidManifest.xml:5:5-7:41
-MERGED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:5:5-7:41
-MERGED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:5:5-7:41
-MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f095cd7f07b7f9f8e2379914232d9e0c\jetified-log-5.0.0.300\AndroidManifest.xml:5:5-7:41
-MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f095cd7f07b7f9f8e2379914232d9e0c\jetified-log-5.0.0.300\AndroidManifest.xml:5:5-7:41
-MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:7:5-9:41
-MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:7:5-9:41
-MERGED from [com.huawei.hms:network-grs:4.0.2.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\ef4dd103aa07e611709fa8de1263f5dc\jetified-network-grs-4.0.2.300\AndroidManifest.xml:7:5-9:41
-MERGED from [com.huawei.hms:network-grs:4.0.2.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\ef4dd103aa07e611709fa8de1263f5dc\jetified-network-grs-4.0.2.300\AndroidManifest.xml:7:5-9:41
-MERGED from [com.huawei.hms:network-common:4.0.2.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\ece73dd22aeb6cd04b2e80b5b2d3e8f9\jetified-network-common-4.0.2.300\AndroidManifest.xml:7:5-9:41
-MERGED from [com.huawei.hms:network-common:4.0.2.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\ece73dd22aeb6cd04b2e80b5b2d3e8f9\jetified-network-common-4.0.2.300\AndroidManifest.xml:7:5-9:41
+MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a71694b4ab761de2f4d9cf8aeed674f1\appcompat-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a71694b4ab761de2f4d9cf8aeed674f1\appcompat-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:7:5-9:41
+MERGED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:7:5-9:41
+MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\41b13209277184acda609cbbbd466c90\jetified-base-5.0.0.300\AndroidManifest.xml:5:5-7:41
+MERGED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\41b13209277184acda609cbbbd466c90\jetified-base-5.0.0.300\AndroidManifest.xml:5:5-7:41
+MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:5:5-7:41
+MERGED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:5:5-7:41
+MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\266f63ee6a5e50b9d1cd1233ae9a13ce\jetified-device-5.0.0.300\AndroidManifest.xml:5:5-7:41
+MERGED from [com.huawei.hms:device:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\266f63ee6a5e50b9d1cd1233ae9a13ce\jetified-device-5.0.0.300\AndroidManifest.xml:5:5-7:41
+MERGED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0e55f5480eef2f6c44d9fb292c11caaa\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:6:5-8:41
+MERGED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0e55f5480eef2f6c44d9fb292c11caaa\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:6:5-8:41
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\572c4919ca9df47f8cef7311ca5c9955\fragment-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\572c4919ca9df47f8cef7311ca5c9955\fragment-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\703ce283474daa8c50a8c7b5d4c58e06\jetified-appcompat-resources-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\703ce283474daa8c50a8c7b5d4c58e06\jetified-appcompat-resources-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\fd58e6483484d31b9b86f94790339655\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\fd58e6483484d31b9b86f94790339655\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\70882da8fbe3b5fa9e667fe61e1c5ecc\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\70882da8fbe3b5fa9e667fe61e1c5ecc\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a508f9a2debdcfbe25836fc3868c966a\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a508f9a2debdcfbe25836fc3868c966a\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\cc29552e094ab4cb1dc5a3cb75f07055\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\cc29552e094ab4cb1dc5a3cb75f07055\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0f4f1862c160724b59c2ecb4e957a0da\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0f4f1862c160724b59c2ecb4e957a0da\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\78642fbb4e265e5e64862ee3d3b5133d\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\78642fbb4e265e5e64862ee3d3b5133d\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1d75602a1f1e6a8f1b6307e80d0d5086\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1d75602a1f1e6a8f1b6307e80d0d5086\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\56d0ad9d99e5ef82017046761d68b655\core-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\56d0ad9d99e5ef82017046761d68b655\core-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9c279b8141e3a563415a6f0b96c9f343\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9c279b8141e3a563415a6f0b96c9f343\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a319d5e37231d49758e2caffebb6580e\versionedparcelable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\a319d5e37231d49758e2caffebb6580e\versionedparcelable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b4790cb5f9b59637e384e0b1572ed4a3\lifecycle-runtime-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b4790cb5f9b59637e384e0b1572ed4a3\lifecycle-runtime-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e7238ba8dab1ec2dfdfb872d3592647b\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e7238ba8dab1ec2dfdfb872d3592647b\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\80c95f8bfb41a3dfacf0caf1a6b2146e\jetified-savedstate-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\80c95f8bfb41a3dfacf0caf1a6b2146e\jetified-savedstate-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d15222ce94e4f2c0f46bb88a2128468e\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d15222ce94e4f2c0f46bb88a2128468e\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f069da76b1c3d52a81b4c55810ef4efc\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\f069da76b1c3d52a81b4c55810ef4efc\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e6ca819c9b0357dde504ed61319d1b1c\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e6ca819c9b0357dde504ed61319d1b1c\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\11afc56bd6b605e77e224a613d3b0f3b\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\11afc56bd6b605e77e224a613d3b0f3b\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\269f0d360912510de69eeca945678a5b\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:7:5-9:41
+MERGED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\269f0d360912510de69eeca945678a5b\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:7:5-9:41
+MERGED from [com.huawei.hmf:tasks:1.4.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7149134c1babf87a25b54c4f42824c8e\jetified-tasks-1.4.1.300\AndroidManifest.xml:6:5-8:41
+MERGED from [com.huawei.hmf:tasks:1.4.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\7149134c1babf87a25b54c4f42824c8e\jetified-tasks-1.4.1.300\AndroidManifest.xml:6:5-8:41
+MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b0dc060f792a7a25ffdd2db465fe07be\jetified-stats-5.0.0.300\AndroidManifest.xml:5:5-7:41
+MERGED from [com.huawei.hms:stats:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\b0dc060f792a7a25ffdd2db465fe07be\jetified-stats-5.0.0.300\AndroidManifest.xml:5:5-7:41
+MERGED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:5:5-7:41
+MERGED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:5:5-7:41
+MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\4a5c57774bbc7b315338fb27feb3f53a\jetified-log-5.0.0.300\AndroidManifest.xml:5:5-7:41
+MERGED from [com.huawei.hms:log:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\4a5c57774bbc7b315338fb27feb3f53a\jetified-log-5.0.0.300\AndroidManifest.xml:5:5-7:41
+MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:7:5-9:41
+MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:7:5-9:41
+MERGED from [com.huawei.hms:network-grs:4.0.2.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\aec41ef113bed61fcbe77c26df8bbee0\jetified-network-grs-4.0.2.300\AndroidManifest.xml:7:5-9:41
+MERGED from [com.huawei.hms:network-grs:4.0.2.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\aec41ef113bed61fcbe77c26df8bbee0\jetified-network-grs-4.0.2.300\AndroidManifest.xml:7:5-9:41
+MERGED from [com.huawei.hms:network-common:4.0.2.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\68c0a393ae6dc7c9a003911dc5c52c81\jetified-network-common-4.0.2.300\AndroidManifest.xml:7:5-9:41
+MERGED from [com.huawei.hms:network-common:4.0.2.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\68c0a393ae6dc7c9a003911dc5c52c81\jetified-network-common-4.0.2.300\AndroidManifest.xml:7:5-9:41
 INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml
 INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml
 	android:targetSdkVersion
@@ -243,152 +243,152 @@ INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml
 		ADDED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml
 		INJECTED from D:\Code_Android\mapkit\src\main\AndroidManifest.xml
 meta-data#com.huawei.hms.map.version
-ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:12:9-14:41
+ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:12:9-14:41
 	android:value
-		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:14:13-38
+		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:14:13-38
 	android:name
-		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:13:13-54
+		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:13:13-54
 meta-data#com.huawei.hms.client.service.name:maps
-ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:15:9-17:46
+ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:15:9-17:46
 	android:value
-		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:17:13-43
+		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:17:13-43
 	android:name
-		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:16:13-67
+		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:16:13-67
 meta-data#com.huawei.hms.min_api_level:maps:huawei_module_maps
-ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:18:9-20:33
+ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:18:9-20:33
 	android:value
-		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:20:13-30
+		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:20:13-30
 	android:name
-		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:19:13-80
+		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:19:13-80
 meta-data#com.huawei.hms.min_api_level:maps:huawei_module_huaweimaps
-ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:21:9-23:33
+ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:21:9-23:33
 	android:value
-		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:23:13-30
+		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:23:13-30
 	android:name
-		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3d8d5f09cc0fc64a4d732c7f2805faef\jetified-maps-5.0.1.300\AndroidManifest.xml:22:13-86
+		ADDED from [com.huawei.hms:maps:5.0.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0420615ba2cb3ad91ee66ae67b2a2706\jetified-maps-5.0.1.300\AndroidManifest.xml:22:13-86
 meta-data#com.huawei.hms.client.service.name:base
-ADDED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3cddce1169667c9fc2b56283ce0967d7\jetified-base-5.0.0.300\AndroidManifest.xml:18:9-20:46
+ADDED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\41b13209277184acda609cbbbd466c90\jetified-base-5.0.0.300\AndroidManifest.xml:18:9-20:46
 	android:value
-		ADDED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3cddce1169667c9fc2b56283ce0967d7\jetified-base-5.0.0.300\AndroidManifest.xml:20:13-43
+		ADDED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\41b13209277184acda609cbbbd466c90\jetified-base-5.0.0.300\AndroidManifest.xml:20:13-43
 	android:name
-		ADDED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3cddce1169667c9fc2b56283ce0967d7\jetified-base-5.0.0.300\AndroidManifest.xml:19:13-67
+		ADDED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\41b13209277184acda609cbbbd466c90\jetified-base-5.0.0.300\AndroidManifest.xml:19:13-67
 meta-data#com.huawei.hms.min_api_level:base:hmscore
-ADDED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3cddce1169667c9fc2b56283ce0967d7\jetified-base-5.0.0.300\AndroidManifest.xml:23:9-25:33
+ADDED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\41b13209277184acda609cbbbd466c90\jetified-base-5.0.0.300\AndroidManifest.xml:23:9-25:33
 	android:value
-		ADDED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3cddce1169667c9fc2b56283ce0967d7\jetified-base-5.0.0.300\AndroidManifest.xml:25:13-30
+		ADDED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\41b13209277184acda609cbbbd466c90\jetified-base-5.0.0.300\AndroidManifest.xml:25:13-30
 	android:name
-		ADDED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\3cddce1169667c9fc2b56283ce0967d7\jetified-base-5.0.0.300\AndroidManifest.xml:24:13-69
+		ADDED from [com.huawei.hms:base:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\41b13209277184acda609cbbbd466c90\jetified-base-5.0.0.300\AndroidManifest.xml:24:13-69
 uses-permission#android.permission.REQUEST_INSTALL_PACKAGES
-ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:16:5-83
-MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:15:5-83
-MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:15:5-83
+ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:16:5-83
+MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:15:5-83
+MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:15:5-83
 	android:name
-		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:16:22-80
+		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:16:22-80
 uses-permission#com.huawei.appmarket.service.commondata.permission.GET_COMMON_DATA
-ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:18:5-106
-MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:18:5-106
-MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:18:5-106
+ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:18:5-106
+MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:18:5-106
+MERGED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:18:5-106
 	android:name
-		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:18:22-103
+		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:18:22-103
 meta-data#availableLoaded
-ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:23:9-25:35
+ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:23:9-25:35
 	android:value
-		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:25:13-32
+		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:25:13-32
 	android:name
-		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:24:13-43
+		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:24:13-43
 provider#com.huawei.hms.update.provider.UpdateProvider
-ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:27:9-32:20
+ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:27:9-32:20
 	android:grantUriPermissions
-		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:31:13-47
+		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:31:13-47
 	android:authorities
-		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:29:13-71
+		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:29:13-71
 	android:exported
-		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:30:13-37
+		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:30:13-37
 	android:name
-		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\9bd8e2cdc6bc233d6ff41e1d817f3bb0\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:28:13-73
+		ADDED from [com.huawei.hms:availableupdate:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\193f17bc263a16b2435b7e42e4530384\jetified-availableupdate-5.0.0.300\AndroidManifest.xml:28:13-73
 provider#com.huawei.agconnect.core.provider.AGConnectInitializeProvider
-ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e57ed78f3c523d34859373118cb5b2b4\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:11:9-14:40
+ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0e55f5480eef2f6c44d9fb292c11caaa\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:11:9-14:40
 	android:authorities
-		ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e57ed78f3c523d34859373118cb5b2b4\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:13:13-73
+		ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0e55f5480eef2f6c44d9fb292c11caaa\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:13:13-73
 	android:exported
-		ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e57ed78f3c523d34859373118cb5b2b4\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:14:13-37
+		ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0e55f5480eef2f6c44d9fb292c11caaa\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:14:13-37
 	android:name
-		ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e57ed78f3c523d34859373118cb5b2b4\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:12:13-90
+		ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0e55f5480eef2f6c44d9fb292c11caaa\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:12:13-90
 service#com.huawei.agconnect.core.ServiceDiscovery
-ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e57ed78f3c523d34859373118cb5b2b4\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:16:9-18:40
+ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0e55f5480eef2f6c44d9fb292c11caaa\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:16:9-18:40
 	android:exported
-		ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e57ed78f3c523d34859373118cb5b2b4\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:18:13-37
+		ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0e55f5480eef2f6c44d9fb292c11caaa\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:18:13-37
 	android:name
-		ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\e57ed78f3c523d34859373118cb5b2b4\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:17:13-70
+		ADDED from [com.huawei.agconnect:agconnect-core:1.3.1.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\0e55f5480eef2f6c44d9fb292c11caaa\jetified-agconnect-core-1.3.1.300\AndroidManifest.xml:17:13-70
 meta-data#com.huawei.hms.client.service.name:dynamic-api
-ADDED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\bbb23b257b5904a8068a2903acb1f8b8\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:12:9-14:54
+ADDED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\269f0d360912510de69eeca945678a5b\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:12:9-14:54
 	android:value
-		ADDED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\bbb23b257b5904a8068a2903acb1f8b8\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:14:13-51
+		ADDED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\269f0d360912510de69eeca945678a5b\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:14:13-51
 	android:name
-		ADDED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\bbb23b257b5904a8068a2903acb1f8b8\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:13:13-74
+		ADDED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\269f0d360912510de69eeca945678a5b\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:13:13-74
 meta-data#com.huawei.hms.min_api_level:dynamic-api:huawei_module_dynamicloader
-ADDED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\bbb23b257b5904a8068a2903acb1f8b8\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:15:9-17:33
+ADDED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\269f0d360912510de69eeca945678a5b\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:15:9-17:33
 	android:value
-		ADDED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\bbb23b257b5904a8068a2903acb1f8b8\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:17:13-30
+		ADDED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\269f0d360912510de69eeca945678a5b\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:17:13-30
 	android:name
-		ADDED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\bbb23b257b5904a8068a2903acb1f8b8\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:16:13-96
+		ADDED from [com.huawei.hms:dynamic-api:1.0.13.303] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\269f0d360912510de69eeca945678a5b\jetified-dynamic-api-1.0.13.303\AndroidManifest.xml:16:13-96
 activity#com.huawei.hms.activity.BridgeActivity
-ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:10:9-21:20
+ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:10:9-21:20
 	android:screenOrientation
-		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:16:13-47
+		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:16:13-47
 	android:excludeFromRecents
-		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:13:13-46
+		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:13:13-46
 	android:hardwareAccelerated
-		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:15:13-47
+		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:15:13-47
 	android:exported
-		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:14:13-37
+		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:14:13-37
 	android:configChanges
-		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:12:13-124
+		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:12:13-124
 	android:theme
-		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:17:13-61
+		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:17:13-61
 	android:name
-		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:11:13-66
+		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:11:13-66
 meta-data#hwc-theme
-ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:18:13-20:77
+ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:18:13-20:77
 	android:value
-		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:20:17-74
+		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:20:17-74
 	android:name
-		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:19:17-41
+		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:19:17-41
 activity#com.huawei.hms.activity.EnableServiceActivity
-ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:22:9-26:20
+ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:22:9-26:20
 	android:exported
-		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:25:13-37
+		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:25:13-37
 	android:configChanges
-		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:24:13-106
+		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:24:13-106
 	android:name
-		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d1e4dd2da2918e2ecdf3727ab87685e3\jetified-ui-5.0.0.300\AndroidManifest.xml:23:13-73
+		ADDED from [com.huawei.hms:ui:5.0.0.300] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\d31652c660eda7f54a9bd4d95abd2fd1\jetified-ui-5.0.0.300\AndroidManifest.xml:23:13-73
 activity#com.huawei.updatesdk.service.otaupdate.AppUpdateActivity
-ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:21:9-29:20
+ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:21:9-29:20
 	android:exported
-		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:24:13-37
+		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:24:13-37
 	android:configChanges
-		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:23:13-59
+		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:23:13-59
 	android:theme
-		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:25:13-49
+		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:25:13-49
 	android:name
-		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:22:13-84
+		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:22:13-84
 activity#com.huawei.updatesdk.support.pm.PackageInstallerActivity
-ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:30:9-38:20
+ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:30:9-38:20
 	android:exported
-		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:33:13-37
+		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:33:13-37
 	android:configChanges
-		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:32:13-74
+		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:32:13-74
 	android:theme
-		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:34:13-49
+		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:34:13-49
 	android:name
-		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:31:13-84
+		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:31:13-84
 provider#com.huawei.updatesdk.fileprovider.UpdateSdkFileProvider
-ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:40:9-45:20
+ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:40:9-45:20
 	android:grantUriPermissions
-		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:44:13-47
+		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:44:13-47
 	android:authorities
-		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:42:13-74
+		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:42:13-74
 	android:exported
-		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:43:13-37
+		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:43:13-37
 	android:name
-		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\1f62af515a873c240d7445be841f5400\jetified-update-2.0.6.302\AndroidManifest.xml:41:13-83
+		ADDED from [com.huawei.hms:update:2.0.6.302] C:\Users\pwang.AP\.gradle\caches\transforms-2\files-2.1\c314d36d839621a7d4bdb7ccd928bd6e\jetified-update-2.0.6.302\AndroidManifest.xml:41:13-83
