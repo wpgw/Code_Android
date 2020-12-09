@@ -3,6 +3,7 @@ package com.philip.fifo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityManager;
+import android.content.ComponentCallbacks;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,6 +43,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -499,6 +503,7 @@ public class fifoActivity extends AppCompatActivity {
         clear_list_data_and_UI_display(); //清空数据及显示，因后边的查询可能会出错
         System.out.println("读取FIFO数据...."+txtPartNo);
         alllist=get_fifo_report(cookies,url,txtPartNo);
+        Collections.sort(alllist);
         split_fifo_report(alllist); //canlist和cannotlist会被充值，如Size为0，则canlist与cannotlist会被清空
     }
 
@@ -760,7 +765,7 @@ public class fifoActivity extends AppCompatActivity {
     }
 
     //自定义数据类型，用于保存记录
-    public static class Part_FIFO_Data{
+    public static class Part_FIFO_Data implements Comparable<Part_FIFO_Data> {
         public String serial;
         public String part_no;
         public String QTY;
@@ -801,11 +806,27 @@ public class fifoActivity extends AppCompatActivity {
             return false;
         }
 
+        @Override
+        public int compareTo(Part_FIFO_Data O){
+            DateFormat format=new SimpleDateFormat("MM/dd/yyyy hh:mm a");   //for example"4/18/2019 12:00 AM"
+            Date thisdate=null;
+            Date Odate=null;
+            try {
+                thisdate=format.parse(this.date);
+                Odate=format.parse(O.date);
+            } catch (ParseException e) {
+                System.out.println("compareTo比较出错！");
+                e.printStackTrace();
+                return 0;    //直接退出
+            }
+            return thisdate.compareTo(Odate);
+        }
+
         public String toString(){
             if(this.serial==null)
                 return "no data";
             //String date=Utils.getMonthTime(this.date);
-            return String.format("%s日期:%s数量:%s %s",this.serial,this.date,this.QTY,location);
+            return String.format("%s 日期:%s 数量:%s 库位:%s",this.serial,this.date.substring(0,this.date.length()-8),this.QTY,location);
         }
     }
 
