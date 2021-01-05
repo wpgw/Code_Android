@@ -189,6 +189,7 @@ public class fifoActivity extends AppCompatActivity {
                 SpannableString s=new SpannableString("请扫码...");
                 if (checkedId==R.id.rd_move){
                     //移库
+                    tv_movedlist.setVisibility(View.VISIBLE);
                     tv_canlist.setVisibility(View.GONE);
                     tv_cannotlist.setVisibility(View.GONE);
                     tv_BarcodeInfo.setText("");tv_BarcodeInfo.setVisibility(View.GONE);  //不显示条码信息
@@ -199,6 +200,7 @@ public class fifoActivity extends AppCompatActivity {
                     //s = new SpannableString("扫库位或箱号......");     //这里输入自己想要的提示文字
                 }else if(checkedId==R.id.rd_issue||checkedId==R.id.rd_report){  //如 FIFO发货 或查 FIFO报表
                     //发货
+                    tv_movedlist.setVisibility(View.VISIBLE);
                     tv_canlist.setVisibility(View.VISIBLE);
                     tv_cannotlist.setVisibility(View.VISIBLE);
                     tv_BarcodeInfo.setText("");tv_BarcodeInfo.setVisibility(View.VISIBLE);  //显示条码信息
@@ -211,6 +213,7 @@ public class fifoActivity extends AppCompatActivity {
                         et_barcode.setText("5%");
                         et_barcode.setSelection(1);
                         btn_scan.setVisibility(View.GONE);
+                        tv_movedlist.setVisibility(View.GONE);
                     }
                 }
                 et_barcode.setHint(user+s);
@@ -807,26 +810,28 @@ public class fifoActivity extends AppCompatActivity {
         }
 
         @Override
-        public int compareTo(Part_FIFO_Data O){
-            DateFormat format=new SimpleDateFormat("MM/dd/yyyy hh:mm a");   //for example"4/18/2019 12:00 AM"
+        public int compareTo(Part_FIFO_Data Other){
+            DateFormat format=new SimpleDateFormat("M/d/yyyy");   //for example"4/18/2019 12:00 AM"
             Date thisdate=null;
-            Date Odate=null;
+            Date Otherdate=null;
+            String strShortdate=this.date.split(" ")[0];
             try {
-                thisdate=format.parse(this.date);
-                Odate=format.parse(O.date);
+                //System.out.println(this.date);
+                thisdate=format.parse(strShortdate);
+                Otherdate=format.parse(Other.date.split(" ")[0]);
             } catch (ParseException e) {
                 System.out.println("compareTo比较出错！");
                 e.printStackTrace();
                 return 0;    //直接退出
             }
-            return thisdate.compareTo(Odate);
+            return thisdate.compareTo(Otherdate);
         }
 
         public String toString(){
             if(this.serial==null)
                 return "no data";
             //String date=Utils.getMonthTime(this.date);
-            return String.format("%s 日期:%s 数量:%s 库位:%s",this.serial,this.date.substring(0,this.date.length()-8),this.QTY,location);
+            return String.format("%s 日期:%s 数量:%s 库位:%s",this.serial,this.date.split(" ")[0],this.QTY,location);
         }
     }
 
@@ -883,19 +888,25 @@ public class fifoActivity extends AppCompatActivity {
         System.out.println("剩余内存："+freeMemory);
     }
 
-    public static void main(String[] args){
-        ArrayList<Part_FIFO_Data> array=new ArrayList<>();
-        Part_FIFO_Data data1=new Part_FIFO_Data("smmp123456","1","","","");
-        Part_FIFO_Data data2=new Part_FIFO_Data("smmP123456","2","","","");
-        Part_FIFO_Data data3=new Part_FIFO_Data("smmp123457","1","","","");
-        array.add(data1);
-        array.add(data2);
-        array.add(data3);
+    public static void main(String[] args) throws ParseException {
+//        ArrayList<Part_FIFO_Data> array=new ArrayList<>();
+//        Part_FIFO_Data data1=new Part_FIFO_Data("smmp123456","1","","","");
+//        Part_FIFO_Data data2=new Part_FIFO_Data("smmP123456","2","","","");
+//        Part_FIFO_Data data3=new Part_FIFO_Data("smmp123457","1","","","");
+//        array.add(data1);
+//        array.add(data2);
+//        array.add(data3);
+//
+//        System.out.println(array);
+//        System.out.println(array.remove(new Part_FIFO_Data("smmP123456","2","","","")));
+//        System.out.println(array);
+//        System.out.println(array.remove(new Part_FIFO_Data("smmP123456","2","","","")));
+//        System.out.println(array);
 
-        System.out.println(array);
-        System.out.println(array.remove(new Part_FIFO_Data("smmP123456","2","","","")));
-        System.out.println(array);
-        System.out.println(array.remove(new Part_FIFO_Data("smmP123456","2","","","")));
-        System.out.println(array);
+        DateFormat format=new SimpleDateFormat("M/d/yyyy");
+        String bb="9/1/2020 12:00 am".split(" ")[0];
+        System.out.println(bb);
+        Date aa=format.parse(bb);
+        System.out.println();
     }
 }

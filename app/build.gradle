@@ -48,7 +48,7 @@ dependencies {
     implementation 'cn.bingoogolapple:bga-qrcode-zxing:1.3.7'
 
     //for import javax to exec javascript
-    compileOnly files("C:/Java/jdk1.8.0_191/jre/lib/rt.jar")
+    //compileOnly files("C:/Java/jdk1.8.0_191/jre/lib/rt.jar")
     //for easypermission
     implementation 'pub.devrel:easypermissions:1.0.1'
 
