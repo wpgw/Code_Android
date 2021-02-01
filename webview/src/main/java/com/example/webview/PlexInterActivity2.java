@@ -165,7 +165,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
                     html=dealwith_interPlant(doc);         //操作获得的结果
                 }catch(Exception e){
                     //如网络操作出错，显示出错原因，并返回一个url当前跳转
-                    System.out.println("网络操作出错，显示出错原因，并返回一个url当前跳转");
+                    System.out.println("myInterPlant网络操作出错，显示出错原因，并返回一个url当前跳转");
                     html=e.getMessage()+ "<br><a href=\"" +url+"\">"+url+"</a>";
                     e.printStackTrace();
                 }
@@ -214,6 +214,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
     private String dealwith_interPlant(Element element) throws Exception{
         //主表格上的两个框框
         Element ele_containers=element.getElementById("hdnContainerView").parent();  //标题框：改颜色，显箱数
+        ele_containers.text("0 Containers: 好好工作!");   //初始显示0，并做个debug标记
         Element input_table=null;
         try{   //界面上，可能没有输入框
             input_table=element.getElementById("ContainerLoadingFilterTable")
@@ -234,7 +235,7 @@ public class PlexInterActivity2 extends AppCompatActivity {
             //主表格的各数据行
             Elements table_rows = element_table.getElementsByTag("tbody").first().getElementsByTag("tr");
             //显示箱数
-            int count=(table_rows.size()-1); ele_containers.text(count+" Containers");
+            int count=(table_rows.size()-1); ele_containers.text(count+" Containers: 好好工作!");
             //处理表格明细
             for (Element row : table_rows) {
                 Elements columns = row.getElementsByTag("td");
@@ -244,8 +245,16 @@ public class PlexInterActivity2 extends AppCompatActivity {
                 //如果发现库位在EPC的箱号，变红色
                 if (columns.get(3).text().startsWith("EPC")) {
                     vibrate(1000);
-                    //去掉扫描输入栏，不能扫描了
-                    element.getElementById("txtItem").remove();
+                     try{
+                         //去掉扫描输入button，禁止继续扫描
+                        element.getElementById("txtItem").remove();
+                    }catch(NullPointerException e){
+                         //如果有多行是未扫描的，这时会NullPointerException,因此时button已不存在了，不能再remove
+                        System.out.println("Remove Button出错，此时可能有多行未扫描!");
+                        e.printStackTrace();
+                        //如多行错误，只处理一行，其后，不处理了，也不发邮件
+                        break;
+                    }
                     //问题行变红
                     row.attr("style","background-color:red");
                     //表头输入框等变红
