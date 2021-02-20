@@ -363,6 +363,7 @@ public class buildMasterActivity2 extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        System.out.println("onDestroy: 开始destroy!");
         if (textToSpeech != null) {
             textToSpeech.stop();
             textToSpeech.shutdown();
